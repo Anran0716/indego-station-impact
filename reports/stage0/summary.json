@@ -1,0 +1,85 @@
+{
+  "study_trip_years": [
+    2022,
+    2023,
+    2024
+  ],
+  "station_table": "indego-stations-2026-10-15.csv",
+  "station_table_source_url": "https://www.rideindego.com/wp-content/uploads/2026/10/indego-stations-2026-10-15.csv",
+  "annual_trip_counts": {
+    "2022": {
+      "raw_rows": 905790,
+      "missing_station_rows": 0,
+      "virtual_station_rows": 13709,
+      "retained_rows": 892081
+    },
+    "2023": {
+      "raw_rows": 1084547,
+      "missing_station_rows": 0,
+      "virtual_station_rows": 12156,
+      "retained_rows": 1072391
+    },
+    "2024": {
+      "raw_rows": 1269390,
+      "missing_station_rows": 0,
+      "virtual_station_rows": 17831,
+      "retained_rows": 1251559
+    }
+  },
+  "station_table_rows_including_virtual": 386,
+  "station_table_stations_excluding_virtual": 385,
+  "observed_stations_excluding_virtual": 289,
+  "observed_ids_missing_from_station_table": [],
+  "date_cases_all_comparable_observed": {
+    "first_trip_late_review": 168,
+    "within_tolerance": 108,
+    "first_trip_earlier": 13
+  },
+  "date_cases_official_openings_2022_2024": {
+    "within_tolerance": 108,
+    "first_trip_earlier": 13
+  },
+  "date_status_counts": {
+    "left_censored_pre_window": 168,
+    "within_tolerance": 108,
+    "unobserved_in_trip_window": 96,
+    "first_trip_earlier": 13
+  },
+  "official_openings_by_year": {
+    "2015": 74,
+    "2016": 32,
+    "2017": 19,
+    "2018": 12,
+    "2019": 13,
+    "2020": 6,
+    "2021": 26,
+    "2022": 27,
+    "2023": 67,
+    "2024": 27,
+    "2025": 41,
+    "2026": 41
+  },
+  "manual_review_station_count": 0,
+  "relocation_flagged_station_count": 1,
+  "relocation_flagged_station_ids": [
+    "3273"
+  ],
+  "relocation_flags_are_confirmed_physical_moves": false,
+  "station_identity_candidate_pairs": 23,
+  "station_identity_candidate_new_ids": 23,
+  "coordinate_status_counts": {
+    "audited": 285,
+    "no_coordinates": 96,
+    "insufficient_quarters": 4
+  },
+  "invalid_departure_coordinate_rows": 0,
+  "projected_crs": "EPSG:32618",
+  "relocation_threshold_m": 50,
+  "runtime": {
+    "python": "3.13.7",
+    "duckdb": "1.4.4",
+    "pandas": "2.3.2",
+    "numpy": "2.3.3",
+    "pyproj": "3.8.0"
+  }
+}

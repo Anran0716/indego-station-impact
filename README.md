@@ -2,7 +2,9 @@ An independent project estimating how new Indego stations affect ridership at ne
 
 # Indego station impact
 
-**Status:** Repository scaffold. Data collection and analysis have not started. The estimated effect, confidence interval, minimum detectable effect (MDE), and diversion rate are pending. The main identification risk is that new stations may be placed where demand is already growing.
+**Status:** Stage 0 data download and input audit completed. Treatment assignment and estimation have not started. The estimated effect, confidence interval, minimum detectable effect (MDE), and diversion rate are pending. The main identification risk is that new stations may be placed where demand is already growing.
+
+See the generated [Stage 0 audit](reports/stage0/README.md) for annual trip counts, opening-date checks, coordinate flags, and possible station-ID replacements. A coordinate jump is a review flag, not a confirmed physical relocation. Resolve station identities before freezing treatment sources.
 
 ## Research question
 
@@ -20,20 +22,28 @@ The [preregistration draft](docs/preregistration.md) records the planned rules. 
 ## Repository
 
 ```text
-config.yaml                 Study parameters and pending design choices
-data/manifest.json          Download inventory; currently empty
-docs/preregistration.md     Draft design and decisions to finalize
-scripts/                    Download and pipeline entry points, to be implemented
+config.yaml                 Study parameters; radius awaits feasibility check
+data/manifest.json          Pinned input URLs, row counts, and SHA256 hashes
+docs/preregistration.md     Design rules; freeze after the feasibility check
+reports/stage0/             Generated input-audit tables and summary
+scripts/                    Download and Stage 0 entry points
 sql/                        DuckDB panel construction, to be implemented
 src/stimpact/               Python analysis package
-tests/                      Data validation and simulation tests, to be implemented
+tests/                      Synthetic input-validation tests
 ```
 
-Python 3.11 is the target runtime. Planned dependencies are pandas, DuckDB, NumPy, pyproj, pyfixest, Matplotlib, and PyYAML; Ruff and pytest support development. The initial CI checks lint and syntax only. Data and estimator tests will be added with their implementations.
+Python 3.11 is the target runtime and is used in CI. Dependencies are pandas, DuckDB, NumPy, pyproj, pyfixest, Matplotlib, and PyYAML; Ruff and pytest support development. CI checks lint, syntax, and synthetic-fixture tests without downloading real inputs. The audit records its actual runtime versions in `reports/stage0/summary.json`. DuckDB is pinned to 1.4.4 after an explicit strict-mode CSV read returned zero rows under 2.0.1 in the local environment; the manifest row-count assertion caught that failure.
 
 ## Reproduction status
 
-A one-command download-to-figures pipeline is planned and is not implemented yet. Each downloaded input will have its source URL, download date, row count, and SHA256 recorded in the committed [manifest](data/manifest.json). Raw and intermediate data stay outside version control.
+Install the project and run the current download-and-audit pipeline:
+
+```powershell
+python -m pip install -e '.[dev]'
+python scripts/run_stage0.py
+```
+
+For a verified existing download, use `python scripts/run_stage0.py --offline`. Each archive and extracted CSV has its source URL, download date, row count, and SHA256 recorded in the committed [manifest](data/manifest.json). URLs are pinned on the first successful discovery, so future runs do not silently switch to a newer station table. Raw and intermediate data stay outside version control. The later download-to-figures analysis pipeline remains to be implemented.
 
 ## Assumptions and limitations
 

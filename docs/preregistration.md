@@ -1,6 +1,6 @@
 # Preregistration draft
 
-**Status: draft; radius not yet selected.** The design decisions below were recorded on 2026-11-20 before feasibility counting or real-data estimation. After the feasibility check, record the selected radius and control mode in a separate freeze commit before estimating effects on real data. Later changes must be documented as amendments rather than silently replacing the original design.
+**Status: draft; radius and physical-station identities not yet finalized.** The design decisions below were recorded on 2026-11-20 before feasibility counting or real-data estimation. Resolve the input-identity review, then complete the feasibility check and record the selected radius and control mode in a separate freeze commit before estimating effects on real data. Later changes must be documented as amendments rather than silently replacing the original design.
 
 ## Question and hypotheses
 
@@ -13,6 +13,8 @@ Use only public Indego trip files for 2022 Q1–2024 Q4 and the latest official 
 The panel covers Monday-start weeks from 2022-01-03 through the last complete week of 2024, starting 2024-12-23. Existing stations opened before 2022-01-01, have mean weekly departures of at least five in the baseline year, and have no run of more than eight consecutive zero-trip weeks within the study window. The baseline is the 52 weeks whose Mondays fall in 2022: 2022-01-03 through 2022-12-26 inclusive. The final baseline week includes 2023-01-01; use the complete 52-week grid, including zero-trip weeks.
 
 Remove virtual station 3000, missing station IDs, trips shorter than one minute, and trips with identical start and end stations. Preserve zero-trip station-weeks with a complete station-by-week grid and enforce trip-count conservation.
+
+**Input-review issue identified during Stage 0, before treatment assignment:** The official table reuses some station names across earlier and later IDs. These may be replacements or renumberings rather than additions to the network. Review the generated `reports/stage0/station_identity_candidates.csv` against public operational evidence and historical coordinates before freezing the physical treatment-source list. Record each decision and reason without inspecting estimated effects. Do not merge IDs solely because their names match. The coordinate-jump rule also remains a conservative exclusion flag, not confirmation of a physical move.
 
 ## Radius selection before outcome analysis
 
@@ -35,7 +37,7 @@ For a quarterly stack, the calendar window starts 12 weeks before its earliest t
 - Distance boundaries are: treated exposure at d <= R; buffer exposure at R < d <= 2R; unexposed at d > 2R.
 - Exclude buffer stations with an opening between R and 2R and none within R from the never-treated control set.
 - Never-treated controls have no new station within 2R over the full 2022–2024 period, including openings outside the eligible treatment-source window.
-- Assign a treated station to its first new station within R. Break same-day ties by ascending new-station ID. A subsequent opening within R does not change its cohort or assignment; flag an opening within the next 12 event weeks as `second_hit`, keep it in the main analysis, and exclude it in a robustness analysis. Subsequent openings in R < d <= 2R do not change a treated station's group. For control eligibility, however, the first exposure anywhere within 2R still determines whether it is clean.
+- Assign a treated station to its first new station within R. Break same-day ties by ascending new-station ID. A subsequent opening within R does not change its cohort or assignment; flag an opening after the first opening in event weeks 0–12 inclusive as `second_hit`, keep it in the main analysis, and exclude it in a robustness analysis. Subsequent openings in R < d <= 2R do not change a treated station's group. For control eligibility, however, the first exposure anywhere within 2R still determines whether it is clean.
 
 Not-yet-exposed status is stack-specific: a station can be a clean control in an earlier stack and exposed later. It can never be both treated and control in the same stack. Report never-treated and added clean controls separately for every stack.
 
