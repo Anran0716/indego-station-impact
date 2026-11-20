@@ -14,7 +14,32 @@ The panel covers Monday-start weeks from 2022-01-03 through the last complete we
 
 Remove virtual station 3000, missing station IDs, trips shorter than one minute, and trips with identical start and end stations. Preserve zero-trip station-weeks with a complete station-by-week grid and enforce trip-count conservation.
 
-**Input-review issue identified during Stage 0, before treatment assignment:** The official table reuses some station names across earlier and later IDs. These may be replacements or renumberings rather than additions to the network. Review the generated `reports/stage0/station_identity_candidates.csv` against public operational evidence and historical coordinates before freezing the physical treatment-source list. Record each decision and reason without inspecting estimated effects. Do not merge IDs solely because their names match. The coordinate-jump rule also remains a conservative exclusion flag, not confirmation of a physical move.
+## Station identity amendment before feasibility counting
+
+The following rules were specified after the initial input audit and before treatment assignment, radius counting, or real-data estimation. They replace the initial unresolved identity-review placeholder; the original audit remains in Git history.
+
+Use both departure and arrival observations to calculate each ID's first and last observed trip dates in Philadelphia local time. Dates before the 2022 observation window remain left-censored. A quarterly coordinate is usable only if it has at least `spatial.min_trips_per_quarter_coordinate = 20` valid, paired departure coordinates. Keep lower-support quarters in the audit with a rejection flag, but do not use them in distances, station centers, or relocation checks. Represent an ID by the coordinate-wise median of its usable quarterly projected positions.
+
+Find candidate pairs using the union of two checks, and deduplicate the same earlier/later ID pair:
+
+- Matching station names after trimming whitespace and ignoring case, with the later ID opening in 2022–2024.
+- Regardless of name, a later ID opening in 2022–2024 is within 50 metres of an earlier ID, and the earlier ID's last observed trip is within 30 calendar days before or after the later ID's reconciled opening date. An earlier ID means an earlier opening, including IDs opened after 2022; it need not already qualify for the pre-2022 existing-station pool.
+
+Report the name-based pair count and the additional pairs found only by proximity and retirement timing separately. Exact distance and day limits are inclusive. Use reconciled opening dates for the temporal proximity check. Missing coordinates are never interpreted as zero distance.
+
+Classify each candidate in this order:
+
+1. Missing usable coordinates for either ID: exclude both IDs from the existing-station pool and treatment sources, with reason `missing_coordinates`.
+2. Distance greater than 50 metres: classify as `relocated`; exclude the earlier ID from the existing pool and the later ID from new treatment sources. Conservatively exclude both identities from both pools.
+3. Observed operation intervals overlap by more than 14 calendar days: classify as `concurrent_operation`; exclude both IDs from both pools. Overlap is `max(0, min(last_old, last_new) - max(first_old, first_new))` in calendar days; endpoints exactly 14 days apart do not exceed the limit. First/last observations measure an observed operation interval, not proof that a station operated every intervening day.
+4. The absolute difference between the earlier ID's last observed trip and the later ID's first observed trip is at most 14 days: classify as `renumbered`, merge into the earlier ID, retain the earlier opening date, and do not count the later ID as a new station.
+5. The later ID's first trip is more than 14 days after the earlier ID's last trip: classify as `interrupted_reopening`, merge into the earlier ID and retain the earlier opening date. Fill every intervening station-week with zero before applying the existing inactivity rule; do not restart the station's age.
+
+Missing activity dates or a timeline not covered by these conditions are conservatively excluded with a specific reason, rather than forced into a merge. Merge chains resolve transitively to the earliest ID. Conflicting multiple predecessors are excluded rather than merged into one physical site without support. Exclusions propagate through an approved merge chain. A supported within-ID or merged-chain displacement above 50 metres also excludes that physical station.
+
+Export every pair's distance, first/last dates, signed handoff gap, overlap duration, classification, discovery method, and reason. Export a complete raw-ID-to-canonical-ID map and a canonical station registry. Apply the map to both trip endpoints before same-station-trip cleaning or station-week construction. An identity exclusion controls station-pool membership; it does not discard an otherwise valid trip from another station merely because its other endpoint is excluded. Enforce trip-count conservation under remapping.
+
+Count surviving canonical openings separately for the full 2022–2024 opening audit window and the narrower 2022-04-01 through 2024-09-30 treatment-source window. These are rule-based classifications; do not claim that every replacement is verified operationally or that contaminating openings necessarily bias an estimate toward zero under every design.
 
 ## Radius selection before outcome analysis
 

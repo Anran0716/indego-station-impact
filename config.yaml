@@ -13,9 +13,16 @@ study:
 spatial:
   projected_crs: EPSG:32618
   relocation_threshold_m: 50
+  min_trips_per_quarter_coordinate: 20
   candidate_radii_m: [400, 600, 800]
   treatment_radius_m: null  # Set after the station-count feasibility check.
   buffer_outer_multiplier: 2
+
+identity:
+  replacement_distance_m: 50
+  max_handoff_gap_days: 14
+  max_overlap_days: 14
+  proximity_retirement_window_days: 30
 
 eligibility:
   baseline_year: 2022

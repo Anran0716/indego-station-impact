@@ -40,7 +40,8 @@ def reconcile_opening_dates(stations: pd.DataFrame, first_seen: pd.DataFrame,
     return result
 
 
-def quarterly_coordinates(trips: pd.DataFrame, projected_crs: str) -> pd.DataFrame:
+def quarterly_coordinates(trips: pd.DataFrame, projected_crs: str,
+                          min_trips_per_quarter_coordinate: int = 20) -> pd.DataFrame:
     """Use paired valid departure coordinates; zero/missing pairs never enter medians."""
     valid = (trips["start_lat"].between(-90, 90) & trips["start_lon"].between(-180, 180)
              & trips["start_lat"].ne(0) & trips["start_lon"].ne(0))
@@ -53,14 +54,33 @@ def quarterly_coordinates(trips: pd.DataFrame, projected_crs: str) -> pd.DataFra
     transformer = Transformer.from_crs("EPSG:4326", projected_crs, always_xy=True)
     result["x_m"], result["y_m"] = transformer.transform(result["longitude"].to_numpy(),
                                                        result["latitude"].to_numpy())
+    result["coordinate_usable"] = (
+        result["coordinate_trip_count"] >= min_trips_per_quarter_coordinate
+    )
     result.attrs["invalid_coordinate_rows"] = int((~valid).sum())
     return result
 
 
-def detect_relocations(coordinates: pd.DataFrame, threshold_m: float) -> pd.DataFrame:
+def trusted_coordinates(coordinates: pd.DataFrame, min_trips: int = 20) -> pd.DataFrame:
+    usable = coordinates["coordinate_trip_count"].ge(min_trips)
+    usable &= np.isfinite(coordinates["x_m"]) & np.isfinite(coordinates["y_m"])
+    if "coordinate_usable" in coordinates:
+        usable &= coordinates["coordinate_usable"]
+    return coordinates.loc[usable].copy()
+
+
+def detect_relocations(coordinates: pd.DataFrame, threshold_m: float,
+                       min_trips: int = 20) -> pd.DataFrame:
     """Flag a station when any pair of quarterly medians is more than the threshold apart."""
     records = []
-    for station_id, rows in coordinates.groupby("station_id", sort=True):
+    for station_id, all_rows in coordinates.groupby("station_id", sort=True):
+        rows = trusted_coordinates(all_rows, min_trips)
+        if rows.empty:
+            records.append({"station_id": station_id, "quarters_observed": len(all_rows),
+                            "quarters_used": 0, "max_displacement_m": np.nan, "relocated": False,
+                            "quarter_a": None, "quarter_b": None, "min_trip_count_in_max_pair": None,
+                            "coordinate_status": "no_supported_coordinates"})
+            continue
         points = rows[["x_m", "y_m"]].to_numpy()
         distances = np.linalg.norm(points[:, None, :] - points[None, :, :], axis=2)
         left, right = np.unravel_index(np.argmax(distances), distances.shape)
@@ -68,7 +88,8 @@ def detect_relocations(coordinates: pd.DataFrame, threshold_m: float) -> pd.Data
         support = (int(min(rows.iloc[left]["coordinate_trip_count"],
                            rows.iloc[right]["coordinate_trip_count"]))
                    if "coordinate_trip_count" in rows else None)
-        records.append({"station_id": station_id, "quarters_observed": len(rows),
+        records.append({"station_id": station_id, "quarters_observed": len(all_rows),
+                        "quarters_used": len(rows),
                         "max_displacement_m": maximum, "relocated": maximum > threshold_m,
                         "quarter_a": rows.iloc[left]["quarter"],
                         "quarter_b": rows.iloc[right]["quarter"],
@@ -78,9 +99,10 @@ def detect_relocations(coordinates: pd.DataFrame, threshold_m: float) -> pd.Data
 
 
 def station_identity_candidates(stations: pd.DataFrame, coordinates: pd.DataFrame,
-                                opening_start: str, opening_end: str) -> pd.DataFrame:
+                                opening_start: str, opening_end: str,
+                                min_trips: int = 20) -> pd.DataFrame:
     """List repeated-name IDs for review; never automatically merge or drop stations."""
-    centers = coordinates.groupby("station_id")[["x_m", "y_m"]].median()
+    centers = trusted_coordinates(coordinates, min_trips).groupby("station_id")[["x_m", "y_m"]].median()
     inventory = stations.merge(centers, on="station_id", how="left", validate="one_to_one")
     inventory["name_key"] = inventory["station_name"].str.strip().str.casefold()
     columns = ["station_name", "earlier_station_id", "later_station_id", "earlier_open_date",

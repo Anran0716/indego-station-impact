@@ -77,7 +77,8 @@ def parse_times(values: pd.Series, formats: tuple[str, ...] = TIME_FORMATS) -> p
     return result
 
 
-def load_trips(path: str | Path, virtual_station_id: str = "3000") -> pd.DataFrame:
+def load_trips(path: str | Path, virtual_station_id: str = "3000", *,
+               station_id_map: pd.DataFrame | None = None) -> pd.DataFrame:
     """Normalize one quarter; exclude missing/virtual endpoint IDs with audit counts.
 
     Durations in the public CSV are minutes and are also exposed as seconds.
@@ -105,6 +106,10 @@ def load_trips(path: str | Path, virtual_station_id: str = "3000") -> pd.DataFra
     frame["duration_seconds"] = frame["duration"] * 60
     frame.attrs["audit"] = {"raw_rows": raw_rows, "missing_station_rows": int(missing.sum()),
                             "virtual_station_rows": int(virtual.sum()), "retained_rows": len(frame)}
+    if station_id_map is not None:
+        from stimpact.identity import canonicalize_trips
+
+        return canonicalize_trips(frame, station_id_map)
     return frame
 
 
