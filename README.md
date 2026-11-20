@@ -2,9 +2,13 @@ An independent project estimating how new Indego stations affect ridership at ne
 
 # Indego station impact
 
-**Status:** Stage 0 data download and input audit completed. Treatment assignment and estimation have not started. The estimated effect, confidence interval, minimum detectable effect (MDE), and diversion rate are pending. The main identification risk is that new stations may be placed where demand is already growing.
+**Status:** Input-identity auditing and Stage 1 feasibility counting are complete. The feasibility decision below determines the next design. The estimated effect, confidence interval, minimum detectable effect (MDE), and diversion rate are pending. The main identification risk is that new stations may be placed where demand is already growing.
 
-See the generated [Stage 0 audit](reports/stage0/README.md) for trip counts, first/last activity dates, supported coordinates, and rule-based identity resolution. Renumbered IDs share a continuous canonical identity; concurrent operation, relocation, and missing-coordinate cases are excluded from station pools with explicit reasons. Radius feasibility counting is the next stage.
+See the generated [Stage 0 audit](reports/stage0/README.md) for trip counts, first/last activity dates, supported coordinates, and rule-based identity resolution. Renumbered IDs share a continuous canonical identity. An unobserved earlier ID does not exclude an independently eligible opening; concurrent-operation and unresolved observed-identity cases carry explicit exclusion reasons.
+
+<!-- stage1-summary:start -->
+Stage 1 screened 156 eligible existing stations. At the rule-selected candidate R = 400 metres: 52 treated, 17 never-exposed controls; the minimum after clean-control augmentation is 17. 5 of 9 stacks fall below 30 controls. **Area-level redesign required.** Keep the station-level radius unset; the next preregistration must specify the one-kilometre-area design before estimation. See the [feasibility audit](reports/stage1/README.md).
+<!-- stage1-summary:end -->
 
 <!-- stage0-summary:start -->
 Stage 0 found 23 name-based identity pairs and 0 additional proximity/timing pairs. The identity rules retain 100 canonical openings in 2022–2024, including 94 in the treatment-source window. The separate exposure table retains 101 operating, located openings, including treatment-ineligible sources. 96 station-table IDs have no observed trip in the study files and are reported separately from opening-date discrepancies.
@@ -30,6 +34,7 @@ config.yaml                 Study parameters; radius awaits feasibility check
 data/manifest.json          Pinned input URLs, row counts, and SHA256 hashes
 docs/preregistration.md     Design rules; freeze after the feasibility check
 reports/stage0/             Generated input-audit tables and summary
+reports/stage1/             Eligibility, radius counts, and stack-control feasibility
 scripts/                    Download and Stage 0 entry points
 sql/                        DuckDB panel construction, to be implemented
 src/stimpact/               Python analysis package
@@ -48,6 +53,8 @@ python scripts/run_stage0.py
 ```
 
 For a verified existing download, use `python scripts/run_stage0.py --offline`. Each archive and extracted CSV has its source URL, download date, row count, and SHA256 recorded in the committed [manifest](data/manifest.json). URLs are pinned on the first successful discovery, so future runs do not silently switch to a newer station table. Raw and intermediate data stay outside version control. The later download-to-figures analysis pipeline remains to be implemented.
+
+Run `python scripts/run_stage1.py` after Stage 0 to reproduce the fixed existing-station eligibility, three-radius counts, and per-stack clean-control checks. Its decision follows the preregistered gates and does not use estimated treatment effects.
 
 The audit exports `station_id_map.csv`, `canonical_station_registry.csv`, and the surviving opening lists. Pass the ID map to `load_trips(..., station_id_map=...)` before subsequent same-station cleaning and panel construction. An ignored weekly activity grid preserves zero weeks during identity transitions and enforces departure-count conservation.
 

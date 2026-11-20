@@ -1,0 +1,7 @@
+radius_m,reason,stations
+400,exposed_to_unusable_source,14
+400,no_pre_period,3
+600,exposed_to_unusable_source,33
+600,no_pre_period,12
+800,exposed_to_unusable_source,50
+800,no_pre_period,18

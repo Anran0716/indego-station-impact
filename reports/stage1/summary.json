@@ -1,0 +1,70 @@
+{
+  "treatment_sources": 94,
+  "exposure_sources": 101,
+  "canonical_pre2022_stations": 182,
+  "eligible_existing_stations": 156,
+  "eligibility_exclusions": {
+    "identity_excluded": 15,
+    "inactive_zero_run": 9,
+    "baseline_below_minimum": 2
+  },
+  "cleaning": {
+    "normalized_trips": 3216031,
+    "short_trips": 0,
+    "same_physical_station_trips": 224291,
+    "outside_complete_weeks": 5484,
+    "counted_departures": 2986256
+  },
+  "radii": [
+    {
+      "radius_m": 400,
+      "eligible_existing_stations": 156,
+      "treated_stations": 52,
+      "never_treated_controls": 17,
+      "buffer_stations": 70,
+      "excluded_stations": 17,
+      "cohort_stacks": 9,
+      "minimum_controls_used_per_stack": 17,
+      "all_stacks_have_min_controls": false,
+      "treated_with_multiple_sources": 13
+    },
+    {
+      "radius_m": 600,
+      "eligible_existing_stations": 156,
+      "treated_stations": 75,
+      "never_treated_controls": 4,
+      "buffer_stations": 32,
+      "excluded_stations": 45,
+      "cohort_stacks": 9,
+      "minimum_controls_used_per_stack": 4,
+      "all_stacks_have_min_controls": false,
+      "treated_with_multiple_sources": 34
+    },
+    {
+      "radius_m": 800,
+      "eligible_existing_stations": 156,
+      "treated_stations": 71,
+      "never_treated_controls": 3,
+      "buffer_stations": 14,
+      "excluded_stations": 68,
+      "cohort_stacks": 9,
+      "minimum_controls_used_per_stack": 3,
+      "all_stacks_have_min_controls": false,
+      "treated_with_multiple_sources": 55
+    }
+  ],
+  "decision": {
+    "decision": "redesign_area_level",
+    "reason": "insufficient_clean_controls_in_at_least_one_stack",
+    "radius_from_treated_count_rule_m": 400,
+    "selected_radius_m": null,
+    "limited_treated_sample": false,
+    "min_controls_required": 30
+  },
+  "input_hashes": {
+    "canonical_station_registry.csv": "43082074833f4939009543f65db25cdd37c24f67f29777695b58b2025b0d38d7",
+    "station_id_map.csv": "b794c1058e7749d3ac3a5cc26c2b5ab848e8c27bf9df6617db2d3e43c4624b33",
+    "treatment_source_stations.csv": "7898dca95d53036209ce649b7f5316f964f559754a91bef38c52fa6e2008a600",
+    "exposure_source_stations.csv": "2b1a93820926686bd470db563c9e9dc322e496f68af171079c9ec0c09d457a90"
+  }
+}

@@ -1,0 +1,4 @@
+radius_m,eligible_existing_stations,treated_stations,never_treated_controls,buffer_stations,excluded_stations,cohort_stacks,minimum_controls_used_per_stack,all_stacks_have_min_controls,treated_with_multiple_sources
+400,156,52,17,70,17,9,17,False,13
+600,156,75,4,32,45,9,4,False,34
+800,156,71,3,14,68,9,3,False,55

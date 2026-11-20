@@ -12,6 +12,7 @@ import yaml
 from stimpact.download import sha256
 from stimpact.feasibility import radius_feasibility, screen_existing_stations, weekly_departures
 from stimpact.io import load_trips
+from stimpact.stage1_report import record_results
 
 
 def run(root: Path) -> dict:
@@ -107,6 +108,7 @@ def run(root: Path) -> dict:
               "week grid. All radii use positions, dates, and the fixed eligibility rules; no "
               "treatment effects are used for radius selection.", ""]
     (output / "README.md").write_text("\n".join(lines), encoding="utf-8")
+    record_results(root, summary, stacks, assignments)
     print(json.dumps(summary, indent=2), flush=True)
     return summary
 

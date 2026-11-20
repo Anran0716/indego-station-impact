@@ -1,0 +1,6 @@
+radius_m,cohort_quarter,treated_stations,stack_first_week,stack_last_week,never_treated_controls,additional_clean_controls_available,all_clean_controls_available,controls_used,control_mode,passes_min_controls
+400,2023Q2,7,2023-02-20,2023-09-04,17,4,21,21,augmented_clean_controls,False
+400,2023Q3,8,2023-04-17,2023-10-30,17,4,21,21,augmented_clean_controls,False
+400,2023Q4,1,2023-08-14,2024-01-29,17,3,20,20,augmented_clean_controls,False
+400,2024Q1,5,2023-11-13,2024-05-20,17,0,17,17,augmented_clean_controls,False
+400,2024Q2,1,2024-01-29,2024-07-15,17,0,17,17,augmented_clean_controls,False
