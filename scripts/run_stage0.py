@@ -112,6 +112,10 @@ def run(root: Path, *, offline: bool = False) -> dict:
         exposure_sources.exposure_only | exposure_sources.low_coordinate_support, "station_id"])
     audit_ids.update(pairs.loc[pairs.classification.isin(["missing_coordinates", "concurrent_operation"]),
                                "earlier_station_id"])
+    independent = pairs.loc[pairs.classification.eq("new_after_unobserved_predecessor")]
+    audit_ids.update(independent.earlier_station_id)
+    audit_ids.update(independent.later_station_id)
+    restored = sorted(set(independent.later_station_id) & set(treatment_sources.station_id))
     in_window = observed & dates.official_open_date.between(
         study["control_exposure_start"], study["control_exposure_end"])
     original_openings = dates.loc[observed & dates.analysis_open_date.between(
@@ -137,7 +141,8 @@ def run(root: Path, *, offline: bool = False) -> dict:
     relocation_full["coordinate_status"] = relocation_full.coordinate_status.fillna("no_coordinates")
     named = pairs.found_by_name.astype(bool)
     cases = ("renumbered", "concurrent_operation", "interrupted_reopening", "relocated",
-             "missing_coordinates", "missing_activity", "ambiguous_timeline")
+             "missing_coordinates", "missing_activity", "ambiguous_timeline",
+             "new_after_unobserved_predecessor")
     counts_by_discovery = {}
     for discovery in ("name", "proximity_only"):
         counts = pairs.loc[pairs.discovery.eq(discovery), "classification"].value_counts()
@@ -183,7 +188,11 @@ def run(root: Path, *, offline: bool = False) -> dict:
             retained.analysis_open_date.dt.year.value_counts().sort_index().items()
         },
         "retained_treatment_source_openings": int(canonical.is_treatment_source.sum()),
+        "restored_independent_treatment_source_ids": restored,
+        "other_eligible_treatment_sources": len(treatment_sources) - len(restored),
         "exposure_source_openings": len(exposure_sources),
+        "eligible_exposure_sources_outside_treatment_window": int(
+            (~exposure_sources.is_treatment_source & ~exposure_sources.exposure_only).sum()),
         "exposure_only_source_ids": exposure_sources.loc[exposure_sources.exposure_only, "station_id"].tolist(),
         "low_coordinate_support_source_ids": exposure_sources.loc[
             exposure_sources.low_coordinate_support, "station_id"].tolist(),

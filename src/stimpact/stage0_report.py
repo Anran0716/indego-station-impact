@@ -82,6 +82,10 @@ def write_report(output: Path, summary: dict, config: dict) -> None:
               "both identities from station pools. A merge preserves the earliest ID and opening "
               "date. Exclusions propagate through approved merge chains; conflicting predecessor "
               "identities are excluded without fusing distinct stations.", "",
+              "Before those checks, an earlier ID with zero departures and zero arrivals is "
+              "classified as an unobserved predecessor. Its later ID remains separate and is "
+              "evaluated as an ordinary new opening; the earlier ID's missing coordinates or "
+              "inactivity are not inherited.", "",
               "## Remaining physical openings", "",
               f"Start with **{summary['original_opening_ids_2022_2024']} observed opening IDs** "
               "whose reconciled dates are in 2022–2024. The complete reconciliation is "
@@ -108,6 +112,14 @@ def write_report(output: Path, summary: dict, config: dict) -> None:
               "renumberings do not create a second physical opening. The exposure-only IDs are "
               f"{summary['exposure_only_source_ids']}; low-support source IDs are "
               f"{summary['low_coordinate_support_source_ids']}.", "",
+              f"Treatment-source reconciliation: {summary['other_eligible_treatment_sources']} "
+              f"other eligible sources + {len(summary['restored_independent_treatment_source_ids'])} "
+              f"restored independent openings {summary['restored_independent_treatment_source_ids']} "
+              f"= **{summary['retained_treatment_source_openings']}**. Exposure reconciliation: "
+              f"{summary['retained_treatment_source_openings']} treatment sources + "
+              f"{summary['eligible_exposure_sources_outside_treatment_window']} eligible openings "
+              f"outside the treatment window + {len(summary['exposure_only_source_ids'])} unusable "
+              f"operating sources = **{summary['exposure_source_openings']}**.", "",
               "An unusable treatment source within 2R assigns an old station to `excluded` with "
               "reason `exposed_to_unusable_source`. It cannot become a never-exposed control. "
               "Stack clean-control checks also use all exposure sources, requiring first exposure "
@@ -123,10 +135,9 @@ def write_report(output: Path, summary: dict, config: dict) -> None:
         lines.append(f"| {row.raw_station_id} | {row.station_name} | {row.departure_trip_count} | "
                      f"{row.arrival_trip_count} | {row.has_known_position} | {row.is_treatment_source} | "
                      f"{row.is_exposure_source} | {row.eligible_existing_identity} |")
-    lines += ["", "A missing position on an unobserved earlier ID is not the same as a missing "
-              "position on its operating successor. Known operating successors still enter "
-              "the exposure table even when uncertain earlier identity excludes them from "
-              "treatment. Operating opening IDs without any known location are "
+    lines += ["", "A missing position on an unobserved earlier ID does not exclude its "
+              "operating successor from treatment. The successor is judged on its own "
+              "activity, position, and opening date. Operating opening IDs without any known location are "
               f"{summary['operating_openings_without_position']}; source-table construction fails "
               "rather than silently dropping any such site and declaring controls clean.", ""]
     lines += ["", "## Continuous station identities and conservation", "",

@@ -15,6 +15,7 @@ from stimpact.audit import (
 )
 
 MERGE_CASES = {"renumbered", "interrupted_reopening"}
+INDEPENDENT_NEW_CASE = "new_after_unobserved_predecessor"
 
 
 def activity_dates(trips: pd.DataFrame) -> pd.DataFrame:
@@ -34,13 +35,19 @@ def activity_dates(trips: pd.DataFrame) -> pd.DataFrame:
 
 def classify_transition(distance_m: float, old_first, old_last, new_first, new_last,
                         *, distance_limit_m: float, max_gap_days: int,
-                        max_overlap_days: int) -> tuple[str, float, float]:
+                        max_overlap_days: int, old_departure_trip_count: int | None = None,
+                        old_arrival_trip_count: int | None = None) -> tuple[str, float, float]:
     dates = [pd.Timestamp(value).normalize() if pd.notna(value) else pd.NaT
              for value in (old_first, old_last, new_first, new_last)]
     first_old, last_old, first_new, last_new = dates
     gap = float((first_new - last_old).days) if pd.notna(first_new) and pd.notna(last_old) else np.nan
     overlap = (float(max(0, (min(last_old, last_new) - max(first_old, first_new)).days))
                if all(pd.notna(value) for value in dates) else np.nan)
+    if old_departure_trip_count is not None and old_arrival_trip_count is not None:
+        if old_departure_trip_count + old_arrival_trip_count == 0:
+            if pd.notna(first_old) or pd.notna(last_old):
+                raise ValueError("Zero-activity predecessor has inconsistent observed trip dates")
+            return INDEPENDENT_NEW_CASE, gap, overlap
     if not np.isfinite(distance_m):
         return "missing_coordinates", gap, overlap
     if distance_m > distance_limit_m:
@@ -98,6 +105,8 @@ def identity_candidates(stations: pd.DataFrame, coordinates: pd.DataFrame, confi
             distance, old.first_trip_date, old.last_trip_date, new.first_trip_date, new.last_trip_date,
             distance_limit_m=identity["replacement_distance_m"],
             max_gap_days=identity["max_handoff_gap_days"], max_overlap_days=identity["max_overlap_days"],
+            old_departure_trip_count=old.get("departure_trip_count"),
+            old_arrival_trip_count=old.get("arrival_trip_count"),
         )
         records.append({"earlier_station_id": old_id, "later_station_id": new_id,
                         "earlier_station_name": old.station_name, "later_station_name": new.station_name,
@@ -105,16 +114,20 @@ def identity_candidates(stations: pd.DataFrame, coordinates: pd.DataFrame, confi
                         "later_open_date": new.official_open_date,
                         "earlier_first_trip_date": old.first_trip_date,
                         "earlier_last_trip_date": old.last_trip_date,
+                        "earlier_departure_trip_count": old.get("departure_trip_count"),
+                        "earlier_arrival_trip_count": old.get("arrival_trip_count"),
                         "later_first_trip_date": new.first_trip_date,
                         "later_last_trip_date": new.last_trip_date,
                         "representative_distance_m": distance, "handoff_gap_days": gap,
                         "overlap_days": overlap, **discovery,
                         "discovery": "name" if discovery["found_by_name"] else "proximity_only",
                         "classification": case,
-                        "action": "merge_to_earlier_id" if case in MERGE_CASES else "exclude_both",
-                        "reason": case})
+                        "action": ("merge_to_earlier_id" if case in MERGE_CASES else
+                                   "keep_new_id" if case == INDEPENDENT_NEW_CASE else "exclude_both"),
+                        "reason": "" if case == INDEPENDENT_NEW_CASE else case})
     columns = ["earlier_station_id", "later_station_id", "earlier_station_name", "later_station_name",
                "earlier_open_date", "later_open_date", "earlier_first_trip_date", "earlier_last_trip_date",
+               "earlier_departure_trip_count", "earlier_arrival_trip_count",
                "later_first_trip_date", "later_last_trip_date", "representative_distance_m",
                "handoff_gap_days", "overlap_days", "found_by_name", "found_by_proximity", "discovery",
                "classification", "action", "reason"]
@@ -143,6 +156,8 @@ def resolve_identities(stations: pd.DataFrame, coordinates: pd.DataFrame,
     exclusions = defaultdict(set)
     for pair in pairs.itertuples():
         old_id, new_id = pair.earlier_station_id, pair.later_station_id
+        if pair.classification == INDEPENDENT_NEW_CASE:
+            continue
         if pair.classification in MERGE_CASES:
             roots = sorted({find(old_id), find(new_id)}, key=priority)
             for other in roots[1:]:

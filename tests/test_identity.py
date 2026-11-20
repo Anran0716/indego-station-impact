@@ -25,10 +25,13 @@ def config():
 def inventory(ids=("1", "2"), names=("Old name", "New name"),
               openings=("2020-01-01", "2023-01-15"),
               first=("2022-01-01", "2023-01-15"), last=("2023-01-01", "2024-12-31")):
+    first_dates = pd.to_datetime(first)
     return pd.DataFrame({"station_id": list(ids), "station_name": list(names),
                          "official_open_date": pd.to_datetime(openings),
                          "analysis_open_date": pd.to_datetime(openings),
-                         "first_trip_date": pd.to_datetime(first), "last_trip_date": pd.to_datetime(last)})
+                         "first_trip_date": first_dates, "last_trip_date": pd.to_datetime(last),
+                         "departure_trip_count": [0 if pd.isna(date) else 1 for date in first_dates],
+                         "arrival_trip_count": [0 if pd.isna(date) else 1 for date in first_dates]})
 
 
 def positions(ids=("1", "2"), x=(0, 2), counts=(20, 20)):
@@ -93,8 +96,7 @@ def test_name_and_spatial_discovery_do_not_double_count_a_pair(config):
 
 
 def test_missing_coordinates_exclude_both_ids_without_an_implicit_zero_distance(config):
-    stations = inventory(names=("Same Name", "Same Name"), first=(None, "2023-01-15"),
-                         last=(None, "2024-12-31"))
+    stations = inventory(names=("Same Name", "Same Name"))
     coords = positions(ids=("2",), x=(2,), counts=(20,))
     pairs, mapping, canonical = resolve_identities(stations, coords, detect_relocations(coords, 50), config)
     assert pairs.iloc[0].classification == "missing_coordinates"
@@ -105,6 +107,30 @@ def test_missing_coordinates_exclude_both_ids_without_an_implicit_zero_distance(
     assert treatment.empty
     assert exposure.station_id.tolist() == ["2"]
     assert exposure.iloc[0].exposure_only
+
+
+def test_unobserved_old_id_does_not_pass_missing_coordinates_to_new_source(config):
+    stations = inventory(names=("Same Name", "Same Name"), first=(None, "2023-01-15"),
+                         last=(None, "2024-12-31"))
+    coords = positions(ids=("2",), x=(2,), counts=(20,))
+    pairs, mapping, canonical = resolve_identities(stations, coords, detect_relocations(coords, 50), config)
+    assert pairs.iloc[0].classification == "new_after_unobserved_predecessor"
+    assert pairs.iloc[0].action == "keep_new_id"
+    assert mapping.set_index("raw_station_id").loc["2", "canonical_station_id"] == "2"
+    new = canonical.set_index("station_id").loc["2"]
+    assert not new.identity_excluded
+    assert new.identity_exclusion_reason == ""
+    assert new.analysis_open_date == pd.Timestamp("2023-01-15")
+    treatment, exposure = source_tables(canonical)
+    assert treatment.station_id.tolist() == exposure.station_id.tolist() == ["2"]
+
+
+def test_arrival_only_old_id_is_not_a_zero_activity_predecessor(config):
+    stations = inventory(names=("Same Name", "Same Name"))
+    stations.loc[0, "departure_trip_count"] = 0
+    coords = positions(ids=("2",), x=(2,), counts=(20,))
+    pairs, _, _ = resolve_identities(stations, coords, detect_relocations(coords, 50), config)
+    assert pairs.iloc[0].classification == "missing_coordinates"
 
 
 def test_merge_keeps_old_opening_and_remaps_both_endpoints_without_dropping_trips(config):
