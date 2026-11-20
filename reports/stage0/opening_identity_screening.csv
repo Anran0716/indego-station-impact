@@ -46,7 +46,7 @@ raw_station_id,station_name,raw_analysis_open_date,canonical_station_id,identity
 3316,16th & Wolf,2023-02-28,3316,False,,kept,2023-02-28,True,retained_new_station
 3317,30th & Reed,2023-03-05,3317,False,,kept,2023-03-05,True,retained_new_station
 3318,City Hall South,2023-03-09,3318,False,,kept,2023-03-09,True,retained_new_station
-3319,Penn Treaty Park,2023-04-04,3319,True,missing_coordinates,excluded,2023-04-04,False,excluded_identity
+3319,Penn Treaty Park,2023-04-04,3319,False,,kept,2023-04-04,True,retained_new_station
 3320,Broad & Master,2023-03-16,3320,False,,kept,2023-03-16,True,retained_new_station
 3321,20th & Cuthbert,2023-03-22,3234,False,,merged,2021-05-11,False,merged_replacement
 3322,7th & Passyunk,2023-05-18,3322,False,,kept,2023-05-18,True,retained_new_station
@@ -60,7 +60,7 @@ raw_station_id,station_name,raw_analysis_open_date,canonical_station_id,identity
 3330,Municipal Services Building,2023-06-21,3330,False,,kept,2023-06-21,True,retained_new_station
 3331,Girard & Palmer,2023-06-20,3331,False,,kept,2023-06-20,True,retained_new_station
 3332,32nd & Allegheny,2023-06-28,3332,False,,kept,2023-06-28,True,retained_new_station
-3333,18th & JFK Curbside,2023-07-18,3333,True,missing_coordinates,excluded,2023-07-18,False,excluded_identity
+3333,18th & JFK Curbside,2023-07-18,3333,False,,kept,2023-07-18,True,retained_new_station
 3334,7th & Dickinson,2023-05-16,3334,False,,kept,2023-05-16,True,retained_new_station
 3335,Main & Shurs,2023-05-31,3335,False,,kept,2023-05-31,True,retained_new_station
 3336,36th & Filbert,2023-05-24,3336,False,,kept,2023-05-24,True,retained_new_station

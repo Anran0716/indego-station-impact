@@ -84,7 +84,7 @@ station_id,station_name,member_ids,member_count,analysis_open_date,first_trip_da
 3102,Pennsylvania & Fairmount Perelman Building,3102,1,2016-05-03,2022-01-01,2025-01-01,484668.98006415466,4424175.463730019,False,31398,31398,30456,0.0,False,,False,False,False,False,False,True
 3103,"27th & Master, Athletic Recreation Center",3103,1,2016-05-03,,,,,False,0,0,0,,True,unobserved_in_trip_window,False,False,False,False,False,False
 3104,34th & Mantua,3104,1,2016-05-03,2022-01-01,2024-12-31,483595.01726527617,4424072.260238091,False,9039,9039,8619,0.0,False,,False,False,False,False,False,True
-3105,Penn Treaty Park,3105,1,2016-05-03,,,,,False,0,0,0,,True,missing_coordinates;unobserved_in_trip_window,False,False,False,False,False,False
+3105,Penn Treaty Park,3105,1,2016-05-03,,,,,False,0,0,0,,True,unobserved_in_trip_window,False,False,False,False,False,False
 3106,33rd & Dauphin,3106,1,2016-05-05,2022-01-01,2024-12-31,484089.517665111,4426862.731100324,False,2002,2002,1917,0.0,False,,False,False,False,False,False,True
 3107,33rd & Reservoir,3107,1,2016-05-04,2022-01-02,2024-12-31,483891.81311940256,4425779.657021191,False,4141,4141,3983,0.0,False,,False,False,False,False,False,True
 3108,15th & Market,3108,1,2016-05-04,2022-01-01,2022-06-08,485862.2931721329,4422571.459927755,False,3147,3147,3196,0.0,False,,False,False,False,False,False,True
@@ -136,7 +136,7 @@ station_id,station_name,member_ids,member_count,analysis_open_date,first_trip_da
 3188,"Broad & Pattison, BSL",3188,1,2018-06-19,2022-01-01,2024-12-31,485177.9845963402,4417195.325393224,False,7750,7750,8366,0.0,False,,False,False,False,False,False,True
 3190,17th & Locust,3190;3359,2,2018-09-14,2022-01-01,2024-12-31,485485.98510590557,4422101.7926478395,False,42165,42165,42690,12.043771509247659,False,,False,False,False,False,False,True
 3192,2nd & Fairmount,3192,1,2018-08-14,,,,,False,0,0,0,,True,unobserved_in_trip_window,False,False,False,False,False,False
-3195,18th & JFK Curbside,3195,1,2019-04-06,,,,,False,0,0,0,,True,missing_coordinates;unobserved_in_trip_window,False,False,False,False,False,False
+3195,18th & JFK Curbside,3195,1,2019-04-06,,,,,False,0,0,0,,True,unobserved_in_trip_window,False,False,False,False,False,False
 3196,25th & Diamond,3196,1,2019-04-18,2022-01-04,2024-12-26,485079.1459221428,4426347.950352818,False,1546,1546,1635,0.0,False,,False,False,False,False,False,True
 3197,Broad & Ritner,3197,1,2019-05-14,2022-01-01,2024-12-31,485444.243160133,4418984.067330487,False,10167,10167,10124,0.0,False,,False,False,False,False,False,True
 3200,Ridge & Master,3200,1,2019-06-27,2022-01-01,2024-12-31,485615.48888455564,4425088.176439799,False,6003,6003,5599,0.0,False,,False,False,False,False,False,True
@@ -225,7 +225,7 @@ station_id,station_name,member_ids,member_count,analysis_open_date,first_trip_da
 3316,16th & Wolf,3316,1,2023-02-28,2023-02-28,2024-09-21,485184.4788940219,4419175.468771043,False,4112,4112,4385,0.0,False,,True,True,True,True,False,False
 3317,30th & Reed,3317;3392,2,2023-03-05,2023-03-05,2024-12-31,483384.42969973857,4420708.500953351,False,2527,2527,2589,0.0,False,,True,True,True,True,False,False
 3318,City Hall South,3318,1,2023-03-09,2023-03-09,2024-11-26,485995.61393904616,4422422.598488338,False,13744,13744,14271,0.0,False,,True,True,True,True,False,False
-3319,Penn Treaty Park,3319,1,2023-04-04,2023-04-04,2024-12-31,488928.6821353981,4424071.6313198,False,3623,3623,4126,0.0,True,missing_coordinates,False,False,True,True,True,False
+3319,Penn Treaty Park,3319,1,2023-04-04,2023-04-04,2024-12-31,488928.6821353981,4424071.6313198,False,3623,3623,4126,0.0,False,,True,True,True,True,False,False
 3320,Broad & Master,3320,1,2023-03-16,2023-03-16,2024-12-31,486408.09037588415,4424950.424584875,False,5505,5505,5234,0.0,False,,True,True,True,True,False,False
 3322,7th & Passyunk,3322,1,2023-05-18,2023-05-18,2024-12-31,486734.9295074247,4420707.375200627,False,9211,9211,9175,0.0,False,,True,True,True,True,False,False
 3323,Manayunk Bridge,3323,1,2023-04-11,2023-04-11,2024-12-31,480571.60309136,4430885.564170261,False,2168,2168,2263,0.0,False,,True,True,True,True,False,False
@@ -238,7 +238,7 @@ station_id,station_name,member_ids,member_count,analysis_open_date,first_trip_da
 3330,Municipal Services Building,3330,1,2023-06-21,2023-06-21,2023-11-16,485928.18783213565,4422637.820856749,False,2153,2153,2214,0.0,False,,True,True,True,True,False,False
 3331,Girard & Palmer,3331,1,2023-06-20,2023-06-20,2024-12-31,489058.43119429814,4424564.239006882,False,2883,2889,3028,0.0,False,,True,True,True,True,False,False
 3332,32nd & Allegheny,3332,1,2023-06-28,2023-06-28,2024-12-18,484514.6546850861,4428369.108597125,False,544,546,586,0.0,False,,True,True,True,True,False,False
-3333,18th & JFK Curbside,3333,1,2023-07-18,2023-07-18,2024-12-31,485509.2884969113,4422676.786335362,False,10628,10628,11021,0.0,True,missing_coordinates,False,False,True,True,True,False
+3333,18th & JFK Curbside,3333,1,2023-07-18,2023-07-18,2024-12-31,485509.2884969113,4422676.786335362,False,10628,10628,11021,0.0,False,,True,True,True,True,False,False
 3334,7th & Dickinson,3334,1,2023-05-16,2023-05-16,2024-10-11,486639.8308124617,4420021.7380132,False,6702,6702,7028,0.0,False,,True,True,True,True,False,False
 3335,Main & Shurs,3335,1,2023-05-31,2023-05-31,2024-12-31,481397.48043650243,4430262.72259389,False,2269,2269,2424,0.0,False,,True,True,True,True,False,False
 3336,36th & Filbert,3336,1,2023-05-24,2023-05-24,2024-12-31,483440.29664096556,4423023.849325401,False,8455,8455,8427,0.0,False,,True,True,True,True,False,False

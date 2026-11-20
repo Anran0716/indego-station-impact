@@ -79,7 +79,7 @@
   "identity_pair_classification_counts": {
     "renumbered": 17,
     "interrupted_reopening": 3,
-    "missing_coordinates": 2,
+    "new_after_unobserved_predecessor": 2,
     "concurrent_operation": 1
   },
   "identity_pair_counts_by_discovery": {
@@ -88,9 +88,10 @@
       "concurrent_operation": 1,
       "interrupted_reopening": 3,
       "relocated": 0,
-      "missing_coordinates": 2,
+      "missing_coordinates": 0,
       "missing_activity": 0,
-      "ambiguous_timeline": 0
+      "ambiguous_timeline": 0,
+      "new_after_unobserved_predecessor": 2
     },
     "proximity_only": {
       "renumbered": 0,
@@ -99,26 +100,31 @@
       "relocated": 0,
       "missing_coordinates": 0,
       "missing_activity": 0,
-      "ambiguous_timeline": 0
+      "ambiguous_timeline": 0,
+      "new_after_unobserved_predecessor": 0
     }
   },
   "original_opening_ids_2022_2024": 121,
   "opening_id_screening_counts": {
-    "retained_new_station": 98,
+    "retained_new_station": 100,
     "merged_replacement": 20,
-    "excluded_identity": 3
+    "excluded_identity": 1
   },
-  "retained_physical_openings_2022_2024": 98,
+  "retained_physical_openings_2022_2024": 100,
   "retained_physical_openings_by_year": {
     "2022": 24,
-    "2023": 58,
+    "2023": 60,
     "2024": 16
   },
-  "retained_treatment_source_openings": 92,
-  "exposure_source_openings": 101,
-  "exposure_only_source_ids": [
+  "retained_treatment_source_openings": 94,
+  "restored_independent_treatment_source_ids": [
     "3319",
-    "3333",
+    "3333"
+  ],
+  "other_eligible_treatment_sources": 92,
+  "exposure_source_openings": 101,
+  "eligible_exposure_sources_outside_treatment_window": 6,
+  "exposure_only_source_ids": [
     "3364"
   ],
   "low_coordinate_support_source_ids": [

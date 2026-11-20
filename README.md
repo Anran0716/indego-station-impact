@@ -7,7 +7,7 @@ An independent project estimating how new Indego stations affect ridership at ne
 See the generated [Stage 0 audit](reports/stage0/README.md) for trip counts, first/last activity dates, supported coordinates, and rule-based identity resolution. Renumbered IDs share a continuous canonical identity; concurrent operation, relocation, and missing-coordinate cases are excluded from station pools with explicit reasons. Radius feasibility counting is the next stage.
 
 <!-- stage0-summary:start -->
-Stage 0 found 23 name-based identity pairs and 0 additional proximity/timing pairs. The identity rules retain 98 canonical openings in 2022–2024, including 92 in the treatment-source window. The separate exposure table retains 101 operating, located openings, including treatment-ineligible sources. 96 station-table IDs have no observed trip in the study files and are reported separately from opening-date discrepancies.
+Stage 0 found 23 name-based identity pairs and 0 additional proximity/timing pairs. The identity rules retain 100 canonical openings in 2022–2024, including 94 in the treatment-source window. The separate exposure table retains 101 operating, located openings, including treatment-ineligible sources. 96 station-table IDs have no observed trip in the study files and are reported separately from opening-date discrepancies.
 <!-- stage0-summary:end -->
 
 ## Research question

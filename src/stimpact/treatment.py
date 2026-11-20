@@ -72,7 +72,10 @@ def assign_treatment(existing: pd.DataFrame, treatment_sources: pd.DataFrame,
         elif not within_outer.empty:
             result.update(group="buffer", reason="exposed_between_r_and_2r")
         records.append(result)
-    result = pd.DataFrame(records)
+    result = pd.DataFrame(records, columns=[
+        "station_id", "group", "reason", "cohort_week", "cohort_quarter", "n_new_within_r",
+        "nearest_new_m", "second_hit", "unusable_source_ids",
+    ])
     if len(result) != len(existing) or result.station_id.duplicated().any():
         raise AssertionError("Every existing station must be assigned exactly once")
     return result

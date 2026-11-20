@@ -84,7 +84,7 @@ raw_station_id,canonical_station_id,identity_excluded,reason,action
 3102,3102,False,,kept
 3103,3103,True,unobserved_in_trip_window,excluded
 3104,3104,False,,kept
-3105,3105,True,missing_coordinates;unobserved_in_trip_window,excluded
+3105,3105,True,unobserved_in_trip_window,excluded
 3106,3106,False,,kept
 3107,3107,False,,kept
 3108,3108,False,,kept
@@ -136,7 +136,7 @@ raw_station_id,canonical_station_id,identity_excluded,reason,action
 3188,3188,False,,kept
 3190,3190,False,,kept
 3192,3192,True,unobserved_in_trip_window,excluded
-3195,3195,True,missing_coordinates;unobserved_in_trip_window,excluded
+3195,3195,True,unobserved_in_trip_window,excluded
 3196,3196,False,,kept
 3197,3197,False,,kept
 3200,3200,False,,kept
@@ -228,7 +228,7 @@ raw_station_id,canonical_station_id,identity_excluded,reason,action
 3316,3316,False,,kept
 3317,3317,False,,kept
 3318,3318,False,,kept
-3319,3319,True,missing_coordinates,excluded
+3319,3319,False,,kept
 3320,3320,False,,kept
 3321,3234,False,,merged
 3322,3322,False,,kept
@@ -242,7 +242,7 @@ raw_station_id,canonical_station_id,identity_excluded,reason,action
 3330,3330,False,,kept
 3331,3331,False,,kept
 3332,3332,False,,kept
-3333,3333,True,missing_coordinates,excluded
+3333,3333,False,,kept
 3334,3334,False,,kept
 3335,3335,False,,kept
 3336,3336,False,,kept

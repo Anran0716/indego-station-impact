@@ -24,6 +24,10 @@ identity:
   max_overlap_days: 14
   proximity_retirement_window_days: 30
 
+feasibility:
+  min_treated_stations: 20
+  preferred_treated_stations: 40
+
 eligibility:
   baseline_year: 2022
   baseline_first_week: '2022-01-03'

@@ -42,11 +42,14 @@ The extra check requires distance <= 50 metres and the earlier ID's last trip wi
 | concurrent_operation | 1 | 0 | 1 |
 | interrupted_reopening | 3 | 0 | 3 |
 | relocated | 0 | 0 | 0 |
-| missing_coordinates | 2 | 0 | 2 |
+| missing_coordinates | 0 | 0 | 0 |
 | missing_activity | 0 | 0 | 0 |
 | ambiguous_timeline | 0 | 0 | 0 |
+| new_after_unobserved_predecessor | 2 | 0 | 2 |
 
 Operation overlap is the intersection of the two observed first/last-date intervals in calendar days. More than 14 days takes priority over handoff merging. Exactly 14 overlap days or an absolute handoff gap of exactly 14 days remains eligible for renumbering. A positive gap above 14 days is an interrupted reopening. Missing coordinates, relocation, concurrency, and unresolved timelines exclude both identities from station pools. A merge preserves the earliest ID and opening date. Exclusions propagate through approved merge chains; conflicting predecessor identities are excluded without fusing distinct stations.
+
+Before those checks, an earlier ID with zero departures and zero arrivals is classified as an unobserved predecessor. Its later ID remains separate and is evaluated as an ordinary new opening; the earlier ID's missing coordinates or inactivity are not inherited.
 
 ## Remaining physical openings
 
@@ -55,20 +58,22 @@ Start with **121 observed opening IDs** whose reconciled dates are in 2022–202
 | Screening result | Raw opening IDs |
 | --- | ---: |
 | merged_replacement | 20 |
-| excluded_identity | 3 |
-| retained_new_station | 98 |
+| excluded_identity | 1 |
+| retained_new_station | 100 |
 
-**Retained canonical physical openings in 2022–2024: 98.** Of these, **92** fall in the narrower 2022-04-01 through 2024-09-30 treatment-source window. Lists are in `new_stations.csv` and `treatment_source_stations.csv`. These are the surviving openings under the preregistered identity rules, not independent operational verification of every physical site.
+**Retained canonical physical openings in 2022–2024: 100.** Of these, **94** fall in the narrower 2022-04-01 through 2024-09-30 treatment-source window. Lists are in `new_stations.csv` and `treatment_source_stations.csv`. These are the surviving openings under the preregistered identity rules, not independent operational verification of every physical site.
 
 | Reconciled opening year | Retained canonical openings |
 | --- | ---: |
 | 2022 | 24 |
-| 2023 | 58 |
+| 2023 | 60 |
 | 2024 | 16 |
 
 ## Treatment sources and exposure sources
 
-`treatment_source_stations.csv` contains 92 eligible sources in the treatment window. `exposure_source_stations.csv` contains 101 canonical openings observed operating in 2022–2024 with known positions, regardless of treatment eligibility. Approved renumberings do not create a second physical opening. The exposure-only IDs are ['3319', '3333', '3364']; low-support source IDs are ['3380'].
+`treatment_source_stations.csv` contains 94 eligible sources in the treatment window. `exposure_source_stations.csv` contains 101 canonical openings observed operating in 2022–2024 with known positions, regardless of treatment eligibility. Approved renumberings do not create a second physical opening. The exposure-only IDs are ['3364']; low-support source IDs are ['3380'].
+
+Treatment-source reconciliation: 92 other eligible sources + 2 restored independent openings ['3319', '3333'] = **94**. Exposure reconciliation: 94 treatment sources + 6 eligible openings outside the treatment window + 1 unusable operating sources = **101**.
 
 An unusable treatment source within 2R assigns an old station to `excluded` with reason `exposed_to_unusable_source`. It cannot become a never-exposed control. Stack clean-control checks also use all exposure sources, requiring first exposure after the full final stack week. Existing identities already excluded by the concurrency rule remain excluded. No actual radius has been selected or counted.
 
@@ -79,12 +84,12 @@ An unusable treatment source within 2R assigns an old station to `excluded` with
 | 3018 | 12th & Filbert | 23456 | 24161 | True | False | False | False |
 | 3105 | Penn Treaty Park | 0 | 0 | False | False | False | False |
 | 3195 | 18th & JFK Curbside | 0 | 0 | False | False | False | False |
-| 3319 | Penn Treaty Park | 3623 | 4126 | True | False | True | False |
-| 3333 | 18th & JFK Curbside | 10628 | 11021 | True | False | True | False |
+| 3319 | Penn Treaty Park | 3623 | 4126 | True | True | True | False |
+| 3333 | 18th & JFK Curbside | 10628 | 11021 | True | True | True | False |
 | 3364 | 12th & Filbert | 1449 | 1602 | True | False | True | False |
 | 3380 | American & Master | 11 | 9 | True | True | True | False |
 
-A missing position on an unobserved earlier ID is not the same as a missing position on its operating successor. Known operating successors still enter the exposure table even when uncertain earlier identity excludes them from treatment. Operating opening IDs without any known location are []; source-table construction fails rather than silently dropping any such site and declaring controls clean.
+A missing position on an unobserved earlier ID does not exclude its operating successor from treatment. The successor is judged on its own activity, position, and opening date. Operating opening IDs without any known location are []; source-table construction fails rather than silently dropping any such site and declaring controls clean.
 
 
 ## Continuous station identities and conservation
