@@ -50,6 +50,8 @@ def quarterly_coordinates(trips: pd.DataFrame, projected_crs: str,
     result = frame.groupby(["start_station", "quarter"], as_index=False).agg(
         latitude=("start_lat", "median"), longitude=("start_lon", "median"),
         coordinate_trip_count=("start_lat", "size"),
+        latitude_min=("start_lat", "min"), latitude_max=("start_lat", "max"),
+        longitude_min=("start_lon", "min"), longitude_max=("start_lon", "max"),
     ).rename(columns={"start_station": "station_id"})
     transformer = Transformer.from_crs("EPSG:4326", projected_crs, always_xy=True)
     result["x_m"], result["y_m"] = transformer.transform(result["longitude"].to_numpy(),
@@ -57,6 +59,8 @@ def quarterly_coordinates(trips: pd.DataFrame, projected_crs: str,
     result["coordinate_usable"] = (
         result["coordinate_trip_count"] >= min_trips_per_quarter_coordinate
     )
+    result["usable_for_relocation"] = result["coordinate_usable"]
+    result["usable_for_position"] = np.isfinite(result.x_m) & np.isfinite(result.y_m)
     result.attrs["invalid_coordinate_rows"] = int((~valid).sum())
     return result
 
@@ -67,6 +71,28 @@ def trusted_coordinates(coordinates: pd.DataFrame, min_trips: int = 20) -> pd.Da
     if "coordinate_usable" in coordinates:
         usable &= coordinates["coordinate_usable"]
     return coordinates.loc[usable].copy()
+
+
+def position_coordinates(coordinates: pd.DataFrame, relocation_min_trips: int = 20) -> pd.DataFrame:
+    """Prefer well-supported quarters for a position; retain low-support-only locations."""
+    valid = coordinates.loc[
+        coordinates.coordinate_trip_count.gt(0)
+        & np.isfinite(coordinates.x_m) & np.isfinite(coordinates.y_m)
+    ].copy()
+    supported = trusted_coordinates(valid, relocation_min_trips)
+    return pd.concat([
+        supported, valid.loc[~valid.station_id.isin(supported.station_id)],
+    ], ignore_index=True)
+
+
+def representative_positions(coordinates: pd.DataFrame, relocation_min_trips: int = 20) -> pd.DataFrame:
+    """Position availability and relocation support are separate properties."""
+    selected = position_coordinates(coordinates, relocation_min_trips)
+    result = selected.groupby("station_id")[["x_m", "y_m"]].median()
+    support = trusted_coordinates(coordinates, relocation_min_trips).station_id.unique()
+    result["low_coordinate_support"] = ~result.index.isin(support)
+    result["position_coordinate_records"] = selected.groupby("station_id").coordinate_trip_count.sum()
+    return result
 
 
 def detect_relocations(coordinates: pd.DataFrame, threshold_m: float,
@@ -102,7 +128,7 @@ def station_identity_candidates(stations: pd.DataFrame, coordinates: pd.DataFram
                                 opening_start: str, opening_end: str,
                                 min_trips: int = 20) -> pd.DataFrame:
     """List repeated-name IDs for review; never automatically merge or drop stations."""
-    centers = trusted_coordinates(coordinates, min_trips).groupby("station_id")[["x_m", "y_m"]].median()
+    centers = representative_positions(coordinates, min_trips)[["x_m", "y_m"]]
     inventory = stations.merge(centers, on="station_id", how="left", validate="one_to_one")
     inventory["name_key"] = inventory["station_name"].str.strip().str.casefold()
     columns = ["station_name", "earlier_station_id", "later_station_id", "earlier_open_date",

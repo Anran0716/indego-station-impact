@@ -3,6 +3,8 @@
 import re
 from pathlib import Path
 
+import pandas as pd
+
 
 def write_report(output: Path, summary: dict, config: dict) -> None:
     lines = ["# Stage 0 data and station identity audit", "",
@@ -39,10 +41,13 @@ def write_report(output: Path, summary: dict, config: dict) -> None:
               f"dates requiring review: {summary['manual_review_station_count']}.", "",
               "## Coordinate support and relocation", "",
               f"Use at least {summary['min_trips_per_quarter_coordinate']} valid paired departure "
-              "coordinates in a quarter before its median can enter a distance or relocation "
-              f"check. The raw medians of {summary['low_support_station_quarters']} rejected "
-              "station-quarters remain in `quarterly_coordinates.csv` with `coordinate_usable=False`. "
-              "Low-support coordinates do not enter identity matching or representative centers.", "",
+              "coordinates in a quarter for **relocation checks only**. "
+              f"{summary['low_support_station_quarters']} lower-support station-quarters remain "
+              "available for positioning. Prefer supported quarters when available; otherwise "
+              "retain the valid lower-support position and mark `low_coordinate_support`. "
+              "`usable_for_relocation` and `usable_for_position` are distinct; the legacy "
+              "`coordinate_usable` flag denotes relocation support only. Low support alone "
+              "does not remove a known station location or a valid treatment source.", "",
               f"Distances use {summary['projected_crs']} in metres. A displacement must exceed "
               f"{summary['relocation_threshold_m']} metres across supported quarters to trigger "
               f"a relocation flag. **Flagged within-ID stations: "
@@ -95,6 +100,35 @@ def write_report(output: Path, summary: dict, config: dict) -> None:
               "| Reconciled opening year | Retained canonical openings |", "| --- | ---: |"]
     for year, count in summary["retained_physical_openings_by_year"].items():
         lines.append(f"| {year} | {count} |")
+    lines += ["", "## Treatment sources and exposure sources", "",
+              f"`treatment_source_stations.csv` contains {summary['retained_treatment_source_openings']} "
+              "eligible sources in the treatment window. `exposure_source_stations.csv` contains "
+              f"{summary['exposure_source_openings']} canonical openings observed operating in "
+              "2022–2024 with known positions, regardless of treatment eligibility. Approved "
+              "renumberings do not create a second physical opening. The exposure-only IDs are "
+              f"{summary['exposure_only_source_ids']}; low-support source IDs are "
+              f"{summary['low_coordinate_support_source_ids']}.", "",
+              "An unusable treatment source within 2R assigns an old station to `excluded` with "
+              "reason `exposed_to_unusable_source`. It cannot become a never-exposed control. "
+              "Stack clean-control checks also use all exposure sources, requiring first exposure "
+              "after the full final stack week. Existing identities already excluded by the "
+              "concurrency rule remain excluded. No actual radius has been selected or counted.", "",
+              "`source_evidence_audit.csv` distinguishes first/last activity and coordinate "
+              "availability for each raw ID. Focused checks of low-support or unusable sources "
+              "and their earlier IDs:", "",
+              "| ID | Name | Departures | Arrivals | Position known | Treatment source | Exposure source | Eligible old identity |",
+              "| --- | --- | ---: | ---: | --- | --- | --- | --- |"]
+    evidence = pd.read_csv(output / "source_evidence_audit.csv", dtype={"raw_station_id": "string"})
+    for row in evidence.loc[evidence.raw_station_id.isin(summary["source_role_audit_ids"])].itertuples():
+        lines.append(f"| {row.raw_station_id} | {row.station_name} | {row.departure_trip_count} | "
+                     f"{row.arrival_trip_count} | {row.has_known_position} | {row.is_treatment_source} | "
+                     f"{row.is_exposure_source} | {row.eligible_existing_identity} |")
+    lines += ["", "A missing position on an unobserved earlier ID is not the same as a missing "
+              "position on its operating successor. Known operating successors still enter "
+              "the exposure table even when uncertain earlier identity excludes them from "
+              "treatment. Operating opening IDs without any known location are "
+              f"{summary['operating_openings_without_position']}; source-table construction fails "
+              "rather than silently dropping any such site and declaring controls clean.", ""]
     lines += ["", "## Continuous station identities and conservation", "",
               f"`station_id_map.csv` maps all {summary['identity_mapping_rows']} raw nonvirtual "
               f"IDs to {summary['canonical_station_rows']} canonical station records. "
@@ -128,7 +162,9 @@ def write_report(output: Path, summary: dict, config: dict) -> None:
             f"{summary['station_identity_additional_proximity_pairs']} additional proximity/timing pairs. "
             f"The identity rules retain {summary['retained_physical_openings_2022_2024']} canonical "
             f"openings in 2022–2024, including {summary['retained_treatment_source_openings']} in the "
-            "treatment-source window. "
+            f"treatment-source window. The separate exposure table retains "
+            f"{summary['exposure_source_openings']} operating, located openings, including "
+            "treatment-ineligible sources. "
             f"{statuses.get('unobserved_in_trip_window', 0)} station-table IDs have no observed trip "
             "in the study files and are reported separately from opening-date discrepancies.\n"
             "<!-- stage0-summary:end -->"

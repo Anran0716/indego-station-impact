@@ -15,9 +15,19 @@ import pandas as pd
 import pyproj
 import yaml
 
-from stimpact.audit import detect_relocations, quarterly_coordinates, reconcile_opening_dates
+from stimpact.audit import (
+    detect_relocations,
+    quarterly_coordinates,
+    reconcile_opening_dates,
+    representative_positions,
+)
 from stimpact.download import download_inputs, sha256
-from stimpact.identity import activity_dates, merged_station_weeks, resolve_identities
+from stimpact.identity import (
+    activity_dates,
+    merged_station_weeks,
+    resolve_identities,
+    source_tables,
+)
 from stimpact.io import load_stations, load_trips
 from stimpact.stage0_report import write_report
 
@@ -69,6 +79,7 @@ def run(root: Path, *, offline: bool = False) -> dict:
         raise ValueError("Quarter coverage is not exactly 2022 Q1 through 2024 Q4")
     lifetimes = pd.concat(activity).groupby("station_id", as_index=False).agg(
         first_trip_date=("first_trip_date", "min"), last_trip_date=("last_trip_date", "max"),
+        departure_trip_count=("departure_trip_count", "sum"), arrival_trip_count=("arrival_trip_count", "sum"),
     )
     lifetimes[["first_trip_date", "last_trip_date"]] = lifetimes[
         ["first_trip_date", "last_trip_date"]].apply(lambda column: column.dt.normalize())
@@ -81,10 +92,26 @@ def run(root: Path, *, offline: bool = False) -> dict:
     dates = reconcile_opening_dates(stations, lifetimes, study["control_exposure_start"],
                                     eligibility["opening_date_tolerance_days"])
     observed = dates.first_trip_date.notna()
+    dates[["departure_trip_count", "arrival_trip_count"]] = dates[
+        ["departure_trip_count", "arrival_trip_count"]].fillna(0).astype(int)
     missing_table = dates.loc[observed & dates.station_name.isna(), "station_id"].tolist()
     if missing_table:
         raise ValueError(f"Observed IDs absent from station table: {missing_table}")
     pairs, id_map, canonical = resolve_identities(dates, coordinate_frame, relocation, config)
+    treatment_sources, exposure_sources = source_tables(canonical)
+    locations = representative_positions(coordinate_frame, spatial["min_trips_per_quarter_coordinate"])
+    evidence = dates.rename(columns={"station_id": "raw_station_id"}).merge(
+        locations.reset_index().rename(columns={"station_id": "raw_station_id"}),
+        on="raw_station_id", how="left", validate="one_to_one")
+    evidence["has_known_position"] = np.isfinite(evidence.x_m) & np.isfinite(evidence.y_m)
+    evidence = evidence.merge(id_map, on="raw_station_id", validate="one_to_one")
+    roles = canonical[["station_id", "is_treatment_source", "is_exposure_source", "exposure_only",
+                       "eligible_existing_identity"]].rename(columns={"station_id": "canonical_station_id"})
+    evidence = evidence.merge(roles, on="canonical_station_id", validate="many_to_one")
+    audit_ids = set(exposure_sources.loc[
+        exposure_sources.exposure_only | exposure_sources.low_coordinate_support, "station_id"])
+    audit_ids.update(pairs.loc[pairs.classification.isin(["missing_coordinates", "concurrent_operation"]),
+                               "earlier_station_id"])
     in_window = observed & dates.official_open_date.between(
         study["control_exposure_start"], study["control_exposure_end"])
     original_openings = dates.loc[observed & dates.analysis_open_date.between(
@@ -156,6 +183,13 @@ def run(root: Path, *, offline: bool = False) -> dict:
             retained.analysis_open_date.dt.year.value_counts().sort_index().items()
         },
         "retained_treatment_source_openings": int(canonical.is_treatment_source.sum()),
+        "exposure_source_openings": len(exposure_sources),
+        "exposure_only_source_ids": exposure_sources.loc[exposure_sources.exposure_only, "station_id"].tolist(),
+        "low_coordinate_support_source_ids": exposure_sources.loc[
+            exposure_sources.low_coordinate_support, "station_id"].tolist(),
+        "operating_openings_without_position": canonical.loc[
+            canonical.is_exposure_candidate & ~canonical.is_exposure_source, "station_id"].tolist(),
+        "source_role_audit_ids": sorted(audit_ids),
         "merged_raw_ids": int(id_map.canonical_station_id.ne(id_map.raw_station_id).sum()),
         "identity_mapping_rows": len(id_map),
         "canonical_station_rows": len(canonical),
@@ -174,7 +208,11 @@ def run(root: Path, *, offline: bool = False) -> dict:
               "quarterly_coordinates": coordinate_frame, "relocation_audit": relocation_full,
               "station_identity_candidates": pairs, "station_id_map": id_map,
               "canonical_station_registry": canonical, "opening_identity_screening": screening,
-              "new_stations": retained, "treatment_source_stations": canonical.loc[canonical.is_treatment_source]}
+              "new_stations": retained, "treatment_source_stations": treatment_sources,
+              "exposure_source_stations": exposure_sources,
+              "source_evidence_audit": evidence,
+              "observed_sources_without_position": canonical.loc[
+                  canonical.is_exposure_candidate & ~canonical.is_exposure_source]}
     for name, frame in tables.items():
         frame.to_csv(output / f"{name}.csv", index=False)
     interim = root / "data/interim"

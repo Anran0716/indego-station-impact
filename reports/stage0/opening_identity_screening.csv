@@ -105,7 +105,7 @@ raw_station_id,station_name,raw_analysis_open_date,canonical_station_id,identity
 3376,Thompson & Franklin,2024-02-06,3376,False,,kept,2024-02-06,True,retained_new_station
 3377,21st & Passyunk,2024-02-20,3377,False,,kept,2024-02-20,True,retained_new_station
 3378,4th & Arch,2024-02-22,3378,False,,kept,2024-02-22,True,retained_new_station
-3380,American & Master,2024-02-27,3380,True,missing_coordinates,excluded,2024-02-27,False,excluded_identity
+3380,American & Master,2024-02-27,3380,False,,kept,2024-02-27,True,retained_new_station
 3381,48th & Baltimore,2024-03-27,3381,False,,kept,2024-03-27,True,retained_new_station
 3382,Walnut & Rittenhouse,2024-04-17,3382,False,,kept,2024-04-17,True,retained_new_station
 3383,"3rd & Wildey, Liberty Lands Park",2024-04-23,3383,False,,kept,2024-04-23,True,retained_new_station

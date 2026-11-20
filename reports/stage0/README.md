@@ -26,7 +26,7 @@ Both departures and arrivals enter the first and last observed trip dates in `op
 
 ## Coordinate support and relocation
 
-Use at least 20 valid paired departure coordinates in a quarter before its median can enter a distance or relocation check. The raw medians of 24 rejected station-quarters remain in `quarterly_coordinates.csv` with `coordinate_usable=False`. Low-support coordinates do not enter identity matching or representative centers.
+Use at least 20 valid paired departure coordinates in a quarter for **relocation checks only**. 24 lower-support station-quarters remain available for positioning. Prefer supported quarters when available; otherwise retain the valid lower-support position and mark `low_coordinate_support`. `usable_for_relocation` and `usable_for_position` are distinct; the legacy `coordinate_usable` flag denotes relocation support only. Low support alone does not remove a known station location or a valid treatment source.
 
 Distances use EPSG:32618 in metres. A displacement must exceed 50 metres across supported quarters to trigger a relocation flag. **Flagged within-ID stations: 0.** IDs with fewer than two supported quarters remain explicitly unaudited for relocation. Missing coordinates never become zero distance.
 
@@ -55,16 +55,37 @@ Start with **121 observed opening IDs** whose reconciled dates are in 2022–202
 | Screening result | Raw opening IDs |
 | --- | ---: |
 | merged_replacement | 20 |
-| excluded_identity | 4 |
-| retained_new_station | 97 |
+| excluded_identity | 3 |
+| retained_new_station | 98 |
 
-**Retained canonical physical openings in 2022–2024: 97.** Of these, **91** fall in the narrower 2022-04-01 through 2024-09-30 treatment-source window. Lists are in `new_stations.csv` and `treatment_source_stations.csv`. These are the surviving openings under the preregistered identity rules, not independent operational verification of every physical site.
+**Retained canonical physical openings in 2022–2024: 98.** Of these, **92** fall in the narrower 2022-04-01 through 2024-09-30 treatment-source window. Lists are in `new_stations.csv` and `treatment_source_stations.csv`. These are the surviving openings under the preregistered identity rules, not independent operational verification of every physical site.
 
 | Reconciled opening year | Retained canonical openings |
 | --- | ---: |
 | 2022 | 24 |
 | 2023 | 58 |
-| 2024 | 15 |
+| 2024 | 16 |
+
+## Treatment sources and exposure sources
+
+`treatment_source_stations.csv` contains 92 eligible sources in the treatment window. `exposure_source_stations.csv` contains 101 canonical openings observed operating in 2022–2024 with known positions, regardless of treatment eligibility. Approved renumberings do not create a second physical opening. The exposure-only IDs are ['3319', '3333', '3364']; low-support source IDs are ['3380'].
+
+An unusable treatment source within 2R assigns an old station to `excluded` with reason `exposed_to_unusable_source`. It cannot become a never-exposed control. Stack clean-control checks also use all exposure sources, requiring first exposure after the full final stack week. Existing identities already excluded by the concurrency rule remain excluded. No actual radius has been selected or counted.
+
+`source_evidence_audit.csv` distinguishes first/last activity and coordinate availability for each raw ID. Focused checks of low-support or unusable sources and their earlier IDs:
+
+| ID | Name | Departures | Arrivals | Position known | Treatment source | Exposure source | Eligible old identity |
+| --- | --- | ---: | ---: | --- | --- | --- | --- |
+| 3018 | 12th & Filbert | 23456 | 24161 | True | False | False | False |
+| 3105 | Penn Treaty Park | 0 | 0 | False | False | False | False |
+| 3195 | 18th & JFK Curbside | 0 | 0 | False | False | False | False |
+| 3319 | Penn Treaty Park | 3623 | 4126 | True | False | True | False |
+| 3333 | 18th & JFK Curbside | 10628 | 11021 | True | False | True | False |
+| 3364 | 12th & Filbert | 1449 | 1602 | True | False | True | False |
+| 3380 | American & Master | 11 | 9 | True | True | True | False |
+
+A missing position on an unobserved earlier ID is not the same as a missing position on its operating successor. Known operating successors still enter the exposure table even when uncertain earlier identity excludes them from treatment. Operating opening IDs without any known location are []; source-table construction fails rather than silently dropping any such site and declaring controls clean.
+
 
 ## Continuous station identities and conservation
 

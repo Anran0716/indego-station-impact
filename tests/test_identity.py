@@ -13,6 +13,7 @@ from stimpact.identity import (
     identity_candidates,
     merged_station_weeks,
     resolve_identities,
+    source_tables,
 )
 
 
@@ -62,6 +63,18 @@ def test_renamed_replacement_can_be_found_without_a_name_match(config, old_open)
     assert result.iloc[0].classification == "renumbered"
 
 
+def test_renamed_zero_distance_adjacent_dates_are_found_by_proximity(config):
+    stations = inventory(last=("2023-01-14", "2024-12-31"))
+    result = identity_candidates(stations, positions(x=(0, 0)), config)
+    assert len(result) == 1
+    pair = result.iloc[0]
+    assert pair.earlier_station_name != pair.later_station_name
+    assert not pair.found_by_name and pair.found_by_proximity
+    assert pair.representative_distance_m == 0
+    assert pair.handoff_gap_days == 1
+    assert pair.classification == "renumbered"
+
+
 @pytest.mark.parametrize("stop_offset,expected", [(-30, 1), (30, 1), (-31, 0), (31, 0)])
 def test_proximity_retirement_window_boundary(config, stop_offset, expected):
     date = pd.Timestamp("2023-03-01")
@@ -88,6 +101,10 @@ def test_missing_coordinates_exclude_both_ids_without_an_implicit_zero_distance(
     assert pd.isna(pairs.iloc[0].representative_distance_m)
     assert mapping.identity_excluded.all()
     assert not canonical.is_new_station_2022_2024.any()
+    treatment, exposure = source_tables(canonical)
+    assert treatment.empty
+    assert exposure.station_id.tolist() == ["2"]
+    assert exposure.iloc[0].exposure_only
 
 
 def test_merge_keeps_old_opening_and_remaps_both_endpoints_without_dropping_trips(config):
@@ -171,3 +188,24 @@ def test_first_and_last_activity_include_arrivals():
                           "end_time": pd.to_datetime(["2023-01-02 00:01"])})
     result = activity_dates(trips).set_index("station_id")
     assert result.loc["2", "last_trip_date"] == pd.Timestamp("2023-01-02 00:01")
+    assert result.loc["1", "departure_trip_count"] == 1
+    assert result.loc["2", "arrival_trip_count"] == 1
+
+
+def test_low_support_location_is_retained_for_treatment_and_exposure(config):
+    stations = inventory(ids=("2",), names=("New site",), openings=("2023-01-15",),
+                         first=("2023-01-15",), last=("2024-12-31",))
+    coords = positions(ids=("2",), x=(0,), counts=(11,))
+    _, _, canonical = resolve_identities(stations, coords, detect_relocations(coords, 50), config)
+    treatment, exposure = source_tables(canonical)
+    assert not canonical.iloc[0].identity_excluded
+    assert canonical.iloc[0].low_coordinate_support
+    assert canonical.iloc[0].position_coordinate_records == 11
+    assert treatment.station_id.tolist() == exposure.station_id.tolist() == ["2"]
+
+
+def test_operating_unlocated_source_blocks_clean_source_construction():
+    canonical = pd.DataFrame({"station_id": ["2"], "is_treatment_source": [False],
+                              "is_exposure_source": [False], "is_exposure_candidate": [True]})
+    with pytest.raises(ValueError, match="Operating opening IDs lack a known position: 2"):
+        source_tables(canonical)

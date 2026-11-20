@@ -287,7 +287,7 @@ raw_station_id,canonical_station_id,identity_excluded,reason,action
 3376,3376,False,,kept
 3377,3377,False,,kept
 3378,3378,False,,kept
-3380,3380,True,missing_coordinates,excluded
+3380,3380,False,,kept
 3381,3381,False,,kept
 3382,3382,False,,kept
 3383,3383,False,,kept

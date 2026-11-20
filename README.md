@@ -7,7 +7,7 @@ An independent project estimating how new Indego stations affect ridership at ne
 See the generated [Stage 0 audit](reports/stage0/README.md) for trip counts, first/last activity dates, supported coordinates, and rule-based identity resolution. Renumbered IDs share a continuous canonical identity; concurrent operation, relocation, and missing-coordinate cases are excluded from station pools with explicit reasons. Radius feasibility counting is the next stage.
 
 <!-- stage0-summary:start -->
-Stage 0 found 23 name-based identity pairs and 0 additional proximity/timing pairs. The identity rules retain 97 canonical openings in 2022–2024, including 91 in the treatment-source window. 96 station-table IDs have no observed trip in the study files and are reported separately from opening-date discrepancies.
+Stage 0 found 23 name-based identity pairs and 0 additional proximity/timing pairs. The identity rules retain 98 canonical openings in 2022–2024, including 92 in the treatment-source window. The separate exposure table retains 101 operating, located openings, including treatment-ineligible sources. 96 station-table IDs have no observed trip in the study files and are reported separately from opening-date discrepancies.
 <!-- stage0-summary:end -->
 
 ## Research question
@@ -16,7 +16,7 @@ How did new Indego stations opening in 2022–2024 affect weekly departures at n
 
 ## Planned design
 
-- Use publicly available Indego quarterly trip files for 2022 Q1–2024 Q4 and the pinned official station table. Audit opening dates and coordinates, require 20 valid departure observations per coordinate quarter, and resolve replacement IDs before assigning treatment. Candidate discovery uses both names and name-independent distance/retirement timing.
+- Use publicly available Indego quarterly trip files for 2022 Q1–2024 Q4 and the pinned official station table. Require 20 coordinate observations per quarter for relocation checks; retain known lower-support locations with a flag. Resolve replacement IDs, then separate eligible treatment sources from all operating, positioned exposure sources before grouping stations. Candidate discovery uses both names and name-independent distance/retirement timing.
 - Select a treatment radius using a prespecified station-count rule and keep the buffer at twice that radius. Require 30 controls per stack: first use never-treated stations, then add stations whose first exposure within 2R occurs after the entire stack window if needed. If any stack remains below 30, redesign at the area level.
 - Estimate a stacked difference-in-differences model of `log(1 + weekly departures)` with stack-specific station and week fixed effects and standard errors clustered by station. The event window is 12 weeks before through 12 weeks after opening.
 - Use simulations to demonstrate a failure of ordinary two-way fixed effects under heterogeneous treatment effects before estimating effects on real data. Report event-study intervals, pretrend diagnostics, robustness checks, and simulation-based power.
@@ -50,6 +50,8 @@ python scripts/run_stage0.py
 For a verified existing download, use `python scripts/run_stage0.py --offline`. Each archive and extracted CSV has its source URL, download date, row count, and SHA256 recorded in the committed [manifest](data/manifest.json). URLs are pinned on the first successful discovery, so future runs do not silently switch to a newer station table. Raw and intermediate data stay outside version control. The later download-to-figures analysis pipeline remains to be implemented.
 
 The audit exports `station_id_map.csv`, `canonical_station_registry.csv`, and the surviving opening lists. Pass the ID map to `load_trips(..., station_id_map=...)` before subsequent same-station cleaning and panel construction. An ignored weekly activity grid preserves zero weeks during identity transitions and enforces departure-count conservation.
+
+`treatment_source_stations.csv` defines eligible opening cohorts; `exposure_source_stations.csv` screens controls using all operating, positioned openings, including unusable treatment sources. The pure assignment function and stack clean-control guard are tested on synthetic stations while the real radius remains unset. `source_evidence_audit.csv` records activity and location evidence for the original IDs and their successors.
 
 ## Assumptions and limitations
 

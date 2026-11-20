@@ -18,7 +18,7 @@ Remove virtual station 3000, missing station IDs, trips shorter than one minute,
 
 The following rules were specified after the initial input audit and before treatment assignment, radius counting, or real-data estimation. They replace the initial unresolved identity-review placeholder; the original audit remains in Git history.
 
-Use both departure and arrival observations to calculate each ID's first and last observed trip dates in Philadelphia local time. Dates before the 2022 observation window remain left-censored. A quarterly coordinate is usable only if it has at least `spatial.min_trips_per_quarter_coordinate = 20` valid, paired departure coordinates. Keep lower-support quarters in the audit with a rejection flag, but do not use them in distances, station centers, or relocation checks. Represent an ID by the coordinate-wise median of its usable quarterly projected positions.
+Use both departure and arrival observations to calculate each ID's first and last observed trip dates in Philadelphia local time. Dates before the 2022 observation window remain left-censored. The `spatial.min_trips_per_quarter_coordinate = 20` threshold applies **only to relocation checks**. Prefer those supported quarterly positions when available. If no supported quarter exists, retain the coordinate-wise median of the valid lower-support quarterly positions with `low_coordinate_support=True`; a known location and treatment eligibility are not removed merely for falling below 20 records. Keep separate `usable_for_relocation` and `usable_for_position` flags. A one-trip coordinate outlier cannot create a relocation when supported quarters are available.
 
 Find candidate pairs using the union of two checks, and deduplicate the same earlier/later ID pair:
 
@@ -29,7 +29,7 @@ Report the name-based pair count and the additional pairs found only by proximit
 
 Classify each candidate in this order:
 
-1. Missing usable coordinates for either ID: exclude both IDs from the existing-station pool and treatment sources, with reason `missing_coordinates`.
+1. Missing any known position for either ID: exclude both IDs from the existing-station pool and treatment sources, with reason `missing_coordinates`. Record which ID lacks the position and whether it has any observed departures or arrivals. A positioned, operating successor still counts as exposure even when its unobserved earlier ID has no coordinates.
 2. Distance greater than 50 metres: classify as `relocated`; exclude the earlier ID from the existing pool and the later ID from new treatment sources. Conservatively exclude both identities from both pools.
 3. Observed operation intervals overlap by more than 14 calendar days: classify as `concurrent_operation`; exclude both IDs from both pools. Overlap is `max(0, min(last_old, last_new) - max(first_old, first_new))` in calendar days; endpoints exactly 14 days apart do not exceed the limit. First/last observations measure an observed operation interval, not proof that a station operated every intervening day.
 4. The absolute difference between the earlier ID's last observed trip and the later ID's first observed trip is at most 14 days: classify as `renumbered`, merge into the earlier ID, retain the earlier opening date, and do not count the later ID as a new station.
@@ -40,6 +40,12 @@ Missing activity dates or a timeline not covered by these conditions are conserv
 Export every pair's distance, first/last dates, signed handoff gap, overlap duration, classification, discovery method, and reason. Export a complete raw-ID-to-canonical-ID map and a canonical station registry. Apply the map to both trip endpoints before same-station-trip cleaning or station-week construction. An identity exclusion controls station-pool membership; it does not discard an otherwise valid trip from another station merely because its other endpoint is excluded. Enforce trip-count conservation under remapping.
 
 Count surviving canonical openings separately for the full 2022–2024 opening audit window and the narrower 2022-04-01 through 2024-09-30 treatment-source window. These are rule-based classifications; do not claim that every replacement is verified operationally or that contaminating openings necessarily bias an estimate toward zero under every design.
+
+## Exposure source amendment before treatment assignment
+
+Keep two source tables. `treatment_source_stations.csv` contains identity-cleared, positioned canonical openings inside the eligible treatment window. `exposure_source_stations.csv` contains all canonical openings in 2022–2024 observed in departures or arrivals with known positions, including treatment-ineligible concurrent sites and operating successors with unresolved earlier identities. A confirmed merged alias does not create another opening. Retain low-support known positions in both tables when otherwise eligible. A table-only ID with no observed trip creates no exposure. If an operating opening lacks any known position, stop source construction and report its ID before any clean controls can be declared.
+
+Treatment cohorts are defined only by the treatment table. Never-treated and stack-specific clean controls are screened using the entire exposure table, including openings outside the treatment-source window. If any treatment-unusable exposure source is within 2R of an existing station during the full study window, exclude that existing station with reason `exposed_to_unusable_source`, before assigning treated/control/buffer status. Exclusions of old identities themselves, including the earlier ID of a concurrent pair, also remain in force. For a stack-specific clean-control check, no exposure within 2R may have an opening week on or before the stack's final week. Tests use excluded-source neighbours and renamed, zero-distance, adjacent-date replacements; actual radius counting remains deferred until the feasibility stage.
 
 ## Radius selection before outcome analysis
 

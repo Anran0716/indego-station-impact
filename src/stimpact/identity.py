@@ -7,7 +7,12 @@ from collections import defaultdict
 import numpy as np
 import pandas as pd
 
-from stimpact.audit import station_identity_candidates, trusted_coordinates
+from stimpact.audit import (
+    position_coordinates,
+    representative_positions,
+    station_identity_candidates,
+    trusted_coordinates,
+)
 
 MERGE_CASES = {"renumbered", "interrupted_reopening"}
 
@@ -19,9 +24,12 @@ def activity_dates(trips: pd.DataFrame) -> pd.DataFrame:
         trips[["end_station", "end_time"]].rename(
             columns={"end_station": "station_id", "end_time": "time"}),
     ], ignore_index=True)
-    return observations.groupby("station_id")["time"].agg(
+    result = observations.groupby("station_id")["time"].agg(
         first_trip_date="min", last_trip_date="max",
     ).reset_index()
+    result["departure_trip_count"] = result.station_id.map(trips.start_station.value_counts()).fillna(0).astype(int)
+    result["arrival_trip_count"] = result.station_id.map(trips.end_station.value_counts()).fillna(0).astype(int)
+    return result
 
 
 def classify_transition(distance_m: float, old_first, old_last, new_first, new_last,
@@ -53,7 +61,7 @@ def identity_candidates(stations: pd.DataFrame, coordinates: pd.DataFrame, confi
     minimum = spatial["min_trips_per_quarter_coordinate"]
     named = station_identity_candidates(stations, coordinates, study["control_exposure_start"],
                                         study["control_exposure_end"], minimum)
-    centers = trusted_coordinates(coordinates, minimum).groupby("station_id")[["x_m", "y_m"]].median()
+    centers = representative_positions(coordinates, minimum)[["x_m", "y_m"]]
     inventory = stations.merge(centers, on="station_id", how="left", validate="one_to_one")
     lookup = inventory.set_index("station_id")
     pairs = {(row.earlier_station_id, row.later_station_id): {
@@ -162,7 +170,8 @@ def resolve_identities(stations: pd.DataFrame, coordinates: pd.DataFrame,
             exclusions[row.station_id].add("within_id_relocation")
     minimum = config["spatial"]["min_trips_per_quarter_coordinate"]
     trusted = trusted_coordinates(coordinates, minimum)
-    centers = trusted.groupby("station_id")[["x_m", "y_m"]].median()
+    positioned = position_coordinates(coordinates, minimum)
+    centers = representative_positions(coordinates, minimum)
     for station in stations.itertuples():
         if pd.isna(station.first_trip_date):
             exclusions[station.station_id].add("unobserved_in_trip_window")
@@ -192,9 +201,15 @@ def resolve_identities(stations: pd.DataFrame, coordinates: pd.DataFrame,
                 component_points[:, None, :] - component_points[None, :, :], axis=2).max())
             if maximum > config["spatial"]["relocation_threshold_m"]:
                 reasons.add("canonical_coordinate_displacement")
-            x_m, y_m = np.median(component_points, axis=0)
         else:
-            maximum, x_m, y_m = np.nan, np.nan, np.nan
+            maximum = np.nan
+        # A low-support position is retained, but cannot create a relocation flag.
+        position_rows = positioned.loc[positioned.station_id.isin(members)]
+        if len(position_rows):
+            x_m, y_m = position_rows[["x_m", "y_m"]].median()
+        else:
+            x_m, y_m = np.nan, np.nan
+        low_support = len(position_rows) > 0 and len(component_points) == 0
         excluded = bool(reasons)
         opening = rows.analysis_open_date.min()
         observed = rows.first_trip_date.notna().any()
@@ -203,14 +218,27 @@ def resolve_identities(stations: pd.DataFrame, coordinates: pd.DataFrame,
                <= pd.Timestamp(study["control_exposure_end"]))
         source = (new and pd.Timestamp(study["treatment_opening_start"]) <= opening
                   <= pd.Timestamp(study["treatment_opening_end"]))
+        exposure_candidate = (observed and pd.notna(opening)
+                              and pd.Timestamp(study["control_exposure_start"]) <= opening
+                              <= pd.Timestamp(study["control_exposure_end"]))
+        exposure = exposure_candidate and np.isfinite(x_m) and np.isfinite(y_m)
         reason = ";".join(sorted(reasons))
         records.append({"station_id": canonical_id, "station_name": lookup.loc[canonical_id, "station_name"],
                         "member_ids": ";".join(sorted(members, key=int)), "member_count": len(members),
                         "analysis_open_date": opening, "first_trip_date": rows.first_trip_date.min(),
                         "last_trip_date": rows.last_trip_date.max(), "x_m": x_m, "y_m": y_m,
+                        "low_coordinate_support": low_support,
+                        "position_coordinate_records": int(position_rows.coordinate_trip_count.sum()),
+                        "departure_trip_count": int(rows.departure_trip_count.sum())
+                        if "departure_trip_count" in rows else None,
+                        "arrival_trip_count": int(rows.arrival_trip_count.sum())
+                        if "arrival_trip_count" in rows else None,
                         "max_coordinate_displacement_m": maximum, "identity_excluded": excluded,
                         "identity_exclusion_reason": reason, "is_new_station_2022_2024": new,
                         "is_treatment_source": source,
+                        "is_exposure_candidate": exposure_candidate,
+                        "is_exposure_source": exposure,
+                        "exposure_only": exposure and excluded,
                         "eligible_existing_identity": not excluded and pd.notna(opening)
                         and opening < pd.Timestamp(study["existing_station_opened_before"])})
         for station_id in members:
@@ -230,6 +258,21 @@ def resolve_identities(stations: pd.DataFrame, coordinates: pd.DataFrame,
     pairs["later_final_excluded"] = pairs.later_station_id.map(status.identity_excluded)
     pairs["final_component_reason"] = pairs.later_station_id.map(status.reason)
     return pairs, id_map, canonical
+
+
+def source_tables(canonical: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Treatment eligibility never determines whether an operating site counts as exposure."""
+    treatment = canonical.loc[canonical.is_treatment_source].copy()
+    exposure = canonical.loc[canonical.is_exposure_source].copy()
+    unknown = canonical.loc[canonical.is_exposure_candidate & ~canonical.is_exposure_source]
+    if not unknown.empty:
+        raise ValueError("Operating opening IDs lack a known position: "
+                         + ", ".join(unknown.station_id.astype(str)))
+    if not set(treatment.station_id) <= set(exposure.station_id):
+        raise AssertionError("A treatment source is missing from exposure sources")
+    if exposure[["x_m", "y_m"]].isna().any().any() or exposure.first_trip_date.isna().any():
+        raise AssertionError("Exposure sources require observed operation and a known position")
+    return treatment, exposure
 
 
 def canonicalize_trips(trips: pd.DataFrame, id_map: pd.DataFrame) -> pd.DataFrame:
