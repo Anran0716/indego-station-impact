@@ -19,6 +19,8 @@ spatial:
 
 eligibility:
   baseline_year: 2022
+  baseline_first_week: '2022-01-03'
+  baseline_last_week: '2022-12-26'
   min_baseline_weekly_departures: 5
   exclude_zero_runs_longer_than_weeks: 8
   virtual_station_id: '3000'
@@ -36,6 +38,12 @@ estimation:
   cluster: station_id
   confidence_level: 0.95
   placebo_shift_weeks: 26
+  primary_summary: pooled_treated_post
+  secondary_summary: mean_event_coefficients_0_to_12
+  min_controls_per_stack: 30
+  control_fallback: not_yet_exposed_within_2r_after_stack_end
+  insufficient_controls_action: redesign_area_level
+  predicted_relative_effect: -0.05
 
 power:
   injected_effects: [0, -0.03, -0.05, -0.10, -0.15]

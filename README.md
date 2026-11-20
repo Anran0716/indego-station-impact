@@ -11,7 +11,7 @@ How did new Indego stations opening in 2022–2024 affect weekly departures at n
 ## Planned design
 
 - Use publicly available Indego quarterly trip files for 2022 Q1–2024 Q4 and the latest official station table. Audit opening dates and station coordinates before assigning treatment.
-- Select a treatment radius using a prespecified station-count rule. Exclude a buffer between the treatment radius and twice that radius; controls must remain unexposed throughout the study window.
+- Select a treatment radius using a prespecified station-count rule and keep the buffer at twice that radius. Require 30 controls per stack: first use never-treated stations, then add stations whose first exposure within 2R occurs after the entire stack window if needed. If any stack remains below 30, redesign at the area level.
 - Estimate a stacked difference-in-differences model of `log(1 + weekly departures)` with stack-specific station and week fixed effects and standard errors clustered by station. The event window is 12 weeks before through 12 weeks after opening.
 - Use simulations to demonstrate a failure of ordinary two-way fixed effects under heterogeneous treatment effects before estimating effects on real data. Report event-study intervals, pretrend diagnostics, robustness checks, and simulation-based power.
 
