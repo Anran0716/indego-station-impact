@@ -1,0 +1,45 @@
+# Draft parameters. Finalize design choices before real-data estimation.
+study:
+  timezone: America/New_York
+  week_start: monday
+  panel_start: '2022-01-03'
+  last_complete_week_start: '2024-12-23'
+  existing_station_opened_before: '2022-01-01'
+  treatment_opening_start: '2022-04-01'
+  treatment_opening_end: '2024-09-30'
+  control_exposure_start: '2022-01-01'
+  control_exposure_end: '2024-12-31'
+
+spatial:
+  projected_crs: EPSG:32618
+  relocation_threshold_m: 50
+  candidate_radii_m: [400, 600, 800]
+  treatment_radius_m: null  # Set after the station-count feasibility check.
+  buffer_outer_multiplier: 2
+
+eligibility:
+  baseline_year: 2022
+  min_baseline_weekly_departures: 5
+  exclude_zero_runs_longer_than_weeks: 8
+  virtual_station_id: '3000'
+  min_trip_duration_seconds: 60
+  opening_date_tolerance_days: 14
+
+estimation:
+  primary_outcome: log1p_weekly_departures
+  cohort_frequency: quarter
+  event_pre_weeks: 12
+  event_post_weeks: 12
+  reference_event_week: -1
+  post_average_start_week: 0
+  post_average_end_week: 12
+  cluster: station_id
+  confidence_level: 0.95
+  placebo_shift_weeks: 26
+
+power:
+  injected_effects: [0, -0.03, -0.05, -0.10, -0.15]
+  repetitions: 200
+  alpha: 0.05
+  target_power: 0.80
+  seed: 20261120
