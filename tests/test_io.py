@@ -76,3 +76,23 @@ def test_duplicate_station_table_ids_fail(tmp_path):
            "Status": "Active"}
     with pytest.raises(ValueError, match="duplicate station ID"):
         load_stations(write_csv(tmp_path / "stations.csv", [row, row]))
+
+
+def test_loader_applies_identity_map_to_both_endpoints(tmp_path, trip_row):
+    mapping = pd.DataFrame({"raw_station_id": ["3004", "3005"],
+                            "canonical_station_id": ["3004", "3004"],
+                            "identity_excluded": [False, False]})
+    result = load_trips(write_csv(tmp_path / "trips.csv", [trip_row]), station_id_map=mapping)
+    assert len(result) == 1
+    assert result.iloc[0].start_station == result.iloc[0].end_station == "3004"
+    assert result.attrs["audit"]["retained_rows"] == 1
+
+
+def test_an_excluded_other_endpoint_does_not_erase_a_valid_departure(tmp_path, trip_row):
+    mapping = pd.DataFrame({"raw_station_id": ["3004", "3005"],
+                            "canonical_station_id": ["3004", "3005"],
+                            "identity_excluded": [False, True]})
+    result = load_trips(write_csv(tmp_path / "trips.csv", [trip_row]), station_id_map=mapping)
+    assert len(result) == 1
+    assert result.iloc[0].start_station == "3004"
+    assert result.iloc[0].end_station == "3005"

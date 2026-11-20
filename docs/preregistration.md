@@ -1,6 +1,6 @@
 # Preregistration draft
 
-**Status: draft; radius and physical-station identities not yet finalized.** The design decisions below were recorded on 2026-11-20 before feasibility counting or real-data estimation. Resolve the input-identity review, then complete the feasibility check and record the selected radius and control mode in a separate freeze commit before estimating effects on real data. Later changes must be documented as amendments rather than silently replacing the original design.
+**Status: draft; radius not yet selected.** The design decisions below were recorded on 2026-11-20 before feasibility counting or real-data estimation. Apply the specified identity rules, then complete the feasibility check and record the selected radius and control mode in a separate freeze commit before estimating effects on real data. Later changes must be documented as amendments rather than silently replacing the original design.
 
 ## Question and hypotheses
 

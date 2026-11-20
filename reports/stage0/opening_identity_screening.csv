@@ -1,0 +1,122 @@
+raw_station_id,station_name,raw_analysis_open_date,canonical_station_id,identity_excluded,reason,action,analysis_open_date,is_new_station_2022_2024,screening_result
+3263,43rd & Powelton,2022-02-23,3263,False,,kept,2022-02-23,True,retained_new_station
+3264,8th & Spruce,2022-05-19,3264,False,,kept,2022-05-19,True,retained_new_station
+3265,Powelton & Lancaster,2022-03-31,3265,False,,kept,2022-03-31,True,retained_new_station
+3266,Water & Mifflin,2022-02-15,3266,False,,kept,2022-02-15,True,retained_new_station
+3267,19th & Oregon,2022-02-17,3267,False,,kept,2022-02-17,True,retained_new_station
+3268,10th & Oxford,2023-09-21,3268,False,,kept,2023-09-21,True,retained_new_station
+3271,53rd & Baltimore,2022-03-03,3271,False,,kept,2022-03-03,True,retained_new_station
+3272,50th & Haverford,2022-03-10,3272,False,,kept,2022-03-10,True,retained_new_station
+3273,Ridge & Ferry,2022-05-05,3273,False,,kept,2022-05-05,True,retained_new_station
+3275,York & Aramingo,2022-04-21,3275,False,,kept,2022-04-21,True,retained_new_station
+3276,12th & Fairmount,2022-04-19,3276,False,,kept,2022-04-19,True,retained_new_station
+3277,20th & Berks,2022-06-25,3277,False,,kept,2022-06-25,True,retained_new_station
+3278,22nd & Sedgley,2022-06-29,3278,False,,kept,2022-06-29,True,retained_new_station
+3279,13th & Mifflin,2022-07-06,3279,False,,kept,2022-07-06,True,retained_new_station
+3280,50th & Woodland,2022-07-13,3280,False,,kept,2022-07-13,True,retained_new_station
+3281,Lindbergh & Wheeler,2022-07-28,3281,False,,kept,2022-07-28,True,retained_new_station
+3282,10th & Nevada,2022-07-21,3282,False,,kept,2022-07-21,True,retained_new_station
+3283,24th & Seybert,2023-01-18,3283,False,,kept,2023-01-18,True,retained_new_station
+3284,Midvale & Cresson,2022-10-25,3284,False,,kept,2022-10-25,True,retained_new_station
+3285,5th & Willow,2022-11-29,3285,False,,kept,2022-11-29,True,retained_new_station
+3286,6th & Brown,2022-10-06,3286,False,,kept,2022-10-06,True,retained_new_station
+3287,49th & Chester,2022-09-07,3287,False,,kept,2022-09-07,True,retained_new_station
+3291,Ridge & Heritage,2022-11-03,3291,False,,kept,2022-11-03,True,retained_new_station
+3292,5th & Wolf,2023-01-12,3292,False,,kept,2023-01-12,True,retained_new_station
+3294,18th & Chestnut,2022-11-09,3206,False,,merged,2019-08-29,False,merged_replacement
+3295,12th & Chestnut,2022-11-03,3167,False,,merged,2018-01-24,False,merged_replacement
+3296,16th & Chestnut,2022-10-11,3202,False,,merged,2019-08-30,False,merged_replacement
+3297,18th & Vine,2023-01-11,3297,False,,kept,2023-01-11,True,retained_new_station
+3298,42nd & Woodland,2022-11-16,3298,False,,kept,2022-11-16,True,retained_new_station
+3299,9th & Lombard,2022-12-08,3299,False,,kept,2022-12-08,True,retained_new_station
+3300,Broad & Cherry,2022-12-07,3300,False,,kept,2022-12-07,True,retained_new_station
+3301,18th & Walnut,2023-01-04,3301,False,,kept,2023-01-04,True,retained_new_station
+3303,41st & Chestnut,2023-02-08,3303,False,,kept,2023-02-08,True,retained_new_station
+3304,7th & South,2023-01-24,3304,False,,kept,2023-01-24,True,retained_new_station
+3305,22nd & Lehigh,2023-01-30,3305,False,,kept,2023-01-30,True,retained_new_station
+3306,28th & Lehigh,2023-01-31,3306,False,,kept,2023-01-31,True,retained_new_station
+3307,27th & Clearfield,2023-02-03,3307,False,,kept,2023-02-03,True,retained_new_station
+3308,12th & Carpenter,2023-03-01,3308,False,,kept,2023-03-01,True,retained_new_station
+3309,"52nd Street Station, MFL",2023-02-07,3309,False,,kept,2023-02-07,True,retained_new_station
+3310,Oxford & Glenwood,2023-02-14,3310,False,,kept,2023-02-14,True,retained_new_station
+3311,4th & Oregon,2023-02-15,3311,False,,kept,2023-02-15,True,retained_new_station
+3313,10th & Oregon,2023-02-21,3313,False,,kept,2023-02-21,True,retained_new_station
+3314,Front & Queen,2023-03-15,3314,False,,kept,2023-03-15,True,retained_new_station
+3315,48th & Woodland,2023-02-24,3315,False,,kept,2023-02-24,True,retained_new_station
+3316,16th & Wolf,2023-02-28,3316,False,,kept,2023-02-28,True,retained_new_station
+3317,30th & Reed,2023-03-05,3317,False,,kept,2023-03-05,True,retained_new_station
+3318,City Hall South,2023-03-09,3318,False,,kept,2023-03-09,True,retained_new_station
+3319,Penn Treaty Park,2023-04-04,3319,True,missing_coordinates,excluded,2023-04-04,False,excluded_identity
+3320,Broad & Master,2023-03-16,3320,False,,kept,2023-03-16,True,retained_new_station
+3321,20th & Cuthbert,2023-03-22,3234,False,,merged,2021-05-11,False,merged_replacement
+3322,7th & Passyunk,2023-05-18,3322,False,,kept,2023-05-18,True,retained_new_station
+3323,Manayunk Bridge,2023-04-11,3323,False,,kept,2023-04-11,True,retained_new_station
+3324,Kelly Drive - Strawberry Mansion Bridge,2023-03-29,3324,False,,kept,2023-03-29,True,retained_new_station
+3325,Cedar & Norris,2023-07-31,3325,False,,kept,2023-07-31,True,retained_new_station
+3326,M.L.K. Drive - Strawberry Mansion Bridge,2023-04-05,3326,False,,kept,2023-04-05,True,retained_new_station
+3327,York & Gaul,2023-06-13,3327,False,,kept,2023-06-13,True,retained_new_station
+3328,Kelly Drive Grandstand,2023-03-30,3328,False,,kept,2023-03-30,True,retained_new_station
+3329,Cresson & Levering,2023-04-27,3329,False,,kept,2023-04-27,True,retained_new_station
+3330,Municipal Services Building,2023-06-21,3330,False,,kept,2023-06-21,True,retained_new_station
+3331,Girard & Palmer,2023-06-20,3331,False,,kept,2023-06-20,True,retained_new_station
+3332,32nd & Allegheny,2023-06-28,3332,False,,kept,2023-06-28,True,retained_new_station
+3333,18th & JFK Curbside,2023-07-18,3333,True,missing_coordinates,excluded,2023-07-18,False,excluded_identity
+3334,7th & Dickinson,2023-05-16,3334,False,,kept,2023-05-16,True,retained_new_station
+3335,Main & Shurs,2023-05-31,3335,False,,kept,2023-05-31,True,retained_new_station
+3336,36th & Filbert,2023-05-24,3336,False,,kept,2023-05-24,True,retained_new_station
+3337,6th & Master,2023-05-09,3337,False,,kept,2023-05-09,True,retained_new_station
+3338,54th & Cedar,2023-05-30,3338,False,,kept,2023-05-30,True,retained_new_station
+3339,Pencoyd Bridge,2023-06-06,3339,False,,kept,2023-06-06,True,retained_new_station
+3340,27th & Pennsylvania,2023-06-15,3340,False,,kept,2023-06-15,True,retained_new_station
+3341,York & Trenton,2023-07-11,3341,False,,kept,2023-07-11,True,retained_new_station
+3342,22nd & Spring Garden,2023-07-13,3342,False,,kept,2023-07-13,True,retained_new_station
+3343,21st & Washington,2023-07-20,3343,False,,kept,2023-07-20,True,retained_new_station
+3344,56th & Chestnut,2023-07-27,3344,False,,kept,2023-07-27,True,retained_new_station
+3345,5th & Spring Garden,2023-08-03,3345,False,,kept,2023-08-03,True,retained_new_station
+3346,6th & Chestnut,2023-08-10,3346,False,,kept,2023-08-10,True,retained_new_station
+3347,9th & Race,2023-08-17,3347,False,,kept,2023-08-17,True,retained_new_station
+3348,27th & Master,2023-08-22,3348,False,,kept,2023-08-22,True,retained_new_station
+3349,25th & Wharton,2023-08-31,3349,False,,kept,2023-08-31,True,retained_new_station
+3350,Broad & Lehigh,2023-09-05,3350,False,,kept,2023-09-05,True,retained_new_station
+3351,12th & Cambria,2023-09-21,3351,False,,kept,2023-09-21,True,retained_new_station
+3352,Broad & Allegheny,2023-12-01,3352,False,,kept,2023-12-01,True,retained_new_station
+3353,"Broad & Ontario, Temple Hospital",2023-09-28,3353,False,,kept,2023-09-28,True,retained_new_station
+3354,58th & Spruce,2023-10-11,3354,False,,kept,2023-10-11,True,retained_new_station
+3355,Broad & Snyder,2023-10-12,3355,False,,kept,2023-10-12,True,retained_new_station
+3356,12th & Normandy,2023-10-17,3186,False,,merged,2018-06-19,False,merged_replacement
+3357,10th & Packer,2023-10-19,3357,False,,kept,2023-10-19,True,retained_new_station
+3358,"Thompson & Palmer, Adaire School",2023-10-24,3153,False,,merged,2017-06-07,False,merged_replacement
+3359,17th & Locust,2023-11-01,3190,False,,merged,2018-09-14,False,merged_replacement
+3360,Broad & Reed,2023-11-07,3360,False,,kept,2023-11-07,True,retained_new_station
+3361,"18th & Fernon, Aquinas Center",2023-12-05,3043,False,,merged,2015-04-23,False,merged_replacement
+3362,13th & Locust,2024-01-08,3045,False,,merged,2015-04-28,False,merged_replacement
+3363,13th & Spruce,2024-02-12,3363,False,,kept,2024-02-12,True,retained_new_station
+3364,12th & Filbert,2023-11-20,3364,True,concurrent_operation,excluded,2023-11-20,False,excluded_identity
+3365,"32nd & Baring, Drexel Park",2023-11-28,3071,False,,merged,2015-04-23,False,merged_replacement
+3366,57th & Westminster,2023-12-08,3366,False,,kept,2023-12-08,True,retained_new_station
+3368,23rd & Master,2023-12-20,3368,False,,kept,2023-12-20,True,retained_new_station
+3369,Ridge & Ferry,2024-01-03,3273,False,,merged,2022-05-05,True,merged_replacement
+3370,Pencoyd Bridge,2024-01-04,3339,False,,merged,2023-06-06,True,merged_replacement
+3371,9th & Arch,2024-01-11,3050,False,,merged,2015-04-23,False,merged_replacement
+3372,24th & Jackson,2024-01-25,3372,False,,kept,2024-01-25,True,retained_new_station
+3373,11th & Wood,2024-02-01,3373,False,,kept,2024-02-01,True,retained_new_station
+3374,26th & Poplar,2024-04-25,3374,False,,kept,2024-04-25,True,retained_new_station
+3375,"Spring Garden Station, MFL",2024-01-29,3070,False,,merged,2015-04-29,False,merged_replacement
+3376,Thompson & Franklin,2024-02-06,3376,False,,kept,2024-02-06,True,retained_new_station
+3377,21st & Passyunk,2024-02-20,3377,False,,kept,2024-02-20,True,retained_new_station
+3378,4th & Arch,2024-02-22,3378,False,,kept,2024-02-22,True,retained_new_station
+3380,American & Master,2024-02-27,3380,True,missing_coordinates,excluded,2024-02-27,False,excluded_identity
+3381,48th & Baltimore,2024-03-27,3381,False,,kept,2024-03-27,True,retained_new_station
+3382,Walnut & Rittenhouse,2024-04-17,3382,False,,kept,2024-04-17,True,retained_new_station
+3383,"3rd & Wildey, Liberty Lands Park",2024-04-23,3383,False,,kept,2024-04-23,True,retained_new_station
+3387,6th & Girard,2024-07-11,3387,False,,kept,2024-07-11,True,retained_new_station
+3388,8th & Brown,2024-07-16,3388,False,,kept,2024-07-16,True,retained_new_station
+3390,"52nd St Station, MFL",2024-08-01,3390,False,,kept,2024-08-01,True,retained_new_station
+3391,54th & City Ave,2024-09-04,3391,False,,kept,2024-09-04,True,retained_new_station
+3392,30th & Reed,2024-08-14,3317,False,,merged,2023-03-05,True,merged_replacement
+3393,2nd & George,2024-08-28,3393,False,,kept,2024-08-28,True,retained_new_station
+3394,Broad & Snyder,2024-09-11,3355,False,,merged,2023-10-12,True,merged_replacement
+3395,12th & Carpenter,2024-09-17,3308,False,,merged,2023-03-01,True,merged_replacement
+3396,21st & Passyunk,2024-10-02,3377,False,,merged,2024-02-20,True,merged_replacement
+3397,21st & Washington,2024-10-16,3343,False,,merged,2023-07-20,True,merged_replacement
+3398,4th & Oregon,2024-12-13,3311,False,,merged,2023-02-15,True,merged_replacement

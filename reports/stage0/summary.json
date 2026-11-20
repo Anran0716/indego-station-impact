@@ -60,21 +60,67 @@
     "2026": 41
   },
   "manual_review_station_count": 0,
-  "relocation_flagged_station_count": 1,
-  "relocation_flagged_station_ids": [
-    "3273"
-  ],
-  "relocation_flags_are_confirmed_physical_moves": false,
-  "station_identity_candidate_pairs": 23,
-  "station_identity_candidate_new_ids": 23,
+  "relocation_flagged_station_count": 0,
+  "relocation_flagged_station_ids": [],
   "coordinate_status_counts": {
     "audited": 285,
     "no_coordinates": 96,
-    "insufficient_quarters": 4
+    "insufficient_quarters": 3,
+    "no_supported_coordinates": 1
   },
   "invalid_departure_coordinate_rows": 0,
+  "low_support_station_quarters": 24,
+  "min_trips_per_quarter_coordinate": 20,
   "projected_crs": "EPSG:32618",
   "relocation_threshold_m": 50,
+  "station_identity_candidate_pairs": 23,
+  "station_identity_name_pairs": 23,
+  "station_identity_additional_proximity_pairs": 0,
+  "identity_pair_classification_counts": {
+    "renumbered": 17,
+    "interrupted_reopening": 3,
+    "missing_coordinates": 2,
+    "concurrent_operation": 1
+  },
+  "identity_pair_counts_by_discovery": {
+    "name": {
+      "renumbered": 17,
+      "concurrent_operation": 1,
+      "interrupted_reopening": 3,
+      "relocated": 0,
+      "missing_coordinates": 2,
+      "missing_activity": 0,
+      "ambiguous_timeline": 0
+    },
+    "proximity_only": {
+      "renumbered": 0,
+      "concurrent_operation": 0,
+      "interrupted_reopening": 0,
+      "relocated": 0,
+      "missing_coordinates": 0,
+      "missing_activity": 0,
+      "ambiguous_timeline": 0
+    }
+  },
+  "original_opening_ids_2022_2024": 121,
+  "opening_id_screening_counts": {
+    "retained_new_station": 97,
+    "merged_replacement": 20,
+    "excluded_identity": 4
+  },
+  "retained_physical_openings_2022_2024": 97,
+  "retained_physical_openings_by_year": {
+    "2022": 24,
+    "2023": 58,
+    "2024": 15
+  },
+  "retained_treatment_source_openings": 91,
+  "merged_raw_ids": 20,
+  "identity_mapping_rows": 385,
+  "canonical_station_rows": 365,
+  "ambiguous_predecessor_excluded_ids": 0,
+  "identity_weekly_departures_sum": 3210064,
+  "identity_weekly_rows": 56940,
   "runtime": {
     "python": "3.13.7",
     "duckdb": "1.4.4",

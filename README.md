@@ -4,7 +4,11 @@ An independent project estimating how new Indego stations affect ridership at ne
 
 **Status:** Stage 0 data download and input audit completed. Treatment assignment and estimation have not started. The estimated effect, confidence interval, minimum detectable effect (MDE), and diversion rate are pending. The main identification risk is that new stations may be placed where demand is already growing.
 
-See the generated [Stage 0 audit](reports/stage0/README.md) for annual trip counts, opening-date checks, coordinate flags, and possible station-ID replacements. A coordinate jump is a review flag, not a confirmed physical relocation. Resolve station identities before freezing treatment sources.
+See the generated [Stage 0 audit](reports/stage0/README.md) for trip counts, first/last activity dates, supported coordinates, and rule-based identity resolution. Renumbered IDs share a continuous canonical identity; concurrent operation, relocation, and missing-coordinate cases are excluded from station pools with explicit reasons. Radius feasibility counting is the next stage.
+
+<!-- stage0-summary:start -->
+Stage 0 found 23 name-based identity pairs and 0 additional proximity/timing pairs. The identity rules retain 97 canonical openings in 2022–2024, including 91 in the treatment-source window. 96 station-table IDs have no observed trip in the study files and are reported separately from opening-date discrepancies.
+<!-- stage0-summary:end -->
 
 ## Research question
 
@@ -12,7 +16,7 @@ How did new Indego stations opening in 2022–2024 affect weekly departures at n
 
 ## Planned design
 
-- Use publicly available Indego quarterly trip files for 2022 Q1–2024 Q4 and the latest official station table. Audit opening dates and station coordinates before assigning treatment.
+- Use publicly available Indego quarterly trip files for 2022 Q1–2024 Q4 and the pinned official station table. Audit opening dates and coordinates, require 20 valid departure observations per coordinate quarter, and resolve replacement IDs before assigning treatment. Candidate discovery uses both names and name-independent distance/retirement timing.
 - Select a treatment radius using a prespecified station-count rule and keep the buffer at twice that radius. Require 30 controls per stack: first use never-treated stations, then add stations whose first exposure within 2R occurs after the entire stack window if needed. If any stack remains below 30, redesign at the area level.
 - Estimate a stacked difference-in-differences model of `log(1 + weekly departures)` with stack-specific station and week fixed effects and standard errors clustered by station. The event window is 12 weeks before through 12 weeks after opening.
 - Use simulations to demonstrate a failure of ordinary two-way fixed effects under heterogeneous treatment effects before estimating effects on real data. Report event-study intervals, pretrend diagnostics, robustness checks, and simulation-based power.
@@ -44,6 +48,8 @@ python scripts/run_stage0.py
 ```
 
 For a verified existing download, use `python scripts/run_stage0.py --offline`. Each archive and extracted CSV has its source URL, download date, row count, and SHA256 recorded in the committed [manifest](data/manifest.json). URLs are pinned on the first successful discovery, so future runs do not silently switch to a newer station table. Raw and intermediate data stay outside version control. The later download-to-figures analysis pipeline remains to be implemented.
+
+The audit exports `station_id_map.csv`, `canonical_station_registry.csv`, and the surviving opening lists. Pass the ID map to `load_trips(..., station_id_map=...)` before subsequent same-station cleaning and panel construction. An ignored weekly activity grid preserves zero weeks during identity transitions and enforces departure-count conservation.
 
 ## Assumptions and limitations
 
