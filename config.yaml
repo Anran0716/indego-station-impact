@@ -28,6 +28,20 @@ feasibility:
   min_treated_stations: 20
   preferred_treated_stations: 40
 
+area_feasibility:
+  cell_size_m: 1000
+  anchor_x_m: 0
+  anchor_y_m: 0
+  offsets_m: [[0, 0], [500, 0], [0, 500], [500, 500]]
+  primary_offset_m: [0, 0]
+  min_eligible_old_stations: 1
+  min_treated_areas: 20
+  min_clean_controls_per_stack: 15
+  adjacency: edge_or_corner
+  adjacency_sources: all_exposure_cells_opened_by_stack_end
+  primary_gate_only: true
+  insufficient_action: stop_causal_estimation
+
 eligibility:
   baseline_year: 2022
   baseline_first_week: '2022-01-03'

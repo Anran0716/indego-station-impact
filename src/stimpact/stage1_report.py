@@ -46,6 +46,23 @@ def record_results(root: Path, summary: dict, stacks: pd.DataFrame,
         "See the [feasibility audit](reports/stage1/README.md)."
     )
     _replace_block(root / "README.md", "stage1-summary", brief)
+    ordered = chosen_stacks.sort_values("stack_last_week")
+    if len(ordered):
+        first, last = ordered.iloc[0], ordered.iloc[-1]
+        exposed = summary["eligible_existing_stations"] - row["never_treated_controls"]
+        outer = radius * 2
+        finding = (
+            f"Conditional on the {summary['eligible_existing_stations']} prespecified eligible "
+            f"existing stations, {exposed} ({100 * exposed / summary['eligible_existing_stations']:.1f}%) "
+            f"have a study-period opening within {outer} metres. Never-exposed controls number "
+            f"{row['never_treated_controls']}; the additional not-yet-exposed controls decline "
+            f"from {first.additional_clean_controls_available} in {first.cohort_quarter} to "
+            f"{last.additional_clean_controls_available} in {last.cohort_quarter}. This is "
+            "a geometry-and-opening-date finding about widespread network densification and "
+            "comparison-group scarcity, conditional on the fixed eligibility sample. It does "
+            "not estimate a ridership effect or use before/after effect estimates."
+        )
+        _replace_block(root / "README.md", "network-densification-finding", finding)
     prereg = (
         f"Feasibility decision before real-data estimation: **{decision['decision']}**. "
         f"The treated-count rule evaluates R = {radius} metres, with {row['treated_stations']} "
