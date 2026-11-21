@@ -2,25 +2,37 @@ An independent project estimating how new Indego stations affect ridership at ne
 
 # Indego station impact
 
-**Status:** Input-identity auditing and Stage 1 feasibility counting are complete. The feasibility decision below determines the next design. The estimated effect, confidence interval, minimum detectable effect (MDE), and diversion rate are pending. The main identification risk is that new stations may be placed where demand is already growing.
+**Status:** Station-level and area-level feasibility counts are complete. The current area decision and boundary diagnostics are recorded below. Effect estimates and minimum detectable effects remain pending; no treatment-effect model has been fitted. Station placement following demand trends and cross-boundary spillovers remain identification risks.
 
 See the generated [Stage 0 audit](reports/stage0/README.md) for trip counts, first/last activity dates, supported coordinates, and rule-based identity resolution. Renumbered IDs share a continuous canonical identity. An unobserved earlier ID does not exclude an independently eligible opening; concurrent-operation and unresolved observed-identity cases carry explicit exclusion reasons.
+
+<!-- area-feasibility-summary:start -->
+**Area feasibility:** the primary (0,0) grid has 54 eligible areas, 1 excluded area(s), 28 treated areas, and at least 21 clean controls per stack. The fixed gates are 20 treated areas and 15 controls per stack. All four offsets pass the basic gate: True. The fixed primary grid passes the basic count gate. After the registered conservative eight-neighbour exclusion, the minimum control counts range from 1 to 2 across grids. That sensitivity sample is insufficient; review cross-boundary spillovers before specifying an estimator. This is a count-only result; no outcome or treatment-effect estimate was produced. [Area count report](reports/area_feasibility/README.md).
+<!-- area-feasibility-summary:end -->
+
+**Original station-level feasibility record**
 
 <!-- stage1-summary:start -->
 Stage 1 screened 156 eligible existing stations. At the rule-selected candidate R = 400 metres: 52 treated, 17 never-exposed controls; the minimum after clean-control augmentation is 17. 5 of 9 stacks fall below 30 controls. **Area-level redesign required.** Keep the station-level radius unset; the next preregistration must specify the one-kilometre-area design before estimation. See the [feasibility audit](reports/stage1/README.md).
 <!-- stage1-summary:end -->
 
+<!-- network-densification-finding:start -->
+Conditional on the 156 prespecified eligible existing stations, 139 (89.1%) have a study-period opening within 800 metres. Never-exposed controls number 17; the additional not-yet-exposed controls decline from 89 in 2022Q2 to 0 in 2024Q2. This is a geometry-and-opening-date finding about widespread network densification and comparison-group scarcity, conditional on the fixed eligibility sample. It does not estimate a ridership effect or use before/after effect estimates.
+<!-- network-densification-finding:end -->
+
 <!-- stage0-summary:start -->
-Stage 0 found 23 name-based identity pairs and 0 additional proximity/timing pairs. The identity rules retain 100 canonical openings in 2022–2024, including 94 in the treatment-source window. The separate exposure table retains 101 operating, located openings, including treatment-ineligible sources. 96 station-table IDs have no observed trip in the study files and are reported separately from opening-date discrepancies.
+Stage 0 found 23 name-based identity pairs and 0 additional proximity/timing pairs. The identity rules retain 100 canonical openings in 2022Ã¢â‚¬â€œ2024, including 94 in the treatment-source window. The separate exposure table retains 101 operating, located openings, including treatment-ineligible sources. 96 station-table IDs have no observed trip in the study files and are reported separately from opening-date discrepancies.
 <!-- stage0-summary:end -->
 
 ## Research question
 
-How did new Indego stations opening in 2022–2024 affect weekly departures at nearby existing stations in Philadelphia? New stations could divert trips from existing stations, improve the network and increase their use, or do both. The target is the net effect on existing stations.
+How did new Indego stations opening in 2022Ã¢â‚¬â€œ2024 affect weekly departures at nearby existing stations in Philadelphia? New stations could divert trips from existing stations, improve the network and increase their use, or do both. The target is the net effect on existing stations.
 
-## Planned design
+## Design records
 
-- Use publicly available Indego quarterly trip files for 2022 Q1–2024 Q4 and the pinned official station table. Require 20 coordinate observations per quarter for relocation checks; retain known lower-support locations with a flag. Resolve replacement IDs, then separate eligible treatment sources from all operating, positioned exposure sources before grouping stations. Candidate discovery uses both names and name-independent distance/retirement timing.
+The area feasibility amendment uses fixed 1-kilometre EPSG:32618 cells containing qualified old stations. It counts a primary grid plus three prespecified shifts, and reports a separate eight-neighbour boundary-spillover diagnostic. Its proposed primary outcome is all-station area departures; the secondary outcome is departures from qualified old stations. Neither outcome has been constructed for an area estimator. The station-level specifications below are retained as the original design record.
+
+- Use publicly available Indego quarterly trip files for 2022 Q1Ã¢â‚¬â€œ2024 Q4 and the pinned official station table. Require 20 coordinate observations per quarter for relocation checks; retain known lower-support locations with a flag. Resolve replacement IDs, then separate eligible treatment sources from all operating, positioned exposure sources before grouping stations. Candidate discovery uses both names and name-independent distance/retirement timing.
 - Select a treatment radius using a prespecified station-count rule and keep the buffer at twice that radius. Require 30 controls per stack: first use never-treated stations, then add stations whose first exposure within 2R occurs after the entire stack window if needed. If any stack remains below 30, redesign at the area level.
 - Estimate a stacked difference-in-differences model of `log(1 + weekly departures)` with stack-specific station and week fixed effects and standard errors clustered by station. The event window is 12 weeks before through 12 weeks after opening.
 - Use simulations to demonstrate a failure of ordinary two-way fixed effects under heterogeneous treatment effects before estimating effects on real data. Report event-study intervals, pretrend diagnostics, robustness checks, and simulation-based power.
@@ -35,7 +47,8 @@ data/manifest.json          Pinned input URLs, row counts, and SHA256 hashes
 docs/preregistration.md     Design rules; freeze after the feasibility check
 reports/stage0/             Generated input-audit tables and summary
 reports/stage1/             Eligibility, radius counts, and stack-control feasibility
-scripts/                    Download and Stage 0 entry points
+reports/area_feasibility/   Registered grid, clean-control, and boundary counts
+scripts/                    Download and feasibility entry points
 sql/                        DuckDB panel construction, to be implemented
 src/stimpact/               Python analysis package
 tests/                      Synthetic input-validation tests
@@ -56,6 +69,8 @@ For a verified existing download, use `python scripts/run_stage0.py --offline`. 
 
 Run `python scripts/run_stage1.py` after Stage 0 to reproduce the fixed existing-station eligibility, three-radius counts, and per-stack clean-control checks. Its decision follows the preregistered gates and does not use estimated treatment effects.
 
+Run `python scripts/count_area_feasibility.py --prereg-commit cd44b51` to reproduce the area counts against the rules committed before the first area count. This command reads only fixed eligibility flags, positions, and opening dates from the versioned input tables.
+
 The audit exports `station_id_map.csv`, `canonical_station_registry.csv`, and the surviving opening lists. Pass the ID map to `load_trips(..., station_id_map=...)` before subsequent same-station cleaning and panel construction. An ignored weekly activity grid preserves zero weeks during identity transitions and enforces departure-count conservation.
 
 `treatment_source_stations.csv` defines eligible opening cohorts; `exposure_source_stations.csv` screens controls using all operating, positioned openings, including unusable treatment sources. The pure assignment function and stack clean-control guard are tested on synthetic stations while the real radius remains unset. `source_evidence_audit.csv` records activity and location evidence for the original IDs and their successors.
@@ -69,7 +84,3 @@ The audit exports `station_id_map.csv`, `canonical_station_registry.csv`, and th
 5. Interpreting reduced trips at existing stations as diversion also requires assumptions about other concurrent changes and how exposure overlaps across new stations.
 
 All eventual estimates will include uncertainty. A nonsignificant estimate will be interpreted with its confidence interval and MDE rather than treated as evidence of zero effect.
-
-<!-- network-densification-finding:start -->
-Conditional on the 156 prespecified eligible existing stations, 139 (89.1%) have a study-period opening within 800 metres. Never-exposed controls number 17; the additional not-yet-exposed controls decline from 89 in 2022Q2 to 0 in 2024Q2. This is a geometry-and-opening-date finding about widespread network densification and comparison-group scarcity, conditional on the fixed eligibility sample. It does not estimate a ridership effect or use before/after effect estimates.
-<!-- network-densification-finding:end -->

@@ -1,0 +1,147 @@
+{
+  "preregistration_commit": "cd44b51f66767b97fca5a9fc3c154c4b0cb05d06",
+  "grid_crs": "EPSG:32618",
+  "registered_area_settings": {
+    "cell_size_m": 1000,
+    "anchor_x_m": 0,
+    "anchor_y_m": 0,
+    "offsets_m": [
+      [
+        0,
+        0
+      ],
+      [
+        500,
+        0
+      ],
+      [
+        0,
+        500
+      ],
+      [
+        500,
+        500
+      ]
+    ],
+    "primary_offset_m": [
+      0,
+      0
+    ],
+    "min_eligible_old_stations": 1,
+    "min_treated_areas": 20,
+    "min_clean_controls_per_stack": 15,
+    "adjacency": "edge_or_corner",
+    "adjacency_sources": "all_exposure_cells_opened_by_stack_end",
+    "primary_gate_only": true,
+    "insufficient_action": "stop_causal_estimation"
+  },
+  "eligible_old_stations": 156,
+  "treatment_sources": 94,
+  "exposure_sources": 101,
+  "input_hashes": {
+    "eligible_existing_stations": "30a660f7ef37a28e4ad15d8b71a70a03bbd9c09b907d72472b109dce5748564d",
+    "treatment_sources": "7898dca95d53036209ce649b7f5316f964f559754a91bef38c52fa6e2008a600",
+    "exposure_sources": "2b1a93820926686bd470db563c9e9dc322e496f68af171079c9ec0c09d457a90"
+  },
+  "grid_counts": [
+    {
+      "offset_x_m": 0,
+      "offset_y_m": 0,
+      "is_primary": true,
+      "eligible_areas": 54,
+      "excluded_unusable_areas": 1,
+      "treated_areas": 28,
+      "never_exposed_control_areas": 21,
+      "exposure_cells_without_eligible_old": 26,
+      "cohort_stacks": 8,
+      "minimum_clean_controls_per_stack": 21,
+      "minimum_adjacency_controls_per_stack": 1,
+      "failed_stacks": 0,
+      "passes_main_gate": true,
+      "passes_adjacency_gate": false
+    },
+    {
+      "offset_x_m": 500,
+      "offset_y_m": 0,
+      "is_primary": false,
+      "eligible_areas": 55,
+      "excluded_unusable_areas": 1,
+      "treated_areas": 31,
+      "never_exposed_control_areas": 20,
+      "exposure_cells_without_eligible_old": 25,
+      "cohort_stacks": 7,
+      "minimum_clean_controls_per_stack": 20,
+      "minimum_adjacency_controls_per_stack": 1,
+      "failed_stacks": 0,
+      "passes_main_gate": true,
+      "passes_adjacency_gate": false
+    },
+    {
+      "offset_x_m": 0,
+      "offset_y_m": 500,
+      "is_primary": false,
+      "eligible_areas": 56,
+      "excluded_unusable_areas": 1,
+      "treated_areas": 33,
+      "never_exposed_control_areas": 20,
+      "exposure_cells_without_eligible_old": 22,
+      "cohort_stacks": 7,
+      "minimum_clean_controls_per_stack": 20,
+      "minimum_adjacency_controls_per_stack": 2,
+      "failed_stacks": 0,
+      "passes_main_gate": true,
+      "passes_adjacency_gate": false
+    },
+    {
+      "offset_x_m": 500,
+      "offset_y_m": 500,
+      "is_primary": false,
+      "eligible_areas": 54,
+      "excluded_unusable_areas": 1,
+      "treated_areas": 32,
+      "never_exposed_control_areas": 21,
+      "exposure_cells_without_eligible_old": 26,
+      "cohort_stacks": 9,
+      "minimum_clean_controls_per_stack": 21,
+      "minimum_adjacency_controls_per_stack": 1,
+      "failed_stacks": 0,
+      "passes_main_gate": true,
+      "passes_adjacency_gate": false
+    }
+  ],
+  "decision": {
+    "decision": "primary_area_feasible",
+    "primary_offset_m": [
+      0,
+      0
+    ],
+    "primary_treated_areas": 28,
+    "primary_min_clean_controls": 21,
+    "primary_failed_stacks": 0,
+    "min_treated_areas_required": 20,
+    "min_controls_per_stack_required": 15,
+    "all_offsets_pass": true,
+    "all_adjacency_diagnostics_pass": false,
+    "passing_offsets": [
+      [
+        0,
+        0
+      ],
+      [
+        500,
+        0
+      ],
+      [
+        0,
+        500
+      ],
+      [
+        500,
+        500
+      ]
+    ],
+    "action": "review_diagnostics_before_any_estimation"
+  },
+  "ridership_values_parsed": false,
+  "treatment_effect_estimator_run": false
+}

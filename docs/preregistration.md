@@ -1,6 +1,6 @@
 # Preregistration draft
 
-**Status: draft; radius not yet selected.** The design decisions below were recorded on 2026-11-20 before feasibility counting or real-data estimation. Apply the specified identity rules, then complete the feasibility check and record the selected radius and control mode in a separate freeze commit before estimating effects on real data. Later changes must be documented as amendments rather than silently replacing the original design.
+**Status: the original station-level plan failed its feasibility gate; the area-count amendment was committed before area counting.** The generated area result below records the primary count gate and boundary diagnostics. No area estimator has been registered or fitted. The original design and its amendments remain here as an audit record; subsequent estimation decisions require a separate specification. Later changes must be documented as amendments rather than silently replacing the original design.
 
 ## Question and hypotheses
 
@@ -122,3 +122,7 @@ For the diversion rate, count each treated existing station once in the numerato
 <!-- feasibility-result:start -->
 Feasibility decision before real-data estimation: **redesign_area_level**. The treated-count rule evaluates R = 400 metres, with 52 treated stations. 5 of 9 quarterly stacks fail the 30-control minimum after adding clean controls; the minimum is 17. **Area-level redesign required.** Keep the station-level radius unset; the next preregistration must specify the one-kilometre-area design before estimation. The original station-level plan remains in this file as a design and feasibility record. [Generated counts and cohort diagnostics](../reports/stage1/README.md).
 <!-- feasibility-result:end -->
+
+<!-- area-feasibility-result:start -->
+Area rules were committed before counting in [cd44b51](https://github.com/Anran0716/indego-station-impact/commit/cd44b51f66767b97fca5a9fc3c154c4b0cb05d06). The primary grid has 28 treated areas and a minimum of 21 clean controls per stack, against the fixed 20/15 gates. Decision: **primary_area_feasible**. The fixed primary grid passes the basic count gate. After the registered conservative eight-neighbour exclusion, the minimum control counts range from 1 to 2 across grids. That sensitivity sample is insufficient; review cross-boundary spillovers before specifying an estimator. The committed rules and thresholds above are unchanged. This amendment registered feasibility only; the area estimator and any subsequent analysis are not frozen here. [Counts and diagnostic memberships](../reports/area_feasibility/README.md).
+<!-- area-feasibility-result:end -->

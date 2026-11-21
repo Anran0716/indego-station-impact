@@ -1,0 +1,11 @@
+offset_x_m,offset_y_m,cell_id,cell_col,cell_row,eligible_old_stations,eligible_area,excluded,reason,treated,role,treatment_sources,exposure_sources,unusable_source_ids,first_treatment_date,cohort_week,cohort_quarter,first_exposure_date,first_exposure_week,prior_exposure_before_eligible_cohort
+0,0,483:4423,483,4423,3,True,False,,True,treated,1,2,,2023-05-24,2023-05-22,2023Q2,2022-03-31,2022-03-28,True
+500,0,480:4423,480,4423,1,True,False,,True,treated,2,3,,2023-02-07,2023-02-06,2023Q1,2022-03-10,2022-03-07,True
+500,0,482:4423,482,4423,2,True,False,,True,treated,1,2,,2023-05-24,2023-05-22,2023Q2,2022-03-31,2022-03-28,True
+0,500,480:4421,480,4421,2,True,False,,True,treated,1,2,,2023-05-30,2023-05-29,2023Q2,2022-03-03,2022-02-28,True
+0,500,482:4422,482,4422,1,True,False,,True,treated,1,2,,2023-02-08,2023-02-06,2023Q1,2022-02-23,2022-02-21,True
+0,500,483:4422,483,4422,5,True,False,,True,treated,1,2,,2023-05-24,2023-05-22,2023Q2,2022-03-31,2022-03-28,True
+500,500,481:4422,481,4422,2,True,False,,True,treated,1,2,,2023-02-08,2023-02-06,2023Q1,2022-02-23,2022-02-21,True
+500,500,482:4422,482,4422,2,True,False,,True,treated,1,2,,2023-05-24,2023-05-22,2023Q2,2022-03-31,2022-03-28,True
+500,500,484:4418,484,4418,2,True,False,,True,treated,1,2,,2023-02-28,2023-02-27,2023Q1,2022-02-17,2022-02-14,True
+500,500,486:4418,486,4418,1,True,False,,True,treated,1,2,,2023-01-12,2023-01-09,2023Q1,2022-02-15,2022-02-14,True

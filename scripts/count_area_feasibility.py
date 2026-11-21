@@ -11,6 +11,7 @@ import pandas as pd
 import yaml
 
 from stimpact.area_feasibility import count_areas
+from stimpact.area_report import record_area_result
 from stimpact.download import sha256
 
 
@@ -64,6 +65,8 @@ def run(root: Path, prereg_commit: str) -> dict:
                           ("old_cell_map", "eligible_old_cell_map"), ("source_cell_map", "source_cell_map")):
         result[key].to_csv(output / f"{filename}.csv", index=False)
     (output / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+    result["areas"].loc[result["areas"].treated & result["areas"].prior_exposure_before_eligible_cohort].to_csv(
+        output / "prior_exposure_timing.csv", index=False)
     decision = result["decision"]
     lines = ["# Area-level feasibility audit", "",
              f"Design registered before counting in [{registered_commit[:7]}]"
@@ -98,7 +101,8 @@ def run(root: Path, prereg_commit: str) -> dict:
               "through the latest opening plus the configured post-period. Clean controls have "
               "no exposure opening on or before the last stack week. Eight-neighbour sensitivity "
               "removes controls adjacent by edge or corner to any exposure cell active by then, "
-              "including adjacent expansion-only cells. Future exposures after the stack end "
+              "including cells outside the eligible unit sample (such as expansion-only cells). "
+              "Future exposures after the stack end "
               "do not trigger this restriction. There is no station-radius or 2R buffer in "
               "the main area design.", "",
               "`stack_control_counts.csv` reports all cohort counts. `control_membership.csv` "
@@ -119,7 +123,11 @@ def run(root: Path, prereg_commit: str) -> dict:
                   "completed by this count-only command.", ""]
     else:
         lines += ["The primary count gate passes. Review the registered adjacency, grid, and "
-                  "timing diagnostics before separately specifying or implementing an estimator.", ""]
+                  "timing diagnostics before separately specifying or implementing an estimator. "
+                  "Passing counts under all offsets does not establish that an unestimated "
+                  "ridership effect is robust to grid location. The adjacency-restricted "
+                  "sample has its own reported counts; a shortfall there is not described as "
+                  "a passed robustness analysis.", ""]
     lines += ["## Reproduction", "", "```powershell",
               f"python scripts/count_area_feasibility.py --prereg-commit {registered_commit}", "```", "",
               "The command verifies that the area settings and event/study windows match "
@@ -127,6 +135,7 @@ def run(root: Path, prereg_commit: str) -> dict:
               "the eligibility CSV is read only for ID, fixed position, and its existing "
               "qualification flag. Raw trips and baseline/weekly ridership fields are not read.", ""]
     (output / "README.md").write_text("\n".join(lines), encoding="utf-8")
+    record_area_result(root, summary)
     print(json.dumps(summary, indent=2), flush=True)
     return summary
 

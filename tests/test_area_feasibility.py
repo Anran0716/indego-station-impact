@@ -45,7 +45,7 @@ def test_multiple_old_stations_in_one_cell_count_as_one_area_and_new_only_cells_
     result = count_areas(old_points([0.0, 500.0]), exposure, exposure, config)
     grid = primary(result, "grid_counts").iloc[0]
     assert grid.eligible_areas == grid.treated_areas == 1
-    assert grid.new_only_exposure_cells == 1
+    assert grid.exposure_cells_without_eligible_old == 1
     area = primary(result, "areas").set_index("cell_id")
     assert area.loc["0:0", "eligible_old_stations"] == 2
     assert not area.loc["3:0", "eligible_area"]
