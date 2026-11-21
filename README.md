@@ -69,3 +69,7 @@ The audit exports `station_id_map.csv`, `canonical_station_registry.csv`, and th
 5. Interpreting reduced trips at existing stations as diversion also requires assumptions about other concurrent changes and how exposure overlaps across new stations.
 
 All eventual estimates will include uncertainty. A nonsignificant estimate will be interpreted with its confidence interval and MDE rather than treated as evidence of zero effect.
+
+<!-- network-densification-finding:start -->
+Conditional on the 156 prespecified eligible existing stations, 139 (89.1%) have a study-period opening within 800 metres. Never-exposed controls number 17; the additional not-yet-exposed controls decline from 89 in 2022Q2 to 0 in 2024Q2. This is a geometry-and-opening-date finding about widespread network densification and comparison-group scarcity, conditional on the fixed eligibility sample. It does not estimate a ridership effect or use before/after effect estimates.
+<!-- network-densification-finding:end -->
