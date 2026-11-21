@@ -49,7 +49,7 @@ def area_decision(counts: pd.DataFrame, config: dict) -> dict:
             "all_adjacency_diagnostics_pass": bool(counts.passes_adjacency_gate.all()),
             "passing_offsets": [[int(row.offset_x_m), int(row.offset_y_m)]
                                 for row in counts.loc[counts.passes_main_gate].itertuples()],
-            "action": "review_diagnostics_before_any_estimation" if passed
+            "action": "validate_simulations_then_specify_main_estimator" if passed
             else "retain_feasibility_reports_and_plan_power_and_randomized_rollout"}
 
 

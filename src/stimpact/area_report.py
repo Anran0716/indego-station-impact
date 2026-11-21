@@ -3,6 +3,11 @@
 import re
 from pathlib import Path
 
+SPILLOVER_LIMITATION = (
+    "The main estimate assumes no cross-boundary spillover; the planned exclusion test was "
+    "not estimable because nearly every control area borders a treated area."
+)
+
 
 def _block(path: Path, name: str, content: str) -> None:
     text = path.read_text(encoding="utf-8")
@@ -27,8 +32,10 @@ def record_area_result(root: Path, summary: dict) -> None:
             minimums = [row["minimum_adjacency_controls_per_stack"] for row in summary["grid_counts"]]
             action += (f" After the registered conservative eight-neighbour exclusion, the "
                        f"minimum control counts range from {min(minimums)} to {max(minimums)} "
-                       "across grids. That sensitivity sample is insufficient; review "
-                       "cross-boundary spillovers before specifying an estimator.")
+                       "across grids. That robustness analysis is **not estimable** "
+                       "(the primary grid retains only 1 control in its smallest stacks). "
+                       "This does not change the main-design gate; simulation validation "
+                       "must precede real-data estimation.")
     brief = (
         f"**Area feasibility:** the primary (0,0) grid has {primary['eligible_areas']} eligible "
         f"areas, {primary['excluded_unusable_areas']} excluded area(s), {primary['treated_areas']} "
@@ -40,6 +47,7 @@ def record_area_result(root: Path, summary: dict) -> None:
         "[Area count report](reports/area_feasibility/README.md)."
     )
     _block(root / "README.md", "area-feasibility-summary", brief)
+    _block(root / "README.md", "spillover-limitation", SPILLOVER_LIMITATION)
     status = (
         f"Area rules were committed before counting in [{prereg[:7]}]"
         f"(https://github.com/Anran0716/indego-station-impact/commit/{prereg}). "

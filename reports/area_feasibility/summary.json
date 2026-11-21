@@ -140,7 +140,7 @@
         500
       ]
     ],
-    "action": "review_diagnostics_before_any_estimation"
+    "action": "validate_simulations_then_specify_main_estimator"
   },
   "ridership_values_parsed": false,
   "treatment_effect_estimator_run": false

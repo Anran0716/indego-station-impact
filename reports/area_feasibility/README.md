@@ -27,7 +27,11 @@ Quarterly stacks use the earliest cohort opening minus the configured pre-period
 
 **primary_area_feasible**. On the primary grid, there are 28 treated areas and a minimum of 21 clean controls across stacks; 0 stacks fall below the control threshold.
 
-The primary count gate passes. Review the registered adjacency, grid, and timing diagnostics before separately specifying or implementing an estimator. Passing counts under all offsets does not establish that an unestimated ridership effect is robust to grid location. The adjacency-restricted sample has its own reported counts; a shortfall there is not described as a passed robustness analysis.
+The primary count gate passes: the main design may proceed after simulation validation and final estimator specification. The eight-neighbour robustness analysis is **not estimable** (only 1 control remains in the smallest primary stacks); its sample shortfall is not an additional main-design gate. Passing counts under all offsets does not establish that an unestimated ridership effect is robust to grid location. The adjacency-restricted sample has its own reported counts; a shortfall there is not described as a passed robustness analysis.
+
+## Limitation
+
+The main estimate assumes no cross-boundary spillover; the planned exclusion test was not estimable because nearly every control area borders a treated area.
 
 ## Reproduction
 

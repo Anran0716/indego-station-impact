@@ -1,6 +1,6 @@
 # Preregistration draft
 
-**Status: the original station-level plan failed its feasibility gate; the area-count amendment was committed before area counting.** The generated area result below records the primary count gate and boundary diagnostics. No area estimator has been registered or fitted. The original design and its amendments remain here as an audit record; subsequent estimation decisions require a separate specification. Later changes must be documented as amendments rather than silently replacing the original design.
+**Status: the original station-level plan failed its feasibility gate; all four area grids pass the registered 20/15 count gates.** The primary area design may proceed after simulation validation and a separate final estimation specification. The eight-neighbour robustness restriction is not estimable and is not an additional main-design gate. No real area outcome model has been fitted. The original design and its amendments remain as an audit record.
 
 ## Question and hypotheses
 
@@ -70,7 +70,21 @@ The station-level design failed its prespecified clean-control gate. This amendm
 
 **Fallback after failure.** The project then becomes a feasibility and experimental-planning deliverable: the station/area feasibility reports, power calculations using real observed variance, and a fully specified randomized staggered opening rollout. Power and experimental design are separate follow-up work; no observational causal coefficient is produced by the present area-count command. Interview language must say that clean comparison groups were insufficient for the prespecified gates, rather than claiming that zero potential controls existed.
 
-## Radius selection before outcome analysis
+## Distance-spillover and area-simulation amendment (2026-11-21)
+
+Commit this amendment before counting the distance-restricted sample or inspecting real area effects. The main 20-treated/15-control gates remain unchanged. The eight-neighbour restriction is a robustness analysis: report it as **not estimable**, including the remaining control count, rather than as passed or as a new feasibility gate.
+
+For each already registered stack and each of the four fixed offsets, start with its main clean-control areas. Remove a control area if **any fixed Stage 1 qualified old station in that area** is at Euclidean distance **<=400 metres** in EPSG:32618 from **any Stage 0 exposure source opening during that stack's calendar window**. Reuse the frozen 156-station old pool; do not substitute cell centroids or only the nearest old station. Include all 101 exposure sources, including treatment-unusable, low-support, outside-treatment-window, and expansion-only sources. Use their canonical fixed coordinates and reconciled opening dates. The window includes the first Monday through the Sunday of the final stack week; openings before that window or after that Sunday do not trigger this particular diagnostic. Own-cell clean-control rules continue to apply independently.
+
+Require at least **10 distinct remaining control areas in every stack** to estimate this distance-restricted robustness variant. Otherwise report **not estimable** for that variant and list the failing stacks/counts. Do not drop stacks, adjust distance, or alter the main-design decision. Count before fitting. Grid-offset checks and both spillover restrictions remain separate from the main gate.
+
+Every report must retain this limitation: "The main estimate assumes no cross-boundary spillover; the planned exclusion test was not estimable because nearly every control area borders a treated area." Here the planned exclusion test means the original eight-neighbour test. Counts alone cannot validate absence of spillovers or robustness of an unestimated effect.
+
+Before real-data estimation, simulate **area** panels using the fixed primary grid's actual available areas, exact opening weeks, quarterly cohort sizes, stack calendar windows, and clean-control memberships. No real weekly outcomes or baseline ridership values enter this simulation. Reuse the full 156-week grid; retain each treated area's event weeks -12 through +12 within its stack. Absorb stack-by-area and stack-by-calendar-week fixed effects and cluster across reused rows by physical area. Validate constant known effects (including -10%) and a heterogeneous dynamic counterexample; the ordinary TWFE case must be an explicit strict expected failure, while stacked recovery passes. Inspect the pooled coefficient's implicit weights and distinguish its design-weighted target from an equal-area ATT.
+
+Use synthetic additive area/calendar effects and log-scale AR(1) errors with innovation SD 0.25, rho 0.5, and the configured seed. Report power at the five configured effect sizes with 200 repetitions, area-clustered CR1 inference and a t reference with G-1 degrees of freedom. These noise parameters are assumptions, **not measured area variances**; label resulting power/MDE as illustrative simulation validation, not empirical project power. The all-station net-effect prediction and final real-data estimator/robustness specification still require a separate record before fitting real outcomes.
+
+## Radius selection before outcome analysis (original station design)
 
 Count treated, control, and buffer stations at radii of 400, 600, and 800 metres without inspecting treatment effects or before/after outcome changes.
 
@@ -124,5 +138,5 @@ Feasibility decision before real-data estimation: **redesign_area_level**. The t
 <!-- feasibility-result:end -->
 
 <!-- area-feasibility-result:start -->
-Area rules were committed before counting in [cd44b51](https://github.com/Anran0716/indego-station-impact/commit/cd44b51f66767b97fca5a9fc3c154c4b0cb05d06). The primary grid has 28 treated areas and a minimum of 21 clean controls per stack, against the fixed 20/15 gates. Decision: **primary_area_feasible**. The fixed primary grid passes the basic count gate. After the registered conservative eight-neighbour exclusion, the minimum control counts range from 1 to 2 across grids. That sensitivity sample is insufficient; review cross-boundary spillovers before specifying an estimator. The committed rules and thresholds above are unchanged. This amendment registered feasibility only; the area estimator and any subsequent analysis are not frozen here. [Counts and diagnostic memberships](../reports/area_feasibility/README.md).
+Area rules were committed before counting in [cd44b51](https://github.com/Anran0716/indego-station-impact/commit/cd44b51f66767b97fca5a9fc3c154c4b0cb05d06). The primary grid has 28 treated areas and a minimum of 21 clean controls per stack, against the fixed 20/15 gates. Decision: **primary_area_feasible**. The fixed primary grid passes the basic count gate. After the registered conservative eight-neighbour exclusion, the minimum control counts range from 1 to 2 across grids. That robustness analysis is **not estimable** (the primary grid retains only 1 control in its smallest stacks). This does not change the main-design gate; simulation validation must precede real-data estimation. The committed rules and thresholds above are unchanged. This amendment registered feasibility only; the area estimator and any subsequent analysis are not frozen here. [Counts and diagnostic memberships](../reports/area_feasibility/README.md).
 <!-- area-feasibility-result:end -->

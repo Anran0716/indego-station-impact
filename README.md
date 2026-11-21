@@ -7,7 +7,7 @@ An independent project estimating how new Indego stations affect ridership at ne
 See the generated [Stage 0 audit](reports/stage0/README.md) for trip counts, first/last activity dates, supported coordinates, and rule-based identity resolution. Renumbered IDs share a continuous canonical identity. An unobserved earlier ID does not exclude an independently eligible opening; concurrent-operation and unresolved observed-identity cases carry explicit exclusion reasons.
 
 <!-- area-feasibility-summary:start -->
-**Area feasibility:** the primary (0,0) grid has 54 eligible areas, 1 excluded area(s), 28 treated areas, and at least 21 clean controls per stack. The fixed gates are 20 treated areas and 15 controls per stack. All four offsets pass the basic gate: True. The fixed primary grid passes the basic count gate. After the registered conservative eight-neighbour exclusion, the minimum control counts range from 1 to 2 across grids. That sensitivity sample is insufficient; review cross-boundary spillovers before specifying an estimator. This is a count-only result; no outcome or treatment-effect estimate was produced. [Area count report](reports/area_feasibility/README.md).
+**Area feasibility:** the primary (0,0) grid has 54 eligible areas, 1 excluded area(s), 28 treated areas, and at least 21 clean controls per stack. The fixed gates are 20 treated areas and 15 controls per stack. All four offsets pass the basic gate: True. The fixed primary grid passes the basic count gate. After the registered conservative eight-neighbour exclusion, the minimum control counts range from 1 to 2 across grids. That robustness analysis is **not estimable** (the primary grid retains only 1 control in its smallest stacks). This does not change the main-design gate; simulation validation must precede real-data estimation. This is a count-only result; no outcome or treatment-effect estimate was produced. [Area count report](reports/area_feasibility/README.md).
 <!-- area-feasibility-summary:end -->
 
 **Original station-level feasibility record**
@@ -84,3 +84,7 @@ The audit exports `station_id_map.csv`, `canonical_station_registry.csv`, and th
 5. Interpreting reduced trips at existing stations as diversion also requires assumptions about other concurrent changes and how exposure overlaps across new stations.
 
 All eventual estimates will include uncertainty. A nonsignificant estimate will be interpreted with its confidence interval and MDE rather than treated as evidence of zero effect.
+
+<!-- spillover-limitation:start -->
+The main estimate assumes no cross-boundary spillover; the planned exclusion test was not estimable because nearly every control area borders a treated area.
+<!-- spillover-limitation:end -->

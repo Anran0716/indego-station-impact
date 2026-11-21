@@ -42,6 +42,23 @@ area_feasibility:
   primary_gate_only: true
   insufficient_action: stop_causal_estimation
 
+spillover_distance:
+  radius_m: 400
+  min_controls_per_stack: 10
+  old_station_scope: fixed_stage1_eligible_stations
+  source_scope: all_stage0_exposure_sources
+  opening_window: inclusive_stack_calendar_weeks
+  insufficient_action: mark_robustness_not_estimable
+  changes_main_gate: false
+
+area_simulation:
+  unit: cell_id
+  primary_offset_m: [0, 0]
+  noise_sd_log: 0.25
+  noise_ar1: 0.5
+  inference: CR1_area_clustered_t_G_minus_1
+  synthetic_only: true
+
 eligibility:
   baseline_year: 2022
   baseline_first_week: '2022-01-03'

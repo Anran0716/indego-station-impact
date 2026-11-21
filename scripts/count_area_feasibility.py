@@ -11,7 +11,7 @@ import pandas as pd
 import yaml
 
 from stimpact.area_feasibility import count_areas
-from stimpact.area_report import record_area_result
+from stimpact.area_report import SPILLOVER_LIMITATION, record_area_result
 from stimpact.download import sha256
 
 
@@ -122,12 +122,15 @@ def run(root: Path, prereg_commit: str) -> dict:
                   "the feasibility reports. Those follow-up deliverables are not claimed as "
                   "completed by this count-only command.", ""]
     else:
-        lines += ["The primary count gate passes. Review the registered adjacency, grid, and "
-                  "timing diagnostics before separately specifying or implementing an estimator. "
+        lines += ["The primary count gate passes: the main design may proceed after simulation "
+                  "validation and final estimator specification. The eight-neighbour robustness "
+                  "analysis is **not estimable** (only 1 control remains in the smallest primary "
+                  "stacks); its sample shortfall is not an additional main-design gate. "
                   "Passing counts under all offsets does not establish that an unestimated "
                   "ridership effect is robust to grid location. The adjacency-restricted "
                   "sample has its own reported counts; a shortfall there is not described as "
                   "a passed robustness analysis.", ""]
+    lines += ["## Limitation", "", SPILLOVER_LIMITATION, ""]
     lines += ["## Reproduction", "", "```powershell",
               f"python scripts/count_area_feasibility.py --prereg-commit {registered_commit}", "```", "",
               "The command verifies that the area settings and event/study windows match "
