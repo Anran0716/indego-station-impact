@@ -1,13 +1,13 @@
-An independent project estimating how new Indego stations affect ridership at nearby existing stations.
+An independent project studying how new Indego stations change local ridership in Philadelphia.
 
 # Indego station impact
 
-**Status:** Station-level and area-level feasibility counts are complete. The current area decision and boundary diagnostics are recorded below. Effect estimates and minimum detectable effects remain pending; no treatment-effect model has been fitted. Station placement following demand trends and cross-boundary spillovers remain identification risks.
+**Status:** The main area design passes its fixed feasibility gates. The eight-neighbour robustness test is not estimable; the preregistered distance restriction has sufficient controls. Area-level synthetic validation is complete. Real effect estimates and power based on observed area variance remain pending; no real-outcome effect model has been fitted. Station placement following demand trends and cross-boundary spillovers remain identification risks.
 
 See the generated [Stage 0 audit](reports/stage0/README.md) for trip counts, first/last activity dates, supported coordinates, and rule-based identity resolution. Renumbered IDs share a continuous canonical identity. An unobserved earlier ID does not exclude an independently eligible opening; concurrent-operation and unresolved observed-identity cases carry explicit exclusion reasons.
 
 <!-- area-feasibility-summary:start -->
-**Area feasibility:** the primary (0,0) grid has 54 eligible areas, 1 excluded area(s), 28 treated areas, and at least 21 clean controls per stack. The fixed gates are 20 treated areas and 15 controls per stack. All four offsets pass the basic gate: True. The fixed primary grid passes the basic count gate. After the registered conservative eight-neighbour exclusion, the minimum control counts range from 1 to 2 across grids. That robustness analysis is **not estimable** (the primary grid retains only 1 control in its smallest stacks). This does not change the main-design gate; simulation validation must precede real-data estimation. This is a count-only result; no outcome or treatment-effect estimate was produced. [Area count report](reports/area_feasibility/README.md).
+**Area feasibility:** the primary (0,0) grid has 54 eligible areas, 1 excluded area(s), 28 treated areas, and at least 21 clean controls per stack. The fixed gates are 20 treated areas and 15 controls per stack. All four offsets pass the basic gate: True. The fixed primary grid passes the basic count gate. After the registered conservative eight-neighbour exclusion, the minimum control counts range from 1 to 2 across grids. That robustness analysis is **not estimable** (the primary grid retains only 1 control(s) in its smallest stacks). This does not change the main-design gate; simulation validation must precede real-data estimation. This is a count-only result; no outcome or treatment-effect estimate was produced. [Area count report](reports/area_feasibility/README.md).
 <!-- area-feasibility-summary:end -->
 
 **Original station-level feasibility record**
@@ -21,23 +21,23 @@ Conditional on the 156 prespecified eligible existing stations, 139 (89.1%) have
 <!-- network-densification-finding:end -->
 
 <!-- stage0-summary:start -->
-Stage 0 found 23 name-based identity pairs and 0 additional proximity/timing pairs. The identity rules retain 100 canonical openings in 2022Ã¢â‚¬â€œ2024, including 94 in the treatment-source window. The separate exposure table retains 101 operating, located openings, including treatment-ineligible sources. 96 station-table IDs have no observed trip in the study files and are reported separately from opening-date discrepancies.
+Stage 0 found 23 name-based identity pairs and 0 additional proximity/timing pairs. The identity rules retain 100 canonical openings in 2022–2024, including 94 in the treatment-source window. The separate exposure table retains 101 operating, located openings, including treatment-ineligible sources. 96 station-table IDs have no observed trip in the study files and are reported separately from opening-date discrepancies.
 <!-- stage0-summary:end -->
 
 ## Research question
 
-How did new Indego stations opening in 2022Ã¢â‚¬â€œ2024 affect weekly departures at nearby existing stations in Philadelphia? New stations could divert trips from existing stations, improve the network and increase their use, or do both. The target is the net effect on existing stations.
+How did new Indego stations opening in 2022–2024 change weekly departures in areas already served by old stations? The primary area outcome includes all stations, including new ones, and targets the net local ridership change. The secondary outcome includes only qualified old stations and addresses diversion. The original station-level question and its failed feasibility audit remain recorded below.
 
 ## Design records
 
-The area feasibility amendment uses fixed 1-kilometre EPSG:32618 cells containing qualified old stations. It counts a primary grid plus three prespecified shifts, and reports a separate eight-neighbour boundary-spillover diagnostic. Its proposed primary outcome is all-station area departures; the secondary outcome is departures from qualified old stations. Neither outcome has been constructed for an area estimator. The station-level specifications below are retained as the original design record.
+The area feasibility amendment uses fixed 1-kilometre EPSG:32618 cells containing qualified old stations. It counts a primary grid plus three prespecified shifts, and reports separate eight-neighbour and 400-metre distance spillover diagnostics. Its primary outcome is all-station area departures; the secondary outcome is departures from qualified old stations. Neither real outcome has been constructed for an area estimator. The station-level specifications below are retained as the original design record.
 
-- Use publicly available Indego quarterly trip files for 2022 Q1Ã¢â‚¬â€œ2024 Q4 and the pinned official station table. Require 20 coordinate observations per quarter for relocation checks; retain known lower-support locations with a flag. Resolve replacement IDs, then separate eligible treatment sources from all operating, positioned exposure sources before grouping stations. Candidate discovery uses both names and name-independent distance/retirement timing.
+- Use publicly available Indego quarterly trip files for 2022 Q1–2024 Q4 and the pinned official station table. Require 20 coordinate observations per quarter for relocation checks; retain known lower-support locations with a flag. Resolve replacement IDs, then separate eligible treatment sources from all operating, positioned exposure sources before grouping stations. Candidate discovery uses both names and name-independent distance/retirement timing.
 - Select a treatment radius using a prespecified station-count rule and keep the buffer at twice that radius. Require 30 controls per stack: first use never-treated stations, then add stations whose first exposure within 2R occurs after the entire stack window if needed. If any stack remains below 30, redesign at the area level.
 - Estimate a stacked difference-in-differences model of `log(1 + weekly departures)` with stack-specific station and week fixed effects and standard errors clustered by station. The event window is 12 weeks before through 12 weeks after opening.
 - Use simulations to demonstrate a failure of ordinary two-way fixed effects under heterogeneous treatment effects before estimating effects on real data. Report event-study intervals, pretrend diagnostics, robustness checks, and simulation-based power.
 
-The [preregistration draft](docs/preregistration.md) records the planned rules. Radius selection and a dated, separate preregistration commit must be completed before real-data estimation. This initial scaffold commit is not a completed preregistration.
+The [preregistration](docs/preregistration.md) records the original station plan, the committed area-count amendment, and the distance/simulation amendment. The station radius remains unset following its failed gate. A final area estimation specification and area net-effect prediction must be recorded before real-outcome fitting.
 
 ## Repository
 
@@ -48,13 +48,15 @@ docs/preregistration.md     Design rules; freeze after the feasibility check
 reports/stage0/             Generated input-audit tables and summary
 reports/stage1/             Eligibility, radius counts, and stack-control feasibility
 reports/area_feasibility/   Registered grid, clean-control, and boundary counts
+reports/distance_spillover/ Registered distance restriction, counts and excluded pairs
+reports/area_simulation/    Synthetic recovery, weighting diagnostics and illustrative power
 scripts/                    Download and feasibility entry points
 sql/                        DuckDB panel construction, to be implemented
 src/stimpact/               Python analysis package
 tests/                      Synthetic input-validation tests
 ```
 
-Python 3.11 is the target runtime and is used in CI. Dependencies are pandas, DuckDB, NumPy, pyproj, pyfixest, Matplotlib, and PyYAML; Ruff and pytest support development. CI checks lint, syntax, and synthetic-fixture tests without downloading real inputs. The audit records its actual runtime versions in `reports/stage0/summary.json`. DuckDB is pinned to 1.4.4 after an explicit strict-mode CSV read returned zero rows under 2.0.1 in the local environment; the manifest row-count assertion caught that failure.
+Python 3.11 is the target runtime and is used in CI. Dependencies are pandas, DuckDB, NumPy, SciPy, pyproj, pyfixest, Matplotlib, and PyYAML; Ruff and pytest support development. CI checks lint, syntax, and synthetic-fixture tests without downloading real inputs. The audit records its actual runtime versions in `reports/stage0/summary.json`. DuckDB is pinned to 1.4.4 after an explicit strict-mode CSV read returned zero rows under 2.0.1 in the local environment; the manifest row-count assertion caught that failure.
 
 ## Reproduction status
 
@@ -88,3 +90,11 @@ All eventual estimates will include uncertainty. A nonsignificant estimate will 
 <!-- spillover-limitation:start -->
 The main estimate assumes no cross-boundary spillover; the planned exclusion test was not estimable because nearly every control area borders a treated area.
 <!-- spillover-limitation:end -->
+
+<!-- distance-spillover-summary:start -->
+The preregistered 400-metre distance sensitivity retains 18–41 controls per primary-grid stack: **estimable**, with 0/8 stacks below 10. The main design remains feasible. [Count-only audit](reports/distance_spillover/README.md).
+<!-- distance-spillover-summary:end -->
+
+<!-- area-simulation-summary:start -->
+Synthetic validation uses the real 53-area, 28-treated, 8-cohort structure. Stacked recovers the known -10% effect; the heterogeneous-dynamic TWFE test fails as expected. Power results assume synthetic noise and are not empirical project power. No real area effect has been fitted. [Simulation audit](reports/area_simulation/README.md).
+<!-- area-simulation-summary:end -->

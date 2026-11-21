@@ -1,4 +1,4 @@
-offset_x_m,offset_y_m,is_primary,eligible_areas,excluded_unusable_areas,treated_areas,never_exposed_control_areas,exposure_cells_without_eligible_old,cohort_stacks,minimum_clean_controls_per_stack,minimum_adjacency_controls_per_stack,failed_stacks,passes_main_gate,passes_adjacency_gate
+offset_x_m,offset_y_m,is_primary,eligible_areas,excluded_unusable_areas,treated_areas,never_exposed_control_areas,exposure_cells_without_eligible_old,cohort_stacks,minimum_clean_controls_per_stack,minimum_adjacency_controls_per_stack,failed_stacks,passes_main_gate,adjacency_sample_sufficient
 0,0,True,54,1,28,21,26,8,21,1,0,True,False
 500,0,False,55,1,31,20,25,7,20,1,0,True,False
 0,500,False,56,1,33,20,22,7,20,2,0,True,False

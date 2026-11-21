@@ -1,0 +1,60 @@
+{
+  "preregistration_commit": "df5127b5a8d05b623143f08304e648be22c4c6cd",
+  "rules": {
+    "radius_m": 400,
+    "min_controls_per_stack": 10,
+    "old_station_scope": "fixed_stage1_eligible_stations",
+    "source_scope": "all_stage0_exposure_sources",
+    "opening_window": "inclusive_stack_calendar_weeks",
+    "insufficient_action": "mark_robustness_not_estimable",
+    "changes_main_gate": false
+  },
+  "input_hashes": {
+    "old": "30a660f7ef37a28e4ad15d8b71a70a03bbd9c09b907d72472b109dce5748564d",
+    "treatment": "7898dca95d53036209ce649b7f5316f964f559754a91bef38c52fa6e2008a600",
+    "exposure": "2b1a93820926686bd470db563c9e9dc322e496f68af171079c9ec0c09d457a90"
+  },
+  "eligible_old_stations": 156,
+  "exposure_sources": 101,
+  "main_decision_unchanged": "primary_area_feasible",
+  "grids": [
+    {
+      "offset_x_m": 0,
+      "offset_y_m": 0,
+      "stacks": 8,
+      "minimum_distance_controls": 18,
+      "maximum_distance_controls": 41,
+      "failed_stacks": 0,
+      "status": "estimable"
+    },
+    {
+      "offset_x_m": 500,
+      "offset_y_m": 0,
+      "stacks": 7,
+      "minimum_distance_controls": 18,
+      "maximum_distance_controls": 42,
+      "failed_stacks": 0,
+      "status": "estimable"
+    },
+    {
+      "offset_x_m": 0,
+      "offset_y_m": 500,
+      "stacks": 7,
+      "minimum_distance_controls": 17,
+      "maximum_distance_controls": 42,
+      "failed_stacks": 0,
+      "status": "estimable"
+    },
+    {
+      "offset_x_m": 500,
+      "offset_y_m": 500,
+      "stacks": 9,
+      "minimum_distance_controls": 19,
+      "maximum_distance_controls": 41,
+      "failed_stacks": 0,
+      "status": "estimable"
+    }
+  ],
+  "ridership_values_parsed": false,
+  "real_effect_estimator_run": false
+}

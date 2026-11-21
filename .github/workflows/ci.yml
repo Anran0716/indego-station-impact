@@ -16,7 +16,7 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install audit and test dependencies
-        run: python -m pip install ruff pytest pandas duckdb==1.4.4 numpy pyproj PyYAML
+        run: python -m pip install ruff pytest pandas duckdb==1.4.4 numpy scipy pyproj PyYAML
       - name: Lint
         run: ruff check .
       - name: Check Python syntax

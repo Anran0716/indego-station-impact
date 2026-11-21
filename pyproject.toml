@@ -12,6 +12,7 @@ dependencies = [
     "pandas",
     "duckdb==1.4.4",
     "numpy",
+    "scipy",
     "pyproj",
     "pyfixest",
     "matplotlib",

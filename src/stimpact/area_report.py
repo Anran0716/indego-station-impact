@@ -28,12 +28,13 @@ def record_area_result(root: Path, summary: dict) -> None:
         action = "The fixed primary grid fails its gate: stop observational causal estimation."
     else:
         action = "The fixed primary grid passes the basic count gate."
-        if not decision["all_adjacency_diagnostics_pass"]:
+        if not decision["all_adjacency_samples_sufficient"]:
             minimums = [row["minimum_adjacency_controls_per_stack"] for row in summary["grid_counts"]]
             action += (f" After the registered conservative eight-neighbour exclusion, the "
                        f"minimum control counts range from {min(minimums)} to {max(minimums)} "
                        "across grids. That robustness analysis is **not estimable** "
-                       "(the primary grid retains only 1 control in its smallest stacks). "
+                       f"(the primary grid retains only {primary['minimum_adjacency_controls_per_stack']} "
+                       "control(s) in its smallest stacks). "
                        "This does not change the main-design gate; simulation validation "
                        "must precede real-data estimation.")
     brief = (

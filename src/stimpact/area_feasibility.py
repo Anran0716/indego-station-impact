@@ -46,7 +46,7 @@ def area_decision(counts: pd.DataFrame, config: dict) -> dict:
             "min_treated_areas_required": area["min_treated_areas"],
             "min_controls_per_stack_required": area["min_clean_controls_per_stack"],
             "all_offsets_pass": bool(counts.passes_main_gate.all()),
-            "all_adjacency_diagnostics_pass": bool(counts.passes_adjacency_gate.all()),
+            "all_adjacency_samples_sufficient": bool(counts.adjacency_sample_sufficient.all()),
             "passing_offsets": [[int(row.offset_x_m), int(row.offset_y_m)]
                                 for row in counts.loc[counts.passes_main_gate].itertuples()],
             "action": "validate_simulations_then_specify_main_estimator" if passed
@@ -153,7 +153,7 @@ def count_areas(eligible_old: pd.DataFrame, treatment: pd.DataFrame,
                    "never_exposed_controls": never, "not_yet_exposed_controls": len(clean) - never,
                    "clean_controls": len(clean), "adjacency_restricted_controls": kept_after_adjacency,
                    "passes_min_controls": len(clean) >= area["min_clean_controls_per_stack"],
-                   "adjacency_passes_min_controls": kept_after_adjacency >= area["min_clean_controls_per_stack"]}
+                   "adjacency_has_min_controls": kept_after_adjacency >= area["min_clean_controls_per_stack"]}
             stack_rows.append(row)
             current_stacks.append(row)
         control_counts = [row["clean_controls"] for row in current_stacks]
@@ -170,12 +170,12 @@ def count_areas(eligible_old: pd.DataFrame, treatment: pd.DataFrame,
                           "minimum_adjacency_controls_per_stack": min(adjacency_counts, default=0),
                           "failed_stacks": sum(not row["passes_min_controls"] for row in current_stacks),
                           "passes_main_gate": passes_gate(len(treated_cells), control_counts, config),
-                          "passes_adjacency_gate": passes_gate(len(treated_cells), adjacency_counts, config)})
+                          "adjacency_sample_sufficient": passes_gate(len(treated_cells), adjacency_counts, config)})
     counts = pd.DataFrame(summaries)
     stacks = pd.DataFrame(stack_rows, columns=[
         "offset_x_m", "offset_y_m", "cohort_quarter", "treated_areas", "stack_first_week", "stack_last_week",
         "never_exposed_controls", "not_yet_exposed_controls", "clean_controls",
-        "adjacency_restricted_controls", "passes_min_controls", "adjacency_passes_min_controls",
+        "adjacency_restricted_controls", "passes_min_controls", "adjacency_has_min_controls",
     ])
     membership = pd.DataFrame(control_rows, columns=[
         "offset_x_m", "offset_y_m", "cohort_quarter", "cell_id", "control_type",

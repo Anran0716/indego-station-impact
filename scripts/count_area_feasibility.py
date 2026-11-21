@@ -122,9 +122,11 @@ def run(root: Path, prereg_commit: str) -> dict:
                   "the feasibility reports. Those follow-up deliverables are not claimed as "
                   "completed by this count-only command.", ""]
     else:
+        primary_grid = result["grid_counts"].loc[result["grid_counts"].is_primary].iloc[0]
         lines += ["The primary count gate passes: the main design may proceed after simulation "
                   "validation and final estimator specification. The eight-neighbour robustness "
-                  "analysis is **not estimable** (only 1 control remains in the smallest primary "
+                  f"analysis is **not estimable** (only {primary_grid.minimum_adjacency_controls_per_stack} "
+                  "control(s) remain in the smallest primary "
                   "stacks); its sample shortfall is not an additional main-design gate. "
                   "Passing counts under all offsets does not establish that an unestimated "
                   "ridership effect is robust to grid location. The adjacency-restricted "

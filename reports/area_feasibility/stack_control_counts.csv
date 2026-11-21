@@ -1,4 +1,4 @@
-offset_x_m,offset_y_m,cohort_quarter,treated_areas,stack_first_week,stack_last_week,never_exposed_controls,not_yet_exposed_controls,clean_controls,adjacency_restricted_controls,passes_min_controls,adjacency_passes_min_controls
+offset_x_m,offset_y_m,cohort_quarter,treated_areas,stack_first_week,stack_last_week,never_exposed_controls,not_yet_exposed_controls,clean_controls,adjacency_restricted_controls,passes_min_controls,adjacency_has_min_controls
 0,0,2022Q2,4,2022-01-24,2022-09-19,21,22,43,10,True,False
 0,0,2022Q3,1,2022-04-11,2022-09-26,21,22,43,10,True,False
 0,0,2022Q4,1,2022-07-11,2022-12-26,21,21,42,6,True,False

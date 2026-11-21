@@ -1,0 +1,685 @@
+{
+  "panel_start": "2022-01-03",
+  "weeks": 156,
+  "areas": [
+    {
+      "cell_id": "480:4421",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": "2022-02-28"
+    },
+    {
+      "cell_id": "480:4422",
+      "treated": true,
+      "opening_index": 73,
+      "cohort": "2023Q2",
+      "first_exposure_week": "2023-05-29"
+    },
+    {
+      "cell_id": "480:4423",
+      "treated": true,
+      "opening_index": 57,
+      "cohort": "2023Q1",
+      "first_exposure_week": "2023-02-06"
+    },
+    {
+      "cell_id": "480:4425",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    },
+    {
+      "cell_id": "481:4422",
+      "treated": true,
+      "opening_index": 116,
+      "cohort": "2024Q1",
+      "first_exposure_week": "2024-03-25"
+    },
+    {
+      "cell_id": "481:4423",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": "2022-03-07"
+    },
+    {
+      "cell_id": "481:4425",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    },
+    {
+      "cell_id": "482:4422",
+      "treated": true,
+      "opening_index": 57,
+      "cohort": "2023Q1",
+      "first_exposure_week": "2023-02-06"
+    },
+    {
+      "cell_id": "482:4423",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": "2022-02-21"
+    },
+    {
+      "cell_id": "482:4424",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    },
+    {
+      "cell_id": "483:4420",
+      "treated": true,
+      "opening_index": 60,
+      "cohort": "2023Q1",
+      "first_exposure_week": "2023-02-27"
+    },
+    {
+      "cell_id": "483:4421",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    },
+    {
+      "cell_id": "483:4422",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    },
+    {
+      "cell_id": "483:4423",
+      "treated": true,
+      "opening_index": 72,
+      "cohort": "2023Q2",
+      "first_exposure_week": "2022-03-28"
+    },
+    {
+      "cell_id": "483:4424",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    },
+    {
+      "cell_id": "483:4425",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    },
+    {
+      "cell_id": "484:4415",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    },
+    {
+      "cell_id": "484:4420",
+      "treated": true,
+      "opening_index": 86,
+      "cohort": "2023Q3",
+      "first_exposure_week": "2023-08-28"
+    },
+    {
+      "cell_id": "484:4421",
+      "treated": true,
+      "opening_index": 80,
+      "cohort": "2023Q3",
+      "first_exposure_week": "2023-07-17"
+    },
+    {
+      "cell_id": "484:4422",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    },
+    {
+      "cell_id": "484:4423",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    },
+    {
+      "cell_id": "484:4424",
+      "treated": true,
+      "opening_index": 75,
+      "cohort": "2023Q2",
+      "first_exposure_week": "2023-06-12"
+    },
+    {
+      "cell_id": "484:4425",
+      "treated": true,
+      "opening_index": 58,
+      "cohort": "2023Q1",
+      "first_exposure_week": "2023-02-13"
+    },
+    {
+      "cell_id": "484:4426",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    },
+    {
+      "cell_id": "485:4416",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    },
+    {
+      "cell_id": "485:4417",
+      "treated": true,
+      "opening_index": 93,
+      "cohort": "2023Q4",
+      "first_exposure_week": "2023-10-16"
+    },
+    {
+      "cell_id": "485:4418",
+      "treated": true,
+      "opening_index": 59,
+      "cohort": "2023Q1",
+      "first_exposure_week": "2023-02-20"
+    },
+    {
+      "cell_id": "485:4419",
+      "treated": true,
+      "opening_index": 26,
+      "cohort": "2022Q3",
+      "first_exposure_week": "2022-07-04"
+    },
+    {
+      "cell_id": "485:4420",
+      "treated": true,
+      "opening_index": 96,
+      "cohort": "2023Q4",
+      "first_exposure_week": "2023-11-06"
+    },
+    {
+      "cell_id": "485:4421",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    },
+    {
+      "cell_id": "485:4422",
+      "treated": true,
+      "opening_index": 52,
+      "cohort": "2023Q1",
+      "first_exposure_week": "2023-01-02"
+    },
+    {
+      "cell_id": "485:4423",
+      "treated": true,
+      "opening_index": 53,
+      "cohort": "2023Q1",
+      "first_exposure_week": "2023-01-09"
+    },
+    {
+      "cell_id": "485:4424",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    },
+    {
+      "cell_id": "485:4425",
+      "treated": true,
+      "opening_index": 24,
+      "cohort": "2022Q2",
+      "first_exposure_week": "2022-06-20"
+    },
+    {
+      "cell_id": "485:4426",
+      "treated": true,
+      "opening_index": 25,
+      "cohort": "2022Q2",
+      "first_exposure_week": "2022-06-27"
+    },
+    {
+      "cell_id": "486:4419",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    },
+    {
+      "cell_id": "486:4420",
+      "treated": true,
+      "opening_index": 60,
+      "cohort": "2023Q1",
+      "first_exposure_week": "2023-02-27"
+    },
+    {
+      "cell_id": "486:4421",
+      "treated": true,
+      "opening_index": 19,
+      "cohort": "2022Q2",
+      "first_exposure_week": "2022-05-16"
+    },
+    {
+      "cell_id": "486:4423",
+      "treated": true,
+      "opening_index": 15,
+      "cohort": "2022Q2",
+      "first_exposure_week": "2022-04-18"
+    },
+    {
+      "cell_id": "486:4424",
+      "treated": true,
+      "opening_index": 62,
+      "cohort": "2023Q1",
+      "first_exposure_week": "2023-03-13"
+    },
+    {
+      "cell_id": "486:4425",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    },
+    {
+      "cell_id": "486:4426",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    },
+    {
+      "cell_id": "487:4419",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": "2022-02-14"
+    },
+    {
+      "cell_id": "487:4420",
+      "treated": true,
+      "opening_index": 62,
+      "cohort": "2023Q1",
+      "first_exposure_week": "2023-03-13"
+    },
+    {
+      "cell_id": "487:4421",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    },
+    {
+      "cell_id": "487:4422",
+      "treated": true,
+      "opening_index": 83,
+      "cohort": "2023Q3",
+      "first_exposure_week": "2023-08-07"
+    },
+    {
+      "cell_id": "487:4423",
+      "treated": true,
+      "opening_index": 39,
+      "cohort": "2022Q4",
+      "first_exposure_week": "2022-10-03"
+    },
+    {
+      "cell_id": "487:4424",
+      "treated": true,
+      "opening_index": 70,
+      "cohort": "2023Q2",
+      "first_exposure_week": "2023-05-08"
+    },
+    {
+      "cell_id": "487:4425",
+      "treated": true,
+      "opening_index": 89,
+      "cohort": "2023Q3",
+      "first_exposure_week": "2023-09-18"
+    },
+    {
+      "cell_id": "488:4422",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    },
+    {
+      "cell_id": "488:4423",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    },
+    {
+      "cell_id": "488:4424",
+      "treated": true,
+      "opening_index": 65,
+      "cohort": "2023Q2",
+      "first_exposure_week": "2023-04-03"
+    },
+    {
+      "cell_id": "488:4425",
+      "treated": false,
+      "opening_index": null,
+      "cohort": null,
+      "first_exposure_week": null
+    }
+  ],
+  "stacks": [
+    {
+      "cohort": "2022Q2",
+      "first_index": 3,
+      "last_index": 37,
+      "controls": [
+        "480:4422",
+        "480:4423",
+        "480:4425",
+        "481:4422",
+        "481:4425",
+        "482:4422",
+        "482:4424",
+        "483:4420",
+        "483:4421",
+        "483:4422",
+        "483:4424",
+        "483:4425",
+        "484:4415",
+        "484:4420",
+        "484:4421",
+        "484:4422",
+        "484:4423",
+        "484:4424",
+        "484:4425",
+        "484:4426",
+        "485:4416",
+        "485:4417",
+        "485:4418",
+        "485:4420",
+        "485:4421",
+        "485:4422",
+        "485:4423",
+        "485:4424",
+        "486:4419",
+        "486:4420",
+        "486:4424",
+        "486:4425",
+        "486:4426",
+        "487:4420",
+        "487:4421",
+        "487:4422",
+        "487:4423",
+        "487:4424",
+        "487:4425",
+        "488:4422",
+        "488:4423",
+        "488:4424",
+        "488:4425"
+      ]
+    },
+    {
+      "cohort": "2022Q3",
+      "first_index": 14,
+      "last_index": 38,
+      "controls": [
+        "480:4422",
+        "480:4423",
+        "480:4425",
+        "481:4422",
+        "481:4425",
+        "482:4422",
+        "482:4424",
+        "483:4420",
+        "483:4421",
+        "483:4422",
+        "483:4424",
+        "483:4425",
+        "484:4415",
+        "484:4420",
+        "484:4421",
+        "484:4422",
+        "484:4423",
+        "484:4424",
+        "484:4425",
+        "484:4426",
+        "485:4416",
+        "485:4417",
+        "485:4418",
+        "485:4420",
+        "485:4421",
+        "485:4422",
+        "485:4423",
+        "485:4424",
+        "486:4419",
+        "486:4420",
+        "486:4424",
+        "486:4425",
+        "486:4426",
+        "487:4420",
+        "487:4421",
+        "487:4422",
+        "487:4423",
+        "487:4424",
+        "487:4425",
+        "488:4422",
+        "488:4423",
+        "488:4424",
+        "488:4425"
+      ]
+    },
+    {
+      "cohort": "2022Q4",
+      "first_index": 27,
+      "last_index": 51,
+      "controls": [
+        "480:4422",
+        "480:4423",
+        "480:4425",
+        "481:4422",
+        "481:4425",
+        "482:4422",
+        "482:4424",
+        "483:4420",
+        "483:4421",
+        "483:4422",
+        "483:4424",
+        "483:4425",
+        "484:4415",
+        "484:4420",
+        "484:4421",
+        "484:4422",
+        "484:4423",
+        "484:4424",
+        "484:4425",
+        "484:4426",
+        "485:4416",
+        "485:4417",
+        "485:4418",
+        "485:4420",
+        "485:4421",
+        "485:4422",
+        "485:4423",
+        "485:4424",
+        "486:4419",
+        "486:4420",
+        "486:4424",
+        "486:4425",
+        "486:4426",
+        "487:4420",
+        "487:4421",
+        "487:4422",
+        "487:4424",
+        "487:4425",
+        "488:4422",
+        "488:4423",
+        "488:4424",
+        "488:4425"
+      ]
+    },
+    {
+      "cohort": "2023Q1",
+      "first_index": 40,
+      "last_index": 74,
+      "controls": [
+        "480:4425",
+        "481:4422",
+        "481:4425",
+        "482:4424",
+        "483:4421",
+        "483:4422",
+        "483:4424",
+        "483:4425",
+        "484:4415",
+        "484:4420",
+        "484:4421",
+        "484:4422",
+        "484:4423",
+        "484:4424",
+        "484:4426",
+        "485:4416",
+        "485:4417",
+        "485:4420",
+        "485:4421",
+        "485:4424",
+        "486:4419",
+        "486:4425",
+        "486:4426",
+        "487:4421",
+        "487:4422",
+        "487:4425",
+        "488:4422",
+        "488:4423",
+        "488:4425"
+      ]
+    },
+    {
+      "cohort": "2023Q2",
+      "first_index": 53,
+      "last_index": 87,
+      "controls": [
+        "480:4425",
+        "481:4422",
+        "481:4425",
+        "482:4424",
+        "483:4421",
+        "483:4422",
+        "483:4424",
+        "483:4425",
+        "484:4415",
+        "484:4422",
+        "484:4423",
+        "484:4426",
+        "485:4416",
+        "485:4417",
+        "485:4420",
+        "485:4421",
+        "485:4424",
+        "486:4419",
+        "486:4425",
+        "486:4426",
+        "487:4421",
+        "487:4425",
+        "488:4422",
+        "488:4423",
+        "488:4425"
+      ]
+    },
+    {
+      "cohort": "2023Q3",
+      "first_index": 68,
+      "last_index": 101,
+      "controls": [
+        "480:4425",
+        "481:4422",
+        "481:4425",
+        "482:4424",
+        "483:4421",
+        "483:4422",
+        "483:4424",
+        "483:4425",
+        "484:4415",
+        "484:4422",
+        "484:4423",
+        "484:4426",
+        "485:4416",
+        "485:4421",
+        "485:4424",
+        "486:4419",
+        "486:4425",
+        "486:4426",
+        "487:4421",
+        "488:4422",
+        "488:4423",
+        "488:4425"
+      ]
+    },
+    {
+      "cohort": "2023Q4",
+      "first_index": 81,
+      "last_index": 108,
+      "controls": [
+        "480:4425",
+        "481:4422",
+        "481:4425",
+        "482:4424",
+        "483:4421",
+        "483:4422",
+        "483:4424",
+        "483:4425",
+        "484:4415",
+        "484:4422",
+        "484:4423",
+        "484:4426",
+        "485:4416",
+        "485:4421",
+        "485:4424",
+        "486:4419",
+        "486:4425",
+        "486:4426",
+        "487:4421",
+        "488:4422",
+        "488:4423",
+        "488:4425"
+      ]
+    },
+    {
+      "cohort": "2024Q1",
+      "first_index": 104,
+      "last_index": 128,
+      "controls": [
+        "480:4425",
+        "481:4425",
+        "482:4424",
+        "483:4421",
+        "483:4422",
+        "483:4424",
+        "483:4425",
+        "484:4415",
+        "484:4422",
+        "484:4423",
+        "484:4426",
+        "485:4416",
+        "485:4421",
+        "485:4424",
+        "486:4419",
+        "486:4425",
+        "486:4426",
+        "487:4421",
+        "488:4422",
+        "488:4423",
+        "488:4425"
+      ]
+    }
+  ],
+  "pre_weeks": 12,
+  "post_weeks": 12,
+  "contains_real_outcomes": false
+}

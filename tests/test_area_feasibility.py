@@ -114,7 +114,7 @@ def test_every_stack_and_treated_count_must_meet_fixed_thresholds(config, treate
 def test_a_passing_shift_cannot_rescue_the_failed_primary_grid(config):
     counts = pd.DataFrame({"offset_x_m": [0, 500, 0, 500], "offset_y_m": [0, 0, 500, 500],
                            "passes_main_gate": [False, True, True, True],
-                           "passes_adjacency_gate": [False] * 4,
+                           "adjacency_sample_sufficient": [False] * 4,
                            "treated_areas": [19, 25, 25, 25],
                            "minimum_clean_controls_per_stack": [15, 20, 20, 20],
                            "failed_stacks": [0, 0, 0, 0]})
@@ -127,3 +127,11 @@ def test_a_passing_shift_cannot_rescue_the_failed_primary_grid(config):
 def test_unknown_position_is_not_silently_assigned_to_a_cell(config):
     with pytest.raises(ValueError, match="finite positions"):
         grid_membership(old_points([np.nan]), (0, 0), config)
+
+
+def test_insufficient_adjacency_sample_does_not_overrule_a_passing_main_gate(config):
+    counts = pd.DataFrame({"offset_x_m": [0], "offset_y_m": [0],
+                           "passes_main_gate": [True], "adjacency_sample_sufficient": [False],
+                           "treated_areas": [28], "minimum_clean_controls_per_stack": [21],
+                           "failed_stacks": [0]})
+    assert area_decision(counts, config)["decision"] == "primary_area_feasible"

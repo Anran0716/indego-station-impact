@@ -58,7 +58,7 @@
       "minimum_adjacency_controls_per_stack": 1,
       "failed_stacks": 0,
       "passes_main_gate": true,
-      "passes_adjacency_gate": false
+      "adjacency_sample_sufficient": false
     },
     {
       "offset_x_m": 500,
@@ -74,7 +74,7 @@
       "minimum_adjacency_controls_per_stack": 1,
       "failed_stacks": 0,
       "passes_main_gate": true,
-      "passes_adjacency_gate": false
+      "adjacency_sample_sufficient": false
     },
     {
       "offset_x_m": 0,
@@ -90,7 +90,7 @@
       "minimum_adjacency_controls_per_stack": 2,
       "failed_stacks": 0,
       "passes_main_gate": true,
-      "passes_adjacency_gate": false
+      "adjacency_sample_sufficient": false
     },
     {
       "offset_x_m": 500,
@@ -106,7 +106,7 @@
       "minimum_adjacency_controls_per_stack": 1,
       "failed_stacks": 0,
       "passes_main_gate": true,
-      "passes_adjacency_gate": false
+      "adjacency_sample_sufficient": false
     }
   ],
   "decision": {
@@ -121,7 +121,7 @@
     "min_treated_areas_required": 20,
     "min_controls_per_stack_required": 15,
     "all_offsets_pass": true,
-    "all_adjacency_diagnostics_pass": false,
+    "all_adjacency_samples_sufficient": false,
     "passing_offsets": [
       [
         0,
