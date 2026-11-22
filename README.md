@@ -88,7 +88,7 @@ The audit exports `station_id_map.csv`, `canonical_station_registry.csv`, and th
 All eventual estimates will include uncertainty. A nonsignificant estimate will be interpreted with its confidence interval and MDE rather than treated as evidence of zero effect.
 
 <!-- spillover-limitation:start -->
-The main estimate assumes no cross-boundary spillover; the planned exclusion test was not estimable because nearly every control area borders a treated area.
+The main estimate assumes no cross-boundary spillover. The eight-neighbour exclusion test was not estimable because nearly every control area borders a treated area. The 400-metre distance-based exclusion test is estimable, retaining at least 17 control areas in every stack across all four preregistered grid offsets.
 <!-- spillover-limitation:end -->
 
 <!-- distance-spillover-summary:start -->

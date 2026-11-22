@@ -41,7 +41,7 @@ This is a coarse tested-effect threshold under assumed synthetic variance, not a
 
 ## Limitation
 
-The main estimate assumes no cross-boundary spillover; the planned exclusion test was not estimable because nearly every control area borders a treated area.
+The main estimate assumes no cross-boundary spillover. The eight-neighbour exclusion test was not estimable because nearly every control area borders a treated area. The 400-metre distance-based exclusion test is estimable, retaining at least 17 control areas in every stack across all four preregistered grid offsets.
 
 ## Reproduction
 

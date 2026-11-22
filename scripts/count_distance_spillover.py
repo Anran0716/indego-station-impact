@@ -73,10 +73,9 @@ def run(root: Path, commit: str) -> dict:
               "lists the old/new station pairs triggering removal. No passing offset rescues "
               "a failed primary sensitivity variant. Passing these counts would establish "
               "estimability only, not absence of spillovers.", "", "## Limitation", "",
-              SPILLOVER_LIMITATION, "", "The sentence above refers to the original "
-              "eight-neighbour test, whose minimum remaining control count is 1 on the "
-              "primary grid. It remains not estimable; the distance rule is a separately "
-              "registered sensitivity, not a replacement main-design gate.", "",
+              SPILLOVER_LIMITATION, "", "The eight-neighbour test retains only 1 control "
+              "in the smallest primary-grid stacks. The distance restriction is a separately "
+              "registered sensitivity; neither restriction changes the main-design gate.", "",
               "## Reproduction", "", "```powershell",
               f"python scripts/count_distance_spillover.py --prereg-commit {commit}", "```", ""]
     (out / "README.md").write_text("\n".join(lines), encoding="utf-8")

@@ -15,9 +15,9 @@ The fixed (0,0) grid remains primary. `stacks.csv` records every count; `control
 
 ## Limitation
 
-The main estimate assumes no cross-boundary spillover; the planned exclusion test was not estimable because nearly every control area borders a treated area.
+The main estimate assumes no cross-boundary spillover. The eight-neighbour exclusion test was not estimable because nearly every control area borders a treated area. The 400-metre distance-based exclusion test is estimable, retaining at least 17 control areas in every stack across all four preregistered grid offsets.
 
-The sentence above refers to the original eight-neighbour test, whose minimum remaining control count is 1 on the primary grid. It remains not estimable; the distance rule is a separately registered sensitivity, not a replacement main-design gate.
+The eight-neighbour test retains only 1 control in the smallest primary-grid stacks. The distance restriction is a separately registered sensitivity; neither restriction changes the main-design gate.
 
 ## Reproduction
 
