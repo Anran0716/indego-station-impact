@@ -47,12 +47,15 @@ The area design uses fixed 1-kilometre EPSG:32618 cells containing qualified old
 
 The [preregistration](docs/preregistration.md) records the original station plan, area-count and distance/simulation amendments, and the frozen area prediction and analysis. The station radius remains unset following its failed gate; the area design proceeds under its separate committed rules.
 
+The [prospective opening-order experiment](docs/experiment-design.md) uses the observed-residual power of 55.5% at +10% as motivation for planned early/delayed controls and a separately powered randomized rollout. It specifies candidate readiness, spatial assignment clusters, a full delayed-control window and a prospective 80% power target; it is a proposal, not an implemented trial.
+
 ## Repository
 
 ```text
 config.yaml                 Study parameters; radius awaits feasibility check
 data/manifest.json          Pinned input URLs, row counts, and SHA256 hashes
 docs/preregistration.md     Design rules; freeze after the feasibility check
+docs/experiment-design.md   Proposed randomized opening order and prospective power planning
 reports/stage0/             Generated input-audit tables and summary
 reports/stage1/             Eligibility, radius counts, and stack-control feasibility
 reports/area_feasibility/   Registered grid, clean-control, and boundary counts
