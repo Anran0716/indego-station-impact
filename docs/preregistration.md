@@ -1,6 +1,6 @@
 # Preregistration draft
 
-**Status: the original station-level plan failed its feasibility gate; all four area grids pass the registered 20/15 count gates.** Area simulations have passed. The final area prediction and estimation specification below are being committed before constructing real area outcomes or fitting any real area effect. The eight-neighbour robustness restriction is not estimable and is not an additional main-design gate. The original design and its amendments remain as an audit record.
+**Status: the original station-level plan failed its feasibility gate; all four area grids pass the registered 20/15 count gates.** Simulations passed before real estimation. The final +5% area prediction and specification were committed in `8bb670b` before real area outcomes were built. Main, robustness, and empirical-residual power results are now reported below. The eight-neighbour restriction remains not estimable and is not an additional main-design gate. Earlier design stages remain as an audit record.
 
 ## Question and hypotheses
 
@@ -84,8 +84,6 @@ Before real-data estimation, simulate **area** panels using the fixed primary gr
 
 Use synthetic additive area/calendar effects and log-scale AR(1) errors with innovation SD 0.25, rho 0.5, and the configured seed. Report power at the five configured effect sizes with 200 repetitions, area-clustered CR1 inference and a t reference with G-1 degrees of freedom. These noise parameters are assumptions, **not measured area variances**; label resulting power/MDE as illustrative simulation validation, not empirical project power. The all-station net-effect prediction and final real-data estimator/robustness specification still require a separate record before fitting real outcomes.
 
-## Radius selection before outcome analysis (original station design)
-
 ## Final area prediction and estimation specification (2026-11-22; before real effects)
 
 **Prediction.** For the primary all-station area outcome, predict a **positive effect of about +5%**, or a pooled log1p coefficient near **log(1.05) = 0.04879**, over event weeks 0–12. A new station improves access and return options and may induce additional trips. Much of its activity may instead be diverted from nearby stations; including old and new stations inside the same area cancels much of that internal diversion. In already served areas, this motivates a modest positive net gain rather than treating every new-station trip as new demand. This prediction is uncertain, is not based on area outcome comparisons, and will not determine which estimates are reported. The historical -5% prediction concerns old-station diversion and remains relevant only to the secondary qualified-old outcome.
@@ -164,5 +162,9 @@ Rules were committed before counting in [df5127b](https://github.com/Anran0716/i
 <!-- distance-spillover-result:end -->
 
 <!-- area-simulation-result:start -->
-Area-level synthetic validation is complete using the fixed 53-area universe, 28 treated areas and 8 quarterly cohorts. The actual stacked sample contains 49 physical-area clusters; four other-exposure areas are never clean. Known -10% recovery, the strict expected TWFE failure, and independent clustered OLS checks are documented in the [simulation audit](../reports/area_simulation/README.md). Power uses assumed synthetic variance. No real area outcome has been fitted; the final area estimation specification remains separate from this validation.
+Area-level synthetic validation is complete using the fixed 53-area universe, 28 treated areas and 8 quarterly cohorts. The actual stacked sample contains 49 physical-area clusters; four other-exposure areas are never clean. Known -10% recovery, the strict expected TWFE failure, and independent clustered OLS checks are documented in the [simulation audit](../reports/area_simulation/README.md). Power here uses assumed synthetic variance. The separately preregistered real area analysis is complete; its observed-residual power supersedes this illustrative power.
 <!-- area-simulation-result:end -->
+
+<!-- area-estimation-result:start -->
+Real area analysis completed under prediction/specification commit [8bb670b](https://github.com/Anran0716/indego-station-impact/commit/8bb670b05303304c4579c72941ae915b0694b9bc). All main cohorts, fixed grids and thresholds were retained. Main, robustness, and empirical power outputs are in the [analysis audit](../reports/area_analysis/README.md).
+<!-- area-estimation-result:end -->

@@ -1,0 +1,13 @@
+{
+  "coefficient": 0.08305513202697436,
+  "se": 0.01887079682512767,
+  "ci_low": 0.04511285202630766,
+  "ci_high": 0.12099741202764105,
+  "p_value": 5.980438983511847e-05,
+  "clusters": 49,
+  "observations": 8109,
+  "parameters": 510,
+  "iterations": 9,
+  "max_score_error": 2.564503347457503e-07,
+  "status": "estimated"
+}

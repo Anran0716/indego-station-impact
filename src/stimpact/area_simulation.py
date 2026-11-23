@@ -1,4 +1,4 @@
-"""Synthetic area-panel validation. This module never loads real ridership."""
+"""Shared area regression and synthetic validation; this module performs no data loading."""
 
 from __future__ import annotations
 
@@ -47,7 +47,7 @@ def absorb(values: np.ndarray, groups: tuple[np.ndarray, ...], tolerance=1e-11) 
     """Alternating projections also handle the trimmed, unbalanced stacked panel."""
     result = np.asarray(values, dtype=float).copy()
     if not np.isfinite(result).all():
-        raise ValueError("Non-finite synthetic outcome or regressor")
+        raise ValueError("Non-finite outcome or regressor")
     counts = [np.bincount(group) for group in groups]
     for _ in range(1000):
         largest = 0.0
@@ -74,12 +74,18 @@ class AreaRegression:
         self.residual_x = absorb(self.treated_post, self.groups)
         self.information = float(self.residual_x @ self.residual_x)
         if self.information <= 1e-10:
-            raise ValueError("Synthetic design does not identify treated_post")
+            raise ValueError("Design does not identify treated_post")
         self.coefficient_weights = self.residual_x / self.information
         self.post_weights = self.coefficient_weights * self.treated_post
 
     def fit(self, panel_y: np.ndarray) -> dict:
-        y = np.asarray(panel_y)[self.panel_rows]
+        return self.fit_rows(np.asarray(panel_y)[self.panel_rows])
+
+    def fit_rows(self, y: np.ndarray) -> dict:
+        """Fit stacked responses directly, including wild-bootstrap stack copies."""
+        y = np.asarray(y)
+        if len(y) != len(self.panel_rows):
+            raise ValueError("Response length differs from the registered stack")
         residual_y = absorb(y, self.groups)
         beta = self.coefficient_weights @ residual_y
         residuals = residual_y - np.multiply.outer(self.residual_x, beta) if y.ndim == 2 else (
@@ -101,7 +107,7 @@ class AreaRegression:
 def make_regression(design: dict, method="stacked") -> AreaRegression:
     n_units, n_weeks = len(design["areas"]), design["weeks"]
     by_id = {area["cell_id"]: index for index, area in enumerate(design["areas"])}
-    rows, unit_keys, week_keys, physical_units, d = [], [], [], [], []
+    rows, unit_keys, week_keys, physical_units, d, events, stack_ids = [], [], [], [], [], [], []
     if method == "twfe":
         for unit, area in enumerate(design["areas"]):
             for week in range(n_weeks):
@@ -110,6 +116,8 @@ def make_regression(design: dict, method="stacked") -> AreaRegression:
                 week_keys.append(week)
                 physical_units.append(unit)
                 d.append(float(area["treated"] and week >= area["opening_index"]))
+                events.append(week - area["opening_index"] if area["treated"] else np.nan)
+                stack_ids.append(0)
         rank = n_units + n_weeks - 1
     elif method == "stacked":
         for stack_number, stack in enumerate(design["stacks"]):
@@ -129,13 +137,18 @@ def make_regression(design: dict, method="stacked") -> AreaRegression:
                     week_keys.append((stack_number, week))
                     physical_units.append(unit)
                     d.append(float(event is not None and event >= 0))
+                    events.append(event if event is not None else np.nan)
+                    stack_ids.append(stack_number)
         # Each stack's FE bipartite graph is connected by its complete-week controls.
         rank = len(set(unit_keys)) + len(set(week_keys)) - len(design["stacks"])
     else:
         raise ValueError("Unknown estimator")
     codes = tuple(pd.factorize(pd.Series(keys))[0] for keys in (unit_keys, week_keys))
     clusters = pd.factorize(pd.Series(physical_units))[0]  # Physical area, never stack-area.
-    return AreaRegression(np.array(rows), clusters, codes, np.array(d), rank)
+    model = AreaRegression(np.array(rows), clusters, codes, np.array(d), rank)
+    model.event_time = np.array(events)
+    model.stack_number = np.array(stack_ids)
+    return model
 
 
 def synthetic_effect(design: dict, delta=-0.10, *, heterogeneous=False) -> np.ndarray:

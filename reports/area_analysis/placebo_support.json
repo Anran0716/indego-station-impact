@@ -1,0 +1,21 @@
+{
+  "omitted_cohorts": [
+    {
+      "cohort": "2022Q2",
+      "reason": "shifted_full_window_outside_panel"
+    },
+    {
+      "cohort": "2022Q3",
+      "reason": "shifted_full_window_outside_panel"
+    }
+  ],
+  "included_cohorts": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q3",
+    "2023Q4",
+    "2024Q1"
+  ],
+  "treated_areas": 23
+}

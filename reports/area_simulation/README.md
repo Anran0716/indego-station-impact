@@ -1,5 +1,7 @@
 # Area simulation validation (synthetic outcomes only)
 
+**Historical validation:** assumed-noise power below is superseded by the [observed-residual power analysis](../area_analysis/README.md).
+
 Plan committed in [df5127b](https://github.com/Anran0716/indego-station-impact/commit/df5127b5a8d05b623143f08304e648be22c4c6cd). Use 53 actual available areas, 28 treated areas, 8 quarterly cohorts, and 156 calendar weeks. Exact opening dates and clean-control memberships come from the count audit. Every outcome is synthetic; no observed ridership variance or real effect is used.
 
 ## Model and independent checks
@@ -21,7 +23,7 @@ The strict expected-failure test requires TWFE and stacked to recover the same k
 
 TWFE's full-panel horizon also differs from the short-window target. For clarity, the heterogeneous DGP's equal-treated-post-observation ATT over the full panel is -0.326012; TWFE returns -0.293926, so it also differs from that full-horizon ATT. `validation.csv` reports both targets rather than attributing every gap solely to forbidden comparisons.
 
-`cohort_weights.csv` compares pooled weights with area shares. Stacked has 0 negative treated-post observation weights in this design; full-panel TWFE has 332. Weight differences remain even when all pooled post weights are nonnegative. Use the equal-area contrast as a simulation aggregation benchmark; final real-data aggregation/corrective-weight robustness still needs a separate specification. See the authors' [stacked DiD discussion of aggregation weights](https://coadywing.github.io/stacked_did_package/articles/introduction.html).
+`cohort_weights.csv` compares pooled weights with area shares. Stacked has 0 negative treated-post observation weights in this design; full-panel TWFE has 332. Weight differences remain even when all pooled post weights are nonnegative. Use the equal-area contrast as a simulation aggregation benchmark; final real-data aggregation must be specified separately from this validation. See the authors' [stacked DiD discussion of aggregation weights](https://coadywing.github.io/stacked_did_package/articles/introduction.html).
 
 ## Illustrative power, not empirical project power
 
@@ -37,7 +39,7 @@ Assume log-scale AR(1) errors with innovation SD 0.25, rho 0.5, seed 20261120, a
 
 Smallest tested absolute effect reaching 80% rejection: **10%**.
 
-This is a coarse tested-effect threshold under assumed synthetic variance, not an interpolated MDE or an empirical power claim. A real-variance power analysis remains pending. The null rejection rate reports finite-sample size; it is not a new design gate.
+This is a coarse tested-effect threshold under assumed synthetic variance, not an interpolated MDE or an empirical power claim. Observed-residual power is now the current project analysis. The null rejection rate reports finite-sample size; it is not a new design gate.
 
 ## Limitation
 

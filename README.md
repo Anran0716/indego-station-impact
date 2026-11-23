@@ -2,7 +2,15 @@ An independent project studying how new Indego stations change local ridership i
 
 # Indego station impact
 
-**Status:** The main area design passes its fixed feasibility gates. The eight-neighbour robustness test is not estimable; the preregistered distance restriction has sufficient controls. Area-level synthetic validation is complete. Real effect estimates and power based on observed area variance remain pending; no real-outcome effect model has been fitted. Station placement following demand trends and cross-boundary spillovers remain identification risks.
+**Status:** The preregistered area analysis is complete: pooled stacked estimate, event study and joint pretrend test, distance exclusion, PPML, time placebo, all four fixed grids, and power based on observed residuals. The eight-neighbour robustness test remains not estimable. Station placement following demand trends and cross-boundary spillovers remain identification risks; estimates require the registered identification assumptions.
+
+<!-- area-estimation-summary:start -->
+Primary stacked estimate: **+11.4%** (95% CI +1.5% to +22.2%). The joint pretrend test does not reject; causal interpretation remains conditional on identification assumptions. Main/event-study results, every prespecified robustness variant, and observed-residual power are in the [area analysis](reports/area_analysis/README.md).
+<!-- area-estimation-summary:end -->
+
+<!-- area-empirical-power-summary:start -->
+Current power uses observed main-model residuals with 200 physical-area wild draws per effect: +5% **17.0%**, +10% **55.5%**, +15% **86.0%** rejection. Smallest tested magnitudes reaching 80%: positive: 15%; negative: 15%. This conditional empirical-residual power supersedes the synthetic-noise example. [Methods and full signed curve](reports/area_analysis/README.md).
+<!-- area-empirical-power-summary:end -->
 
 See the generated [Stage 0 audit](reports/stage0/README.md) for trip counts, first/last activity dates, supported coordinates, and rule-based identity resolution. Renumbered IDs share a continuous canonical identity. An unobserved earlier ID does not exclude an independently eligible opening; concurrent-operation and unresolved observed-identity cases carry explicit exclusion reasons.
 
@@ -30,14 +38,14 @@ How did new Indego stations opening in 2022–2024 change weekly departures in a
 
 ## Design records
 
-The area feasibility amendment uses fixed 1-kilometre EPSG:32618 cells containing qualified old stations. It counts a primary grid plus three prespecified shifts, and reports separate eight-neighbour and 400-metre distance spillover diagnostics. Its primary outcome is all-station area departures; the secondary outcome is departures from qualified old stations. Neither real outcome has been constructed for an area estimator. The station-level specifications below are retained as the original design record.
+The area design uses fixed 1-kilometre EPSG:32618 cells containing qualified old stations. Its primary outcome includes departures from all stations, including new stations; qualified-old departures are secondary. The +5% net-effect prediction and final estimator were committed in [8bb670b](https://github.com/Anran0716/indego-station-impact/commit/8bb670b05303304c4579c72941ae915b0694b9bc) before building real area outcomes. The [analysis report](reports/area_analysis/README.md) contains all fixed-grid and spillover checks. The station-level specifications below remain the original design record.
 
 - Use publicly available Indego quarterly trip files for 2022 Q1–2024 Q4 and the pinned official station table. Require 20 coordinate observations per quarter for relocation checks; retain known lower-support locations with a flag. Resolve replacement IDs, then separate eligible treatment sources from all operating, positioned exposure sources before grouping stations. Candidate discovery uses both names and name-independent distance/retirement timing.
 - Select a treatment radius using a prespecified station-count rule and keep the buffer at twice that radius. Require 30 controls per stack: first use never-treated stations, then add stations whose first exposure within 2R occurs after the entire stack window if needed. If any stack remains below 30, redesign at the area level.
 - Estimate a stacked difference-in-differences model of `log(1 + weekly departures)` with stack-specific station and week fixed effects and standard errors clustered by station. The event window is 12 weeks before through 12 weeks after opening.
 - Use simulations to demonstrate a failure of ordinary two-way fixed effects under heterogeneous treatment effects before estimating effects on real data. Report event-study intervals, pretrend diagnostics, robustness checks, and simulation-based power.
 
-The [preregistration](docs/preregistration.md) records the original station plan, the committed area-count amendment, and the distance/simulation amendment. The station radius remains unset following its failed gate. A final area estimation specification and area net-effect prediction must be recorded before real-outcome fitting.
+The [preregistration](docs/preregistration.md) records the original station plan, area-count and distance/simulation amendments, and the frozen area prediction and analysis. The station radius remains unset following its failed gate; the area design proceeds under its separate committed rules.
 
 ## Repository
 
@@ -50,6 +58,7 @@ reports/stage1/             Eligibility, radius counts, and stack-control feasib
 reports/area_feasibility/   Registered grid, clean-control, and boundary counts
 reports/distance_spillover/ Registered distance restriction, counts and excluded pairs
 reports/area_simulation/    Synthetic recovery, weighting diagnostics and illustrative power
+reports/area_analysis/      Real estimates, event-study figures, robustness and empirical power
 scripts/                    Download and feasibility entry points
 sql/                        DuckDB panel construction, to be implemented
 src/stimpact/               Python analysis package
@@ -67,7 +76,9 @@ python -m pip install -e '.[dev]'
 python scripts/run_stage0.py
 ```
 
-For a verified existing download, use `python scripts/run_stage0.py --offline`. Each archive and extracted CSV has its source URL, download date, row count, and SHA256 recorded in the committed [manifest](data/manifest.json). URLs are pinned on the first successful discovery, so future runs do not silently switch to a newer station table. Raw and intermediate data stay outside version control. The later download-to-figures analysis pipeline remains to be implemented.
+For a verified existing download, use `python scripts/run_stage0.py --offline`. Each archive and extracted CSV has its source URL, download date, row count, and SHA256 recorded in the committed [manifest](data/manifest.json). URLs are pinned on the first successful discovery, so future runs do not silently switch to a newer station table. Raw and intermediate data stay outside version control.
+
+Run the real area analysis with `python scripts/run_area_analysis.py --prereg-commit 8bb670b`. The command verifies the frozen prediction/settings and pinned inputs, builds area panels, then runs main, robustness, and empirical-residual power in order. Full area panels and the hashed station-week cache remain in ignored data directories; figures and aggregate diagnostics are versioned in the report.
 
 Run `python scripts/run_stage1.py` after Stage 0 to reproduce the fixed existing-station eligibility, three-radius counts, and per-stack clean-control checks. Its decision follows the preregistered gates and does not use estimated treatment effects.
 
@@ -96,5 +107,5 @@ The preregistered 400-metre distance sensitivity retains 18–41 controls per pr
 <!-- distance-spillover-summary:end -->
 
 <!-- area-simulation-summary:start -->
-Synthetic validation uses the real 53-area, 28-treated, 8-cohort structure. Stacked recovers the known -10% effect; the heterogeneous-dynamic TWFE test fails as expected. Power results assume synthetic noise and are not empirical project power. No real area effect has been fitted. [Simulation audit](reports/area_simulation/README.md).
+Synthetic validation uses the real 53-area, 28-treated, 8-cohort structure. Stacked recovers the known -10% effect; the heterogeneous-dynamic TWFE test fails as expected. Power results assume synthetic noise. Current power is the [observed-residual analysis](reports/area_analysis/README.md); this synthetic power is historical validation. [Simulation audit](reports/area_simulation/README.md).
 <!-- area-simulation-summary:end -->

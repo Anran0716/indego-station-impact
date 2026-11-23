@@ -1,0 +1,29 @@
+{
+  "smallest_tested_80pct": {
+    "positive": 0.15,
+    "negative": 0.15
+  },
+  "residual_sd_before_scale": 0.24503108406059754,
+  "method": "physical_area_wild_bootstrap_of_empirical_residuals",
+  "uses_observed_variance": true,
+  "settings": {
+    "method": "area_cluster_wild_residual_bootstrap_unrestricted_residuals",
+    "residual_scale": "sqrt_N_over_N_minus_K",
+    "weights": "rademacher_one_draw_per_physical_area",
+    "injected_effects": [
+      0,
+      0.03,
+      0.05,
+      0.1,
+      0.15,
+      -0.03,
+      -0.05,
+      -0.1,
+      -0.15
+    ],
+    "repetitions": 200,
+    "seed": 20261122,
+    "alpha": 0.05,
+    "target_power": 0.8
+  }
+}

@@ -1,0 +1,5 @@
+offset_x_m,offset_y_m,areas,weeks,all_cleaned_departures,departures_inside_sample,departures_outside_sample,qualified_old_departures_inside
+0,0,53,156,2986256,2726431,259825,2365004
+500,0,54,156,2986256,2634224,352032,2288542
+0,500,55,156,2986256,2801715,184541,2440718
+500,500,53,156,2986256,2745905,240351,2397011

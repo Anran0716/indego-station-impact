@@ -25,6 +25,9 @@ from stimpact.download import sha256
 
 
 def run(root: Path, prereg_commit: str) -> dict:
+    empirical_path = root / "reports/area_analysis/summary.json"
+    empirical_available = (empirical_path.exists()
+                           and json.loads(empirical_path.read_text(encoding="utf-8")).get("uses_observed_variance", False))
     config = yaml.safe_load((root / "config.yaml").read_text(encoding="utf-8"))
     registered = yaml.safe_load(subprocess.check_output(
         ["git", "show", f"{prereg_commit}:config.yaml"], cwd=root, text=True, encoding="utf-8"))
@@ -124,7 +127,10 @@ def run(root: Path, prereg_commit: str) -> dict:
     pd.DataFrame(power_rows).to_csv(out / "illustrative_power.csv", index=False)
     pd.DataFrame(replication_rows).to_csv(out / "replications.csv", index=False)
     pd.DataFrame(cohort_rows).to_csv(out / "cohort_weights.csv", index=False)
-    lines = ["# Area simulation validation (synthetic outcomes only)", "",
+    archive_note = ("**Historical validation:** assumed-noise power below is superseded by "
+                    "the [observed-residual power analysis](../area_analysis/README.md)."
+                    if empirical_available else "Synthetic validation only; empirical area power is pending.")
+    lines = ["# Area simulation validation (synthetic outcomes only)", "", archive_note, "",
              f"Plan committed in [{prereg_commit[:7]}]"
              f"(https://github.com/Anran0716/indego-station-impact/commit/{prereg_commit}). "
              f"Use {summary['areas']} actual available areas, {summary['treated_areas']} treated areas, "
@@ -171,7 +177,7 @@ def run(root: Path, prereg_commit: str) -> dict:
               f"in this design; full-panel TWFE has {summary['twfe_negative_post_weights']}. "
               "Weight differences remain even when all pooled post weights are nonnegative. "
               "Use the equal-area contrast as a simulation aggregation benchmark; final real-data "
-              "aggregation/corrective-weight robustness still needs a separate specification. "
+              "aggregation must be specified separately from this validation. "
               "See the authors' [stacked DiD discussion of aggregation weights]"
               "(https://coadywing.github.io/stacked_did_package/articles/introduction.html).", "",
               "## Illustrative power, not empirical project power", "",
@@ -191,8 +197,10 @@ def run(root: Path, prereg_commit: str) -> dict:
     lines += ["", f"Smallest tested absolute effect reaching 80% rejection: **{mde:.0%}**."
               if mde is not None else "No tested effect reaches 80% rejection.", "",
               "This is a coarse tested-effect threshold under assumed synthetic variance, "
-              "not an interpolated MDE or an empirical power claim. A real-variance power "
-              "analysis remains pending. The null rejection rate reports finite-sample size; "
+              "not an interpolated MDE or an empirical power claim. "
+              + ("Observed-residual power is now the current project analysis. " if empirical_available
+                 else "A real-variance power analysis remains pending. ")
+              + "The null rejection rate reports finite-sample size; "
               "it is not a new design gate.", "", "## Limitation", "", SPILLOVER_LIMITATION, "",
               "## Reproduction", "", "```powershell",
               f"python scripts/validate_area_simulations.py --prereg-commit {prereg_commit}",
@@ -201,16 +209,21 @@ def run(root: Path, prereg_commit: str) -> dict:
     _block(root / "README.md", "area-simulation-summary",
            "Synthetic validation uses the real 53-area, 28-treated, 8-cohort structure. "
            "Stacked recovers the known -10% effect; the heterogeneous-dynamic TWFE test fails "
-           "as expected. Power results assume synthetic noise and are not empirical project "
-           "power. No real area effect has been fitted. [Simulation audit](reports/area_simulation/README.md).")
+           "as expected. Power results assume synthetic noise. "
+           + ("Current power is the [observed-residual analysis](reports/area_analysis/README.md); "
+              "this synthetic power is historical validation. " if empirical_available
+              else "No real area effect has been fitted. ")
+           + "[Simulation audit](reports/area_simulation/README.md).")
     _block(root / "docs/preregistration.md", "area-simulation-result",
            "Area-level synthetic validation is complete using the fixed 53-area universe, "
            "28 treated areas and 8 quarterly cohorts. The actual stacked sample contains "
            "49 physical-area clusters; four other-exposure areas are never clean. Known "
            "-10% recovery, the strict expected TWFE failure, and independent clustered OLS "
            "checks are documented in the [simulation audit](../reports/area_simulation/README.md). "
-           "Power uses assumed synthetic variance. No real area outcome has been fitted; "
-           "the final area estimation specification remains separate from this validation.")
+           "Power here uses assumed synthetic variance. "
+           + ("The separately preregistered real area analysis is complete; its observed-residual "
+              "power supersedes this illustrative power." if empirical_available else
+              "No real area outcome has been fitted; final estimation requires a separate specification."))
     print(json.dumps({key: value for key, value in summary.items() if key != "input_hashes"}, indent=2))
     return summary
 
