@@ -20,10 +20,12 @@ from stimpact.area_models import (
     area_panel,
     distance_design,
     empirical_power,
+    event_reference_diagnostic,
     event_study,
     ordered_outcome,
     placebo_design,
     ppml,
+    type_m_diagnostic,
 )
 from stimpact.area_report import SPILLOVER_LIMITATION, _block
 from stimpact.area_simulation import design_from_counts, make_regression
@@ -272,6 +274,18 @@ def run(root, prereg_commit, reuse_cache=False):
 
 def write_report(root, out, summary):
     commit, primary = summary["preregistration_commit"], summary["estimates"][0]
+    powers = {row["effect"]: row["rejection_rate"] for row in summary["power"]}
+    old_result = next(row for row in summary["estimates"] if row["outcome"] == "qualified_old")
+    event_coefficients = pd.read_csv(out / "event_study.csv")
+    event_covariance = pd.read_csv(out / "event_covariance.csv", index_col=0)
+    reference = event_reference_diagnostic(event_coefficients, event_covariance.to_numpy(),
+                                            event_covariance.index.to_numpy(dtype=int), primary["clusters"])
+    type_m = type_m_diagnostic(pd.read_csv(out / "power_replications.csv"), assumed_effect=0.10)
+    diagnostics = {"status": "post_result_interpretation_only", "registered_estimators_unchanged": True,
+                   "event_reference": reference, "type_m": type_m,
+                   "input_hashes": {name: sha256(out / name) for name in (
+                       "event_study.csv", "event_covariance.csv", "power_replications.csv")}}
+    save_json(out / "interpretation_diagnostics.json", diagnostics)
     lines = ["# Preregistered area-level analysis", "",
              f"Prediction and final specification committed before area outcomes in [{commit[:7]}]"
              f"(https://github.com/Anran0716/indego-station-impact/commit/{commit}). "
@@ -291,6 +305,13 @@ def write_report(root, out, summary):
         lines.append(f"| {row['specification']} | {row['relative_effect']:+.1%} | "
                      f"[{row['relative_ci_low']:+.1%}, {row['relative_ci_high']:+.1%}] | "
                      f"{row['p_value']:.4g} | {row['clusters']} | {row['observations']} |")
+    lines += ["", "Under the registered identification assumptions, higher all-station area "
+              "ridership alongside lower qualified-old ridership is consistent with net local "
+              "growth and partial redistribution from existing stations. Aggregate estimates "
+              "do not track individual riders or directly identify a transfer fraction. "
+              "Nonplacebo robustness point estimates are positive across specifications; "
+              "the time-placebo estimate is small and compatible with zero, rather than "
+              "proof that no pre-opening confounding exists."]
     joint, average = summary["event_pretrend"], summary["event_post_average"]
     lines += ["", "## Event study and identification", "", "![Event study](event_study.png)", ""]
     if joint["status"] == "estimated":
@@ -311,7 +332,32 @@ def write_report(root, out, summary):
               f"{average['ci_high']:.5f}], p = {average['p_value']:.4g}. "
               f"Transformed: {np.expm1(average['coefficient']):+.1%} "
               f"[{np.expm1(average['ci_low']):+.1%}, {np.expm1(average['ci_high']):+.1%}]. "
-              "This average uses the full event covariance, not an average of standard errors.", "",
+              "This average uses the full event covariance, not an average of standard errors. "
+              "It is a prespecified secondary contrast relative to week -1, **not the headline "
+              "net-growth estimate**.", "",
+              "The event-study average is relative to week -1, which sits below the pre-period "
+              "mean; relative to the full pre-period the post average is about +11%, consistent "
+              "with the pooled estimate.", "",
+              f"For clarity, the mean coefficient over weeks -12..-2 is "
+              f"{reference['pre_mean_minus12_to_minus2']:.5f}. Including the zero reference "
+              f"coefficient for week -1, the full 12-week pre-period mean is "
+              f"{reference['pre_mean_minus12_to_minus1']:.5f}. Subtracting that full pre-mean "
+              f"from the post mean gives {reference['post_minus_full_pre']['coefficient']:.5f} "
+              f"log units, or **{reference['post_minus_full_pre_relative']:+.1%}**. Excluding "
+              f"the reference week from the pre-mean gives "
+              f"{reference['post_minus_nonreference_pre_relative']:+.1%}. These are explicitly "
+              "post-result reference diagnostics, computed from the saved coefficients and "
+              "their full covariance; no model was refitted or reference week changed. The "
+              "pooled estimator compares post observations with the whole pre-period using "
+              "its regression weights, reducing reliance on any one low week. It need not "
+              "equal an arithmetic event-time contrast exactly.", "",
+              f"Descriptively, weeks 1–2 average "
+              f"{reference['early_post_mean_1_to_2_log']:.3f} in log coefficients relative to "
+              f"week -1, while weeks 3–12 average "
+              f"{reference['later_post_mean_3_to_12_log']:.3f} with week-to-week fluctuations. "
+              "This early bump is compatible with a transient opening response or novelty, "
+              "but the curve alone does not identify that mechanism. These log coefficients "
+              "are not percentage-point changes.", "",
               "## Robustness and sample support", "", "![Prespecified variants](robustness.png)", "",
               "The <=400m exclusion is the registered distance rule, requiring >=10 controls "
               "in every stack. PPML uses the same count sample/FE and physical clusters; its "
@@ -354,6 +400,30 @@ def write_report(root, out, summary):
               "not interpolated MDEs. The 0% row estimates the null rejection rate. The "
               "[synthetic simulation](../area_simulation/README.md) remains an archived code "
               "validation; its assumed-noise power is superseded by this empirical analysis.", "",
+              "## Magnitude uncertainty and Type M risk", "",
+              f"With {powers[0.10]:.1%} power at an assumed +10% effect, statistically significant estimates "
+              "can exaggerate magnitude when attention is conditioned on significance. "
+              "This is the conditional Type M/exaggeration risk described by "
+              "[Gelman and Carlin](https://sites.stat.columbia.edu/gelman/research/published/retropower20.pdf). "
+              f"It does not, by itself, establish that this particular {primary['relative_effect']:+.1%} estimate is "
+              "too large, or justify replacing its interval with a narrower subjective range.", ""]
+    if type_m["estimable"]:
+        lines += [f"Post-result illustration using only the already saved +10% bootstrap "
+                  f"scenario: {type_m['significant_repetitions']}/{type_m['repetitions']} draws "
+                  f"are significant. Among those draws, the mean transformed estimate is "
+                  f"{type_m['conditional_mean_relative_estimate']:+.1%}; the conditional mean "
+                  f"absolute log-magnitude ratio is **{type_m['conditional_log_magnitude_ratio']:.2f}** "
+                  "relative to the assumed true log effect. This calculation is conditional "
+                  "on a true +10% effect and this empirical-residual bootstrap; it is not a "
+                  "shrinkage correction or a posterior probability about the observed effect.", ""]
+    lines += ["Interview wording: \"The results are consistent with positive net area growth "
+              "alongside diversion from existing stations. Every prespecified nonplacebo "
+              "robustness variant for the all-station outcome has a positive point estimate. "
+              f"Given only about {powers[0.10]:.0%} power at +10%, "
+              "I would describe a positive effect on roughly a 10% scale with substantial "
+              "uncertainty, rather than claim precisely 11%.\" The full primary 95% interval "
+              f"remains {primary['relative_ci_low']:+.1%} to {primary['relative_ci_high']:+.1%}, "
+              "with some robustness intervals including zero.", "",
               "## Limitations", "", SPILLOVER_LIMITATION, "",
               "Station placement can follow local demand changes. All-station area totals "
               "include within-cell diversion, while cross-boundary changes can bias estimates "
@@ -379,10 +449,16 @@ def write_report(root, out, summary):
     _block(root / "README.md", "area-estimation-summary",
            f"Primary stacked estimate: **{primary['relative_effect']:+.1%}** "
            f"(95% CI {primary['relative_ci_low']:+.1%} to {primary['relative_ci_high']:+.1%}). "
+           f"The qualified-old secondary estimate is {old_result['relative_effect']:+.1%}, "
+           "consistent with net local growth alongside partial redistribution under the "
+           f"identification assumptions. The event-study {np.expm1(average['coefficient']):+.1%} "
+           "average is relative to a low "
+           f"week -1; its contrast against the full pre-period is about "
+           f"**{reference['post_minus_full_pre_relative']:+.1%}**, consistent with the pooled "
+           "estimate. The week -1-relative secondary contrast is not the headline conclusion. "
            f"{interpretation}; causal interpretation remains conditional on identification "
            "assumptions. Main/event-study results, every prespecified robustness variant, "
            "and observed-residual power are in the [area analysis](reports/area_analysis/README.md).")
-    powers = {row["effect"]: row["rejection_rate"] for row in summary["power"]}
     mdes = summary["empirical_power"]["smallest_tested_80pct"]
     mde_note = "; ".join(f"{direction}: {magnitude:.0%}" if magnitude is not None
                          else f"{direction}: no tested effect" for direction, magnitude in mdes.items())
@@ -391,7 +467,11 @@ def write_report(root, out, summary):
            f"per effect: +5% **{powers[0.05]:.1%}**, +10% **{powers[0.10]:.1%}**, "
            f"+15% **{powers[0.15]:.1%}** rejection. Smallest tested magnitudes reaching 80%: "
            f"{mde_note}. This conditional empirical-residual power supersedes "
-           "the synthetic-noise example. [Methods and full signed curve](reports/area_analysis/README.md).")
+           f"the synthetic-noise example. At about {powers[0.10]:.0%} power for +10%, significance-selected "
+           f"estimates can exaggerate magnitude (Type M risk); {primary['relative_effect']:+.1%} should be read with its "
+           "wide interval, rather than as a precise effect size. This is a conditional risk, "
+           "not proof that the observed estimate is inflated. "
+           "[Methods, interpretation and full signed curve](reports/area_analysis/README.md).")
     _block(root / "docs/preregistration.md", "area-estimation-result",
            f"Real area analysis completed under prediction/specification commit [{commit[:7]}]"
            f"(https://github.com/Anran0716/indego-station-impact/commit/{commit}). "

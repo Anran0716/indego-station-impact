@@ -12,10 +12,12 @@ from stimpact.area_models import (
     area_panel,
     distance_design,
     empirical_power,
+    event_reference_diagnostic,
     event_study,
     fit_multiple,
     placebo_design,
     ppml,
+    type_m_diagnostic,
 )
 from stimpact.area_simulation import make_regression
 
@@ -151,3 +153,31 @@ def test_area_counts_include_new_and_ineligible_old_stations_and_keep_zero_weeks
     registry.loc[registry.station_id.eq("new"), "x_m"] = np.nan
     with pytest.raises(ValueError, match="unresolved position"):
         area_panel(weekly, registry, {"old"}, areas, (0, 0), config)
+
+
+def test_reference_diagnostic_includes_reference_week_and_uses_full_covariance():
+    events = np.array([i for i in range(-12, 13) if i != -1])
+    coefficients = pd.DataFrame({"event_week": range(-12, 13),
+                                 "coefficient": [0 if i == -1 else 0.06 if i < 0 else 0.16
+                                                 for i in range(-12, 13)]})
+    covariance = 0.01 * np.eye(24) + 0.005 * np.ones((24, 24))
+    result = event_reference_diagnostic(coefficients, covariance, events, 49)
+    assert result["pre_mean_minus12_to_minus1"] == pytest.approx(0.055)
+    assert result["post_minus_full_pre"]["coefficient"] == pytest.approx(0.105)
+    # Independent variance formula for diagonal variance plus a shared reference component.
+    expected_variance = 0.01 * (1 / 13 + 11 / 144) + 0.005 / 144
+    assert result["post_minus_full_pre"]["se"] ** 2 == pytest.approx(expected_variance)
+    assert result["post_minus_full_pre_relative"] == pytest.approx(np.expm1(0.105))
+
+
+def test_type_m_is_conditional_on_significance_and_includes_either_sign():
+    assumed = np.expm1(0.1)
+    draws = pd.DataFrame({"effect": [assumed] * 4, "log_estimate": [0.01, 0.2, -0.3, 0.04],
+                          "rejected": [False, True, True, False]})
+    result = type_m_diagnostic(draws, assumed)
+    assert result["power"] == 0.5
+    assert result["conditional_log_magnitude_ratio"] == pytest.approx(2.5)
+    assert result["conditional_mean_relative_estimate"] == pytest.approx(
+        (np.expm1(0.2) + np.expm1(-0.3)) / 2)
+    with pytest.raises(ValueError, match="nonzero"):
+        type_m_diagnostic(draws, 0)

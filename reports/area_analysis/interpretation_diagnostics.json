@@ -1,0 +1,37 @@
+{
+  "status": "post_result_interpretation_only",
+  "registered_estimators_unchanged": true,
+  "event_reference": {
+    "status": "posthoc_descriptive_diagnostic",
+    "reference_week": -1,
+    "pre_mean_minus12_to_minus2": 0.042271664541896285,
+    "pre_mean_minus12_to_minus1": 0.038749025830071594,
+    "post_mean_0_to_12": 0.14615488418775252,
+    "post_minus_full_pre": {
+      "coefficient": 0.1074058583576809,
+      "se": 0.04693900775067935,
+      "ci_low": 0.013028657885771788,
+      "ci_high": 0.20178305882959002,
+      "p_value": 0.02657130218839376
+    },
+    "post_minus_full_pre_relative": 0.11338603982228253,
+    "post_minus_nonreference_pre_relative": 0.10947088294737682,
+    "early_post_mean_1_to_2_log": 0.19403756313928222,
+    "later_post_mean_3_to_12_log": 0.13913969755417815
+  },
+  "type_m": {
+    "status": "posthoc_assumption_conditional_diagnostic",
+    "assumed_effect": 0.1,
+    "repetitions": 200,
+    "significant_repetitions": 111,
+    "estimable": true,
+    "power": 0.555,
+    "conditional_log_magnitude_ratio": 1.3356135186714082,
+    "conditional_mean_relative_estimate": 0.13611546292822047
+  },
+  "input_hashes": {
+    "event_study.csv": "0dd2d9a6d6ec28e786ee35d2f2bfbc72e105bfe821bdfc142bf15eb88a767ec2",
+    "event_covariance.csv": "9e04bff712ef0f7161a68f459b2ad690d6fc3209836b094bf9373a0f42c91284",
+    "power_replications.csv": "c29cc4124269a8d90a757d118c352d0257ca3024900d334c493d70245077909c"
+  }
+}

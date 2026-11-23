@@ -17,6 +17,8 @@ The primary outcome is log(1 + departures from all stations inside a qualified a
 | Grid (0,500) | +14.1% | [+5.0%, +24.0%] | 0.002529 | 53 | 7565 |
 | Grid (500,500) | +13.2% | [-0.4%, +28.7%] | 0.05738 | 53 | 8791 |
 
+Under the registered identification assumptions, higher all-station area ridership alongside lower qualified-old ridership is consistent with net local growth and partial redistribution from existing stations. Aggregate estimates do not track individual riders or directly identify a transfer fraction. Nonplacebo robustness point estimates are positive across specifications; the time-placebo estimate is small and compatible with zero, rather than proof that no pre-opening confounding exists.
+
 ## Event study and identification
 
 ![Event study](event_study.png)
@@ -24,7 +26,13 @@ The primary outcome is log(1 + departures from all stations inside a qualified a
 Joint pretrend test, event weeks -12..-2: F(11,48) = 1.112, p = **0.3727**.
 The pretrend test does not reject at 5%. This does not establish parallel trends, no anticipation, or random station placement.
 
-Secondary event-study average, weeks 0..12: log coefficient 0.14615, 95% CI [0.04215, 0.25016], p = 0.006858. Transformed: +15.7% [+4.3%, +28.4%]. This average uses the full event covariance, not an average of standard errors.
+Secondary event-study average, weeks 0..12: log coefficient 0.14615, 95% CI [0.04215, 0.25016], p = 0.006858. Transformed: +15.7% [+4.3%, +28.4%]. This average uses the full event covariance, not an average of standard errors. It is a prespecified secondary contrast relative to week -1, **not the headline net-growth estimate**.
+
+The event-study average is relative to week -1, which sits below the pre-period mean; relative to the full pre-period the post average is about +11%, consistent with the pooled estimate.
+
+For clarity, the mean coefficient over weeks -12..-2 is 0.04227. Including the zero reference coefficient for week -1, the full 12-week pre-period mean is 0.03875. Subtracting that full pre-mean from the post mean gives 0.10741 log units, or **+11.3%**. Excluding the reference week from the pre-mean gives +10.9%. These are explicitly post-result reference diagnostics, computed from the saved coefficients and their full covariance; no model was refitted or reference week changed. The pooled estimator compares post observations with the whole pre-period using its regression weights, reducing reliance on any one low week. It need not equal an arithmetic event-time contrast exactly.
+
+Descriptively, weeks 1–2 average 0.194 in log coefficients relative to week -1, while weeks 3–12 average 0.139 with week-to-week fluctuations. This early bump is compatible with a transient opening response or novelty, but the curve alone does not identify that mechanism. These log coefficients are not percentage-point changes.
 
 ## Robustness and sample support
 
@@ -59,6 +67,14 @@ Smallest tested positive absolute effect reaching 80% rejection: **15%**.
 Smallest tested negative absolute effect reaching 80% rejection: **15%**.
 
 These are coarse tested-effect thresholds with Monte Carlo uncertainty, not interpolated MDEs. The 0% row estimates the null rejection rate. The [synthetic simulation](../area_simulation/README.md) remains an archived code validation; its assumed-noise power is superseded by this empirical analysis.
+
+## Magnitude uncertainty and Type M risk
+
+With 55.5% power at an assumed +10% effect, statistically significant estimates can exaggerate magnitude when attention is conditioned on significance. This is the conditional Type M/exaggeration risk described by [Gelman and Carlin](https://sites.stat.columbia.edu/gelman/research/published/retropower20.pdf). It does not, by itself, establish that this particular +11.4% estimate is too large, or justify replacing its interval with a narrower subjective range.
+
+Post-result illustration using only the already saved +10% bootstrap scenario: 111/200 draws are significant. Among those draws, the mean transformed estimate is +13.6%; the conditional mean absolute log-magnitude ratio is **1.34** relative to the assumed true log effect. This calculation is conditional on a true +10% effect and this empirical-residual bootstrap; it is not a shrinkage correction or a posterior probability about the observed effect.
+
+Interview wording: "The results are consistent with positive net area growth alongside diversion from existing stations. Every prespecified nonplacebo robustness variant for the all-station outcome has a positive point estimate. Given only about 56% power at +10%, I would describe a positive effect on roughly a 10% scale with substantial uncertainty, rather than claim precisely 11%." The full primary 95% interval remains +1.5% to +22.2%, with some robustness intervals including zero.
 
 ## Limitations
 

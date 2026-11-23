@@ -71,6 +71,46 @@ def contrast(beta: np.ndarray, covariance: np.ndarray, weights: np.ndarray, grou
             "p_value": float(2 * t.sf(abs(value) / max(se, 1e-15), groups - 1))}
 
 
+def event_reference_diagnostic(coefficients: pd.DataFrame, covariance: np.ndarray,
+                               event_order: np.ndarray, groups: int) -> dict:
+    """Post-result interpretation only; retain the registered week -1 coefficients."""
+    series = coefficients.set_index("event_week").coefficient.sort_index()
+    if series.index.duplicated().any() or set(series.index) != set(range(-12, 13)):
+        raise ValueError("Reference diagnostic requires all event weeks -12..12")
+    if series.loc[-1] != 0 or set(event_order) != set(series.index) - {-1}:
+        raise ValueError("Registered event reference must be week -1")
+    beta = series.loc[event_order].to_numpy()
+    # Week -1 has coefficient/variance zero but belongs to the full 12-week pre-period.
+    weights = np.where(event_order >= 0, 1 / 13, -1 / 12)
+    full_pre = contrast(beta, covariance, weights, groups)
+    return {"status": "posthoc_descriptive_diagnostic", "reference_week": -1,
+            "pre_mean_minus12_to_minus2": float(series.loc[-12:-2].mean()),
+            "pre_mean_minus12_to_minus1": float(series.loc[-12:-1].mean()),
+            "post_mean_0_to_12": float(series.loc[0:12].mean()),
+            "post_minus_full_pre": full_pre,
+            "post_minus_full_pre_relative": float(np.expm1(full_pre["coefficient"])),
+            "post_minus_nonreference_pre_relative": float(np.expm1(
+                series.loc[0:12].mean() - series.loc[-12:-2].mean())),
+            "early_post_mean_1_to_2_log": float(series.loc[1:2].mean()),
+            "later_post_mean_3_to_12_log": float(series.loc[3:12].mean())}
+
+
+def type_m_diagnostic(draws: pd.DataFrame, assumed_effect=0.10) -> dict:
+    """Conditional exaggeration in existing draws, not a correction to the observed estimate."""
+    if assumed_effect <= -1 or assumed_effect == 0:
+        raise ValueError("Type M requires a nonzero assumed effect greater than -1")
+    selected_effect = draws.loc[np.isclose(draws.effect, assumed_effect)]
+    significant = selected_effect.loc[selected_effect.rejected]
+    result = {"status": "posthoc_assumption_conditional_diagnostic", "assumed_effect": assumed_effect,
+              "repetitions": len(selected_effect), "significant_repetitions": len(significant)}
+    if selected_effect.empty or significant.empty:
+        return {**result, "estimable": False}
+    return {**result, "estimable": True, "power": len(significant) / len(selected_effect),
+            "conditional_log_magnitude_ratio": float(significant.log_estimate.abs().mean()
+                                                       / abs(np.log1p(assumed_effect))),
+            "conditional_mean_relative_estimate": float(np.expm1(significant.log_estimate).mean())}
+
+
 def fit_multiple(model: AreaRegression, y: np.ndarray, x: np.ndarray) -> dict:
     rx, ry = absorb(x, model.groups), absorb(y, model.groups)
     if np.linalg.matrix_rank(rx) != x.shape[1]:
