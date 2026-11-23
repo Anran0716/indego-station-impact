@@ -1,9 +1,10 @@
 """Generate the human-readable Stage 0 report from the audited counts."""
 
-import re
 from pathlib import Path
 
 import pandas as pd
+
+from stimpact.area_report import record_summary
 
 
 def write_report(output: Path, summary: dict, config: dict) -> None:
@@ -164,22 +165,15 @@ def write_report(output: Path, summary: dict, config: dict) -> None:
               "inputs stay outside Git. No radius counting or treatment-effect fitting is "
               "performed by this command.", ""]
     (output / "README.md").write_text("\n".join(lines), encoding="utf-8")
-    readme_path = output.parents[1] / "README.md"
-    if readme_path.exists():
-        readme = readme_path.read_text(encoding="utf-8")
-        generated = (
-            "<!-- stage0-summary:start -->\n"
-            f"Stage 0 found {summary['station_identity_name_pairs']} name-based identity pairs and "
-            f"{summary['station_identity_additional_proximity_pairs']} additional proximity/timing pairs. "
-            f"The identity rules retain {summary['retained_physical_openings_2022_2024']} canonical "
-            f"openings in 2022–2024, including {summary['retained_treatment_source_openings']} in the "
-            f"treatment-source window. The separate exposure table retains "
-            f"{summary['exposure_source_openings']} operating, located openings, including "
-            "treatment-ineligible sources. "
-            f"{statuses.get('unobserved_in_trip_window', 0)} station-table IDs have no observed trip "
-            "in the study files and are reported separately from opening-date discrepancies.\n"
-            "<!-- stage0-summary:end -->"
-        )
-        readme = re.sub(r"<!-- stage0-summary:start -->.*?<!-- stage0-summary:end -->",
-                        lambda match: generated, readme, flags=re.DOTALL)
-        readme_path.write_text(readme, encoding="utf-8")
+    generated = (
+        f"Stage 0 found {summary['station_identity_name_pairs']} name-based identity pairs and "
+        f"{summary['station_identity_additional_proximity_pairs']} additional proximity/timing pairs. "
+        f"The identity rules retain {summary['retained_physical_openings_2022_2024']} canonical "
+        f"openings in 2022–2024, including {summary['retained_treatment_source_openings']} in the "
+        f"treatment-source window. The separate exposure table retains "
+        f"{summary['exposure_source_openings']} operating, located openings, including "
+        "treatment-ineligible sources. "
+        f"{statuses.get('unobserved_in_trip_window', 0)} station-table IDs have no observed trip "
+        "in the study files and are reported separately from opening-date discrepancies."
+    )
+    record_summary(output.parents[1], "stage0-summary", generated)

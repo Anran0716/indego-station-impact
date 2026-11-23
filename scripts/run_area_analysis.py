@@ -27,7 +27,7 @@ from stimpact.area_models import (
     ppml,
     type_m_diagnostic,
 )
-from stimpact.area_report import SPILLOVER_LIMITATION, _block
+from stimpact.area_report import SPILLOVER_LIMITATION, _block, record_summary
 from stimpact.area_simulation import design_from_counts, make_regression
 from stimpact.download import sha256
 from stimpact.feasibility import weekly_departures
@@ -446,7 +446,7 @@ def write_report(root, out, summary):
     interpretation = ("The joint pretrend test is not estimable" if joint["status"] != "estimated"
                       else "The joint pretrend test rejects" if joint["p_value"] < 0.05
                       else "The joint pretrend test does not reject")
-    _block(root / "README.md", "area-estimation-summary",
+    record_summary(root, "area-estimation-summary",
            f"Primary stacked estimate: **{primary['relative_effect']:+.1%}** "
            f"(95% CI {primary['relative_ci_low']:+.1%} to {primary['relative_ci_high']:+.1%}). "
            f"The qualified-old secondary estimate is {old_result['relative_effect']:+.1%}, "
@@ -462,7 +462,7 @@ def write_report(root, out, summary):
     mdes = summary["empirical_power"]["smallest_tested_80pct"]
     mde_note = "; ".join(f"{direction}: {magnitude:.0%}" if magnitude is not None
                          else f"{direction}: no tested effect" for direction, magnitude in mdes.items())
-    _block(root / "README.md", "area-empirical-power-summary",
+    record_summary(root, "area-empirical-power-summary",
            f"Current power uses observed main-model residuals with 200 physical-area wild draws "
            f"per effect: +5% **{powers[0.05]:.1%}**, +10% **{powers[0.10]:.1%}**, "
            f"+15% **{powers[0.15]:.1%}** rejection. Smallest tested magnitudes reaching 80%: "

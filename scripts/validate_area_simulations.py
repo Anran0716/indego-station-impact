@@ -12,7 +12,7 @@ import pandas as pd
 import yaml
 from scipy.stats import t
 
-from stimpact.area_report import SPILLOVER_LIMITATION, _block
+from stimpact.area_report import SPILLOVER_LIMITATION, _block, record_summary
 from stimpact.area_simulation import (
     clean_area_contrast,
     design_from_counts,
@@ -206,7 +206,7 @@ def run(root: Path, prereg_commit: str) -> dict:
               f"python scripts/validate_area_simulations.py --prereg-commit {prereg_commit}",
               "python -m pytest -q tests/test_area_simulation.py -rxX", "```", ""]
     (out / "README.md").write_text("\n".join(lines), encoding="utf-8")
-    _block(root / "README.md", "area-simulation-summary",
+    record_summary(root, "area-simulation-summary",
            "Synthetic validation uses the real 53-area, 28-treated, 8-cohort structure. "
            "Stacked recovers the known -10% effect; the heterogeneous-dynamic TWFE test fails "
            "as expected. Power results assume synthetic noise. "

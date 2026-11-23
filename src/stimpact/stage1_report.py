@@ -7,6 +7,8 @@ from pathlib import Path
 
 import pandas as pd
 
+from stimpact.area_report import record_summary
+
 
 def _replace_block(path: Path, marker: str, content: str) -> None:
     text = path.read_text(encoding="utf-8")
@@ -45,7 +47,7 @@ def record_results(root: Path, summary: dict, stacks: pd.DataFrame,
         f"{decision['min_controls_required']} controls. {action} "
         "See the [feasibility audit](reports/stage1/README.md)."
     )
-    _replace_block(root / "README.md", "stage1-summary", brief)
+    record_summary(root, "stage1-summary", brief)
     ordered = chosen_stacks.sort_values("stack_last_week")
     if len(ordered):
         first, last = ordered.iloc[0], ordered.iloc[-1]
@@ -62,7 +64,7 @@ def record_results(root: Path, summary: dict, stacks: pd.DataFrame,
             "comparison-group scarcity, conditional on the fixed eligibility sample. It does "
             "not estimate a ridership effect or use before/after effect estimates."
         )
-        _replace_block(root / "README.md", "network-densification-finding", finding)
+        record_summary(root, "network-densification-finding", finding)
     prereg = (
         f"Feasibility decision before real-data estimation: **{decision['decision']}**. "
         f"The treated-count rule evaluates R = {radius} metres, with {row['treated_stations']} "

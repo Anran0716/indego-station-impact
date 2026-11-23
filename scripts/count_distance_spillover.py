@@ -12,7 +12,7 @@ import yaml
 from count_area_feasibility import check_registration
 
 from stimpact.area_feasibility import count_areas
-from stimpact.area_report import SPILLOVER_LIMITATION, _block
+from stimpact.area_report import SPILLOVER_LIMITATION, _block, record_summary
 from stimpact.area_spillover import count_distance_controls
 from stimpact.download import sha256
 
@@ -81,7 +81,7 @@ def run(root: Path, commit: str) -> dict:
     (out / "README.md").write_text("\n".join(lines), encoding="utf-8")
     primary = result["grids"].loc[result["grids"].offset_x_m.eq(0)
                                  & result["grids"].offset_y_m.eq(0)].iloc[0]
-    _block(root / "README.md", "distance-spillover-summary",
+    record_summary(root, "distance-spillover-summary",
            f"The preregistered 400-metre distance sensitivity retains {primary.minimum_distance_controls}"
            f"–{primary.maximum_distance_controls} controls per primary-grid stack: "
            f"**{primary.status}**, with {primary.failed_stacks}/{primary.stacks} stacks below 10. "

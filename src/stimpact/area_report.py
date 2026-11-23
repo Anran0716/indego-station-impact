@@ -1,7 +1,9 @@
 """Record count-only area decisions while keeping robustness limitations visible."""
 
+import posixpath
 import re
 from pathlib import Path
+from urllib.parse import urlsplit
 
 SPILLOVER_LIMITATION = (
     "The main estimate assumes no cross-boundary spillover. The eight-neighbour exclusion "
@@ -20,6 +22,26 @@ def _block(path: Path, name: str, content: str) -> None:
     else:
         text = text.rstrip() + "\n\n" + replacement + "\n"
     path.write_text(text, encoding="utf-8")
+
+
+def root_links_in_reports(content: str) -> str:
+    """Keep root-relative Markdown links valid after moving technical notes into reports/."""
+    def relocate(match):
+        target = match.group(1)
+        if target.startswith(("#", "/")) or urlsplit(target).scheme:
+            return match.group(0)
+        return "](" + posixpath.relpath(target, "reports") + ")"
+
+    return re.sub(r"\]\(([^)]+)\)", relocate, content)
+
+
+def record_summary(root: Path, name: str, content: str) -> None:
+    """Generated technical summaries belong in reports, leaving the short landing page editorial."""
+    notes = root / "reports/project-notes.md"
+    notes.parent.mkdir(parents=True, exist_ok=True)
+    if not notes.exists():
+        notes.write_text("# Project notes and reproducibility\n", encoding="utf-8")
+    _block(notes, name, root_links_in_reports(content))
 
 
 def record_area_result(root: Path, summary: dict) -> None:
@@ -49,8 +71,8 @@ def record_area_result(root: Path, summary: dict) -> None:
         "This is a count-only result; no outcome or treatment-effect estimate was produced. "
         "[Area count report](reports/area_feasibility/README.md)."
     )
-    _block(root / "README.md", "area-feasibility-summary", brief)
-    _block(root / "README.md", "spillover-limitation", SPILLOVER_LIMITATION)
+    record_summary(root, "area-feasibility-summary", brief)
+    record_summary(root, "spillover-limitation", SPILLOVER_LIMITATION)
     status = (
         f"Area rules were committed before counting in [{prereg[:7]}]"
         f"(https://github.com/Anran0716/indego-station-impact/commit/{prereg}). "
