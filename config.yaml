@@ -51,6 +51,28 @@ spillover_distance:
   insufficient_action: mark_robustness_not_estimable
   changes_main_gate: false
 
+area_analysis:
+  primary_outcome: log1p_all_station_weekly_departures
+  secondary_outcome: log1p_qualified_old_weekly_departures
+  predicted_relative_effect: 0.05
+  prediction_horizon: event_weeks_0_to_12
+  primary_offset_m: [0, 0]
+  cluster: physical_cell_id
+  inference: CR1_full_FE_rank_t_G_minus_1
+  pretrend_test: joint_event_weeks_minus12_to_minus2_F_q_Gminus1
+  ppml: same_stacked_sample_log_link_CR1_physical_area
+  placebo_shift_weeks: 26
+  placebo_support: omit_entire_placebo_cohort_if_shifted_window_outside_panel
+  empirical_power:
+    method: area_cluster_wild_residual_bootstrap_unrestricted_residuals
+    residual_scale: sqrt_N_over_N_minus_K
+    weights: rademacher_one_draw_per_physical_area
+    injected_effects: [0, 0.03, 0.05, 0.10, 0.15, -0.03, -0.05, -0.10, -0.15]
+    repetitions: 200
+    seed: 20261122
+    alpha: 0.05
+    target_power: 0.80
+
 area_simulation:
   unit: cell_id
   primary_offset_m: [0, 0]
